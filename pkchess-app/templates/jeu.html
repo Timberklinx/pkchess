@@ -3,340 +3,486 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PKChess - Partie {{ code }}</title>
+    <title>PKChess — Partie {{ code }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #1a1a2e;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            min-height: 100vh;
+        :root {
+            --gold: #FFD700;
+            --gold-dark: #C8A800;
+            --blue-deep: #0D1B3E;
+            --blue-mid: #1A2F5E;
+            --blue-light: #243D7A;
+            --blue-card: #162447;
+            --red: #E63946;
+            --green: #52B788;
+            --white: #F8F9FA;
         }
 
-        /* ── Header ── */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--blue-deep);
+            color: var(--white);
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── HEADER ── */
         .header {
-            background: #16213e;
-            padding: 12px 24px;
+            background: linear-gradient(90deg, var(--blue-mid), var(--blue-light));
+            padding: 10px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 3px solid #f0c040;
+            border-bottom: 3px solid var(--gold);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            position: sticky; top: 0; z-index: 100;
         }
-        .header h1 { color: #f0c040; font-size: 1.4em; }
-        .code-partie {
-            background: #0f3460;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            letter-spacing: 4px;
-            color: #f0c040;
-        }
-        .statut-ws {
-            width: 12px; height: 12px;
-            border-radius: 50%;
-            background: #ff6b6b;
-            display: inline-block;
-            margin-right: 8px;
-        }
-        .statut-ws.connecte { background: #51cf66; }
 
-        /* ── Mon plateau ── */
-        .mon-plateau {
-            background: #16213e;
-            margin: 16px;
-            border-radius: 16px;
-            padding: 20px;
-            border: 2px solid #f0c040;
-        }
-        .plateau-titre {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #f0c040;
-            margin-bottom: 16px;
-        }
-        .stats-joueur {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .stat-box {
-            background: #0f3460;
-            border-radius: 10px;
-            padding: 10px 16px;
-            text-align: center;
-            min-width: 80px;
-        }
-        .stat-box .val {
-            font-size: 1.6em;
-            font-weight: bold;
-            color: #f0c040;
-        }
-        .stat-box .label {
-            font-size: 0.75em;
-            color: #aaa;
-            margin-top: 2px;
-        }
-        .stat-box.pv .val { color: #ff6b6b; }
-        .stat-box.pieces .val { color: #f0c040; }
-        .stat-box.niveau .val { color: #51cf66; }
-
-        /* ── Actions ── */
-        .actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-        .btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
+        .header-logo {
+            font-family: 'Press Start 2P', monospace;
             font-size: 0.9em;
-            transition: opacity 0.2s, transform 0.1s;
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
         }
-        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
-        .btn-jaune { background: #f0c040; color: #1a1a2e; }
-        .btn-vert  { background: #51cf66; color: #1a1a2e; }
-        .btn-rouge { background: #ff6b6b; color: white; }
-        .btn-bleu  { background: #4a90d9; color: white; }
 
-        /* ── Plateaux adversaires ── */
-        .section-titre {
-            color: #aaa;
+        .header-code {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.75em;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: var(--gold);
+            border: 1px solid rgba(255,215,0,0.3);
+            letter-spacing: 4px;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 20px 16px 8px;
+            font-weight: 700;
         }
-        .plateaux-adversaires {
+        .dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--red);
+            box-shadow: 0 0 6px var(--red);
+            transition: all 0.3s;
+        }
+        .dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%,100%{box-shadow:0 0 6px var(--green)} 50%{box-shadow:0 0 14px var(--green)} }
+
+        /* ── LAYOUT ── */
+        .game-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 12px;
-            margin: 0 16px 16px;
-        }
-        .plateau-adversaire {
-            background: #16213e;
-            border-radius: 12px;
+            grid-template-columns: 1fr 340px;
+            grid-template-rows: auto 1fr;
+            gap: 16px;
             padding: 16px;
-            border: 2px solid #0f3460;
+            flex: 1;
         }
-        .plateau-adversaire .nom {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #ddd;
+
+        @media (max-width: 900px) {
+            .game-layout { grid-template-columns: 1fr; }
         }
-        .plateau-adversaire .stats {
+
+        /* ── MON PLATEAU ── */
+        .mon-plateau {
+            grid-column: 1;
+            background: linear-gradient(135deg, var(--blue-mid), var(--blue-card));
+            border-radius: 20px;
+            padding: 24px;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 30px rgba(255,215,0,0.1), 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .plateau-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .plateau-nom {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.7em;
+            color: var(--gold);
+        }
+        .tour-badge {
+            background: rgba(255,215,0,0.15);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.8em;
+            font-weight: 800;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Stats bars */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.25);
+            border-radius: 14px;
+            padding: 14px 10px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: transform 0.2s;
+        }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-icon { font-size: 1.4em; margin-bottom: 6px; }
+        .stat-val {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 1.1em;
+            font-weight: 900;
+            margin-bottom: 4px;
+            transition: color 0.3s;
+        }
+        .stat-label { font-size: 0.7em; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .stat-card.pv .stat-val { color: #FF6B6B; }
+        .stat-card.pieces .stat-val { color: var(--gold); }
+        .stat-card.niveau .stat-val { color: var(--green); }
+        .stat-card.tour .stat-val { color: #74C0FC; }
+
+        /* PV bar */
+        .pv-bar-wrap { margin-bottom: 20px; }
+        .pv-bar-label { display: flex; justify-content: space-between; font-size: 0.8em; color: rgba(255,255,255,0.5); margin-bottom: 6px; font-weight: 700; }
+        .pv-bar-bg { background: rgba(0,0,0,0.3); border-radius: 10px; height: 10px; overflow: hidden; }
+        .pv-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #FF6B6B, #E63946); transition: width 0.6s ease; box-shadow: 0 0 8px rgba(230,57,70,0.5); }
+
+        /* Synergies */
+        .synergies-titre {
+            font-size: 0.75em; font-weight: 800; color: rgba(255,255,255,0.5);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
+        }
+        .synergies-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; min-height: 36px; }
+        .syn-badge {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 0.8em;
+            font-weight: 800;
+            transition: all 0.3s;
+        }
+        .syn-badge.actif {
+            background: rgba(255,215,0,0.15);
+            border-color: var(--gold);
+            color: var(--gold);
+            box-shadow: 0 0 10px rgba(255,215,0,0.2);
+        }
+
+        /* Actions */
+        .actions-titre {
+            font-size: 0.75em; font-weight: 800; color: rgba(255,255,255,0.5);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
+        }
+        .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn {
+            padding: 11px 20px;
+            border: none; border-radius: 12px;
+            font-weight: 900; font-family: 'Nunito', sans-serif;
+            cursor: pointer; font-size: 0.9em;
+            transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .btn:hover { transform: translateY(-2px); opacity: 0.92; }
+        .btn:active { transform: translateY(0); }
+        .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--blue-deep); box-shadow: 0 4px 16px rgba(255,215,0,0.25); }
+        .btn-green { background: linear-gradient(135deg, #52B788, #2D8A60); color: white; box-shadow: 0 4px 16px rgba(82,183,136,0.25); }
+        .btn-red { background: linear-gradient(135deg, #E63946, #C1121F); color: white; }
+        .btn-blue { background: linear-gradient(135deg, #3A7BFF, #1A55D0); color: white; }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            grid-column: 2;
+            grid-row: 1 / 3;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .panel {
+            background: linear-gradient(135deg, var(--blue-mid), var(--blue-card));
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .panel-title {
+            font-size: 0.7em; font-weight: 800; color: rgba(255,255,255,0.5);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* Adversaires */
+        .adversaire {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: border-color 0.2s;
+        }
+        .adversaire:last-child { margin-bottom: 0; }
+        .adversaire:hover { border-color: rgba(255,255,255,0.15); }
+        .adv-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue-light), var(--blue-mid));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1em; border: 2px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        .adv-info { flex: 1; min-width: 0; }
+        .adv-nom { font-weight: 800; font-size: 0.9em; truncate; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .adv-stats { display: flex; gap: 8px; margin-top: 4px; }
+        .adv-stat { font-size: 0.75em; font-weight: 700; }
+        .adv-stat.hp { color: #FF6B6B; }
+        .adv-stat.gp { color: var(--gold); }
+        .adv-stat.lv { color: var(--green); }
+
+        /* Log */
+        .log-panel { flex: 1; }
+        .log-list {
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,215,0,0.2) transparent;
+        }
+        .log-item {
+            font-size: 0.8em;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.6);
             display: flex;
             gap: 8px;
+            font-weight: 600;
         }
-        .mini-stat {
-            background: #0f3460;
-            border-radius: 8px;
-            padding: 6px 10px;
-            text-align: center;
-            font-size: 0.85em;
-        }
-        .mini-stat .v { font-weight: bold; color: #f0c040; }
-        .mini-stat.pv .v { color: #ff6b6b; }
+        .log-item:last-child { border-bottom: none; }
+        .log-item .time { color: rgba(255,255,255,0.3); flex-shrink: 0; font-size: 0.9em; }
+        .log-item.gold { color: var(--gold); }
+        .log-item.green { color: var(--green); }
+        .log-item.red { color: #FF6B6B; }
 
-        /* ── Log ── */
-        .log {
-            background: #16213e;
-            margin: 0 16px 16px;
-            border-radius: 12px;
-            padding: 16px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        .log-ligne {
-            font-size: 0.85em;
-            color: #aaa;
-            padding: 3px 0;
-            border-bottom: 1px solid #0f3460;
-        }
-        .log-ligne:last-child { border-bottom: none; }
-        .log-ligne.important { color: #f0c040; }
+        /* Attente */
+        .attente { text-align: center; color: rgba(255,255,255,0.3); padding: 20px; font-style: italic; font-size: 0.9em; }
 
-        /* ── Synergies ── */
-        .synergies {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 10px;
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .synergie-badge {
-            background: #0f3460;
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 0.8em;
-            border: 1px solid #333;
-        }
-        .synergie-badge.actif { border-color: #f0c040; color: #f0c040; }
+        .fade-in { animation: fadeInUp 0.4s ease both; }
 
-        .attente { text-align: center; color: #555; padding: 20px; font-style: italic; }
+        .stat-val.changed {
+            animation: pop 0.4s ease both;
+        }
+        @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.3)} 100%{transform:scale(1)} }
     </style>
 </head>
 <body>
 
+<!-- Header -->
 <div class="header">
-    <h1>⚔️ PKChess</h1>
-    <div class="code-partie">{{ code }}</div>
-    <div>
-        <span class="statut-ws" id="statut-ws"></span>
-        <span id="statut-texte">Connexion...</span>
+    <div class="header-logo">⚔️ PKChess</div>
+    <div class="header-code">{{ code }}</div>
+    <div class="header-status">
+        <div class="dot" id="dot"></div>
+        <span id="statut-txt">Connexion...</span>
     </div>
 </div>
 
-<!-- Mon plateau -->
-<div class="mon-plateau">
-    <div class="plateau-titre" id="mon-titre">Mon plateau</div>
-    <div class="stats-joueur">
-        <div class="stat-box pv">
-            <div class="val" id="mes-pv">100</div>
-            <div class="label">PV</div>
+<!-- Game layout -->
+<div class="game-layout">
+
+    <!-- Mon plateau -->
+    <div class="mon-plateau fade-in">
+        <div class="plateau-header">
+            <div class="plateau-nom" id="mon-nom">🎮 Dresseur</div>
+            <div class="tour-badge">Tour <span id="tour-num">0</span></div>
         </div>
-        <div class="stat-box pieces">
-            <div class="val" id="mes-pieces">0</div>
-            <div class="label">Pièces</div>
+
+        <div class="stats-grid">
+            <div class="stat-card pv">
+                <div class="stat-icon">❤️</div>
+                <div class="stat-val" id="mes-pv">100</div>
+                <div class="stat-label">PV</div>
+            </div>
+            <div class="stat-card pieces">
+                <div class="stat-icon">🪙</div>
+                <div class="stat-val" id="mes-pieces">0</div>
+                <div class="stat-label">Pièces</div>
+            </div>
+            <div class="stat-card niveau">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-val" id="mon-niveau">1</div>
+                <div class="stat-label">Niveau</div>
+            </div>
+            <div class="stat-card tour">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-val" id="mon-exp">0</div>
+                <div class="stat-label">EXP</div>
+            </div>
         </div>
-        <div class="stat-box niveau">
-            <div class="val" id="mon-niveau">1</div>
-            <div class="label">Niveau</div>
+
+        <div class="pv-bar-wrap">
+            <div class="pv-bar-label">
+                <span>Points de vie</span>
+                <span id="pv-label">100/100</span>
+            </div>
+            <div class="pv-bar-bg">
+                <div class="pv-bar" id="pv-bar" style="width:100%"></div>
+            </div>
         </div>
-        <div class="stat-box">
-            <div class="val" id="mon-tour">0</div>
-            <div class="label">Tour</div>
+
+        <div class="synergies-titre">Synergies actives</div>
+        <div class="synergies-wrap" id="mes-synergies">
+            <span style="color:rgba(255,255,255,0.3);font-size:0.85em;font-weight:700">Aucune synergie active</span>
+        </div>
+
+        <div class="actions-titre">Actions</div>
+        <div class="actions">
+            <button class="btn btn-green" onclick="finTour()">✅ Fin de tour</button>
+            <button class="btn btn-gold" onclick="acheterExp()">📈 Exp (4 pièces)</button>
         </div>
     </div>
-    <div class="synergies" id="mes-synergies"></div>
-    <div class="actions">
-        <button class="btn btn-vert" onclick="finTour()">✅ Fin de tour</button>
-        <button class="btn btn-jaune" onclick="acheterExp()">📈 Exp (4 pièces)</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+        <!-- Adversaires -->
+        <div class="panel">
+            <div class="panel-title">👥 Autres dresseurs</div>
+            <div id="adversaires-list">
+                <div class="attente">En attente des autres joueurs...</div>
+            </div>
+        </div>
+
+        <!-- Log -->
+        <div class="panel log-panel">
+            <div class="panel-title">📋 Journal</div>
+            <div class="log-list" id="log-list"></div>
+        </div>
+
     </div>
 </div>
-
-<!-- Plateaux adversaires -->
-<div class="section-titre">🎮 Autres joueurs</div>
-<div class="plateaux-adversaires" id="plateaux-adversaires">
-    <div class="attente">En attente des autres joueurs...</div>
-</div>
-
-<!-- Log -->
-<div class="section-titre">📋 Journal</div>
-<div class="log" id="log"></div>
 
 <script>
 const CODE   = "{{ code }}";
-const PSEUDO = new URLSearchParams(window.location.search).get('pseudo') || 'Joueur';
-let ws, etat;
+const PSEUDO = new URLSearchParams(window.location.search).get('pseudo') || 'Dresseur';
+let ws, etat, pvMax = 100;
 
-document.getElementById('mon-titre').textContent = `🎮 ${PSEUDO}`;
+document.getElementById('mon-nom').textContent = '🎮 ' + PSEUDO;
 
 function connecterWS() {
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     ws = new WebSocket(`${proto}://${location.host}/ws/${CODE}/${PSEUDO}`);
 
     ws.onopen = () => {
-        document.getElementById('statut-ws').classList.add('connecte');
-        document.getElementById('statut-texte').textContent = 'Connecté';
+        document.getElementById('dot').classList.add('on');
+        document.getElementById('statut-txt').textContent = 'Connecté';
     };
-
     ws.onclose = () => {
-        document.getElementById('statut-ws').classList.remove('connecte');
-        document.getElementById('statut-texte').textContent = 'Déconnecté - reconnexion...';
+        document.getElementById('dot').classList.remove('on');
+        document.getElementById('statut-txt').textContent = 'Reconnexion...';
         setTimeout(connecterWS, 2000);
     };
-
-    ws.onmessage = (event) => {
-        const msg = JSON.parse(event.data);
-        traiterMessage(msg);
+    ws.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        if (msg.etat) { etat = msg.etat; majInterface(); }
+        if (msg.msg) log(msg.msg, msg.type === 'etat_mis_a_jour' ? 'gold' : '');
+        if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) log(`${msg.pseudo} a rejoint`, 'green');
+        if (msg.type === 'joueur_deconnecte') log(`${msg.pseudo} déconnecté`, 'red');
     };
 }
 
-function traiterMessage(msg) {
-    if (msg.etat) {
-        etat = msg.etat;
-        mettreAJourInterface();
-    }
-    if (msg.msg) {
-        ajouterLog(msg.msg, msg.type === 'etat_mis_a_jour');
-    }
-    if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) {
-        ajouterLog(`${msg.pseudo} a rejoint la partie`);
-    }
-    if (msg.type === 'joueur_deconnecte') {
-        ajouterLog(`${msg.pseudo} s'est déconnecté`);
+function animStat(id, newVal) {
+    const el = document.getElementById(id);
+    if (el && el.textContent != newVal) {
+        el.textContent = newVal;
+        el.classList.remove('changed');
+        void el.offsetWidth;
+        el.classList.add('changed');
     }
 }
 
-function mettreAJourInterface() {
-    if (!etat || !etat.joueurs) return;
+function majInterface() {
+    if (!etat?.joueurs) return;
     const moi = etat.joueurs[PSEUDO];
     if (moi) {
-        document.getElementById('mes-pv').textContent     = moi.pv;
-        document.getElementById('mes-pieces').textContent = moi.pieces;
-        document.getElementById('mon-niveau').textContent = moi.niveau;
-        document.getElementById('mon-tour').textContent   = etat.tour || 0;
-        afficherSynergies(moi.synergies, 'mes-synergies');
+        animStat('mes-pv', moi.pv);
+        animStat('mes-pieces', moi.pieces);
+        animStat('mon-niveau', moi.niveau);
+        animStat('mon-exp', moi.exp || 0);
+        document.getElementById('tour-num').textContent = etat.tour || 0;
+
+        // PV bar
+        const pct = Math.max(0, Math.min(100, (moi.pv / pvMax) * 100));
+        document.getElementById('pv-bar').style.width = pct + '%';
+        document.getElementById('pv-label').textContent = `${moi.pv}/${pvMax}`;
+
+        // Synergies
+        const synEl = document.getElementById('mes-synergies');
+        const syns = moi.synergies || {};
+        if (Object.keys(syns).length === 0) {
+            synEl.innerHTML = '<span style="color:rgba(255,255,255,0.3);font-size:0.85em;font-weight:700">Aucune synergie active</span>';
+        } else {
+            synEl.innerHTML = Object.entries(syns).map(([t, n]) =>
+                `<span class="syn-badge ${n >= 3 ? 'actif' : ''}">${t} ${n}</span>`
+            ).join('');
+        }
     }
 
-    // Plateaux adversaires
-    const container = document.getElementById('plateaux-adversaires');
-    const adversaires = Object.entries(etat.joueurs).filter(([p]) => p !== PSEUDO);
-    if (adversaires.length === 0) {
-        container.innerHTML = '<div class="attente">En attente des autres joueurs...</div>';
-        return;
+    // Adversaires
+    const advEl = document.getElementById('adversaires-list');
+    const advs = Object.entries(etat.joueurs).filter(([p]) => p !== PSEUDO);
+    if (advs.length === 0) {
+        advEl.innerHTML = '<div class="attente">En attente des autres joueurs...</div>';
+    } else {
+        advEl.innerHTML = advs.map(([pseudo, j]) => {
+            const initials = pseudo.substring(0,2).toUpperCase();
+            return `<div class="adversaire">
+                <div class="adv-avatar">${initials}</div>
+                <div class="adv-info">
+                    <div class="adv-nom">${pseudo}</div>
+                    <div class="adv-stats">
+                        <span class="adv-stat hp">❤️ ${j.pv}</span>
+                        <span class="adv-stat gp">🪙 ${j.pieces}</span>
+                        <span class="adv-stat lv">⭐ Niv.${j.niveau}</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
     }
-    container.innerHTML = adversaires.map(([pseudo, j]) => `
-        <div class="plateau-adversaire">
-            <div class="nom">👤 ${pseudo}</div>
-            <div class="stats">
-                <div class="mini-stat pv"><div class="v">${j.pv}</div><div>PV</div></div>
-                <div class="mini-stat"><div class="v">${j.pieces}</div><div>Pièces</div></div>
-                <div class="mini-stat"><div class="v">${j.niveau}</div><div>Niv.</div></div>
-            </div>
-        </div>
-    `).join('');
 }
 
-function afficherSynergies(synergies, containerId) {
-    const el = document.getElementById(containerId);
-    if (!synergies || Object.keys(synergies).length === 0) {
-        el.innerHTML = '<span style="color:#555;font-size:0.8em">Aucune synergie active</span>';
-        return;
-    }
-    el.innerHTML = Object.entries(synergies).map(([type, niv]) =>
-        `<span class="synergie-badge ${niv >= 3 ? 'actif' : ''}">${type} ${niv}</span>`
-    ).join('');
+function log(msg, cls = '') {
+    const list = document.getElementById('log-list');
+    const item = document.createElement('div');
+    item.className = 'log-item' + (cls ? ' ' + cls : '');
+    const h = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    item.innerHTML = `<span class="time">${h}</span><span>${msg}</span>`;
+    list.prepend(item);
+    while (list.children.length > 60) list.removeChild(list.lastChild);
 }
 
 function finTour() {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({type: 'fin_tour'}));
-    }
+    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'fin_tour'}));
 }
-
 function acheterExp() {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({type: 'depenser_pieces', montant: 4, raison: 'exp'}));
-    }
+    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'depenser_pieces', montant:4, raison:'exp'}));
 }
 
-function ajouterLog(msg, important = false) {
-    const log = document.getElementById('log');
-    const ligne = document.createElement('div');
-    ligne.className = 'log-ligne' + (important ? ' important' : '');
-    const heure = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-    ligne.textContent = `[${heure}] ${msg}`;
-    log.prepend(ligne);
-    // Garder max 50 lignes
-    while (log.children.length > 50) log.removeChild(log.lastChild);
-}
-
-// Démarrage
 connecterWS();
 </script>
 </body>
