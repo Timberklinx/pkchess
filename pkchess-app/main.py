@@ -260,7 +260,12 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                     pts1 += 1
                 if vainqueur_poke:
                     vainqueur_poke["xp_combats"] = vainqueur_poke.get("xp_combats", 0) + 1
-                    logs.append(f"    ⭐ {vainqueur_poke['nom']} gagne 1 XP combat !")
+                    evol_ko = vainqueur_poke.get("evolution_ko")
+                    xp_actuel = vainqueur_poke.get("xp_combats", 0)
+                    if evol_ko:
+                        logs.append(f"    ⭐ {vainqueur_poke['nom']} gagne 1 XP combat ! ({xp_actuel}/{evol_ko} KO)")
+                    else:
+                        logs.append(f"    ⭐ {vainqueur_poke['nom']} gagne 1 XP combat !")
 
     # Dégâts directs des Pokémon sans adversaire
     degats_directs_j1 = 0
@@ -317,6 +322,14 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                     poke["position"] = "banc"
                     poke["slot"] = slot_libre
 
+    # Vérifier les évolutions après combat
+    evol_msgs = []
+    for pseudo_check, joueur_check in [(p1, j1), (p2, j2)]:
+        msgs = verifier_evolutions(partie, joueur_check)
+        for m in msgs:
+            evol_msgs.append(f"[{pseudo_check}] {m}")
+    logs.extend(evol_msgs)
+
     return {
         "type_duel": "normal",
         "joueurs": [p1, p2],
@@ -339,6 +352,64 @@ def resoudre_duel_ghost(partie, pseudo, joueur):
         "logs": logs,
         "pv_apres": {pseudo: joueur["pv"]},
     }
+
+def faire_evoluer(partie, joueur, poke):
+    """
+    Fait évoluer un Pokémon si ses conditions sont remplies.
+    Retourne (True, message) si évolution, (False, '') sinon.
+    """
+    if poke.get("ko", False):
+        return False, ""
+    evol_id  = poke.get("evolution_id")
+    evol_nom = poke.get("evolution_nom")
+    evol_ko  = poke.get("evolution_ko")
+    if not evol_id or evol_ko is None:
+        return False, ""
+    if poke.get("xp_combats", 0) < evol_ko:
+        return False, ""
+
+    # Récupérer les données de l'évolution
+    evol_data = _get_poke(evol_id)
+    if not evol_data:
+        return False, ""
+
+    ancien_pv_max = poke.get("pv_max", 100)
+    nouveau_pv_max = evol_data.get("pv_max", 100)
+    diff_pv = nouveau_pv_max - ancien_pv_max
+
+    # Mettre à jour le Pokémon en place (on conserve position/slot)
+    poke["id"]           = evol_data["id"]
+    poke["nom"]          = evol_data["nom"]
+    poke["types"]        = evol_data.get("types", poke["types"])
+    poke["niveau"]       = evol_data.get("niveau", poke["niveau"])
+    poke["stade"]        = evol_data.get("stade", poke["stade"])
+    poke["pv_max"]       = nouveau_pv_max
+    poke["pv"]           = min(poke.get("pv", nouveau_pv_max) + diff_pv, nouveau_pv_max)
+    poke["vitesse"]      = evol_data.get("vitesse", poke.get("vitesse", 50))
+    poke["degats"]       = evol_data.get("degats", poke.get("degats", 20))
+    poke["faiblesses"]   = evol_data.get("faiblesses", [])
+    poke["resistances"]  = evol_data.get("resistances", [])
+    poke["immunites"]    = evol_data.get("immunites", [])
+    poke["att_off_nom"]  = evol_data.get("att_off_nom", "")
+    poke["att_off_desc"] = evol_data.get("att_off_desc", "")
+    poke["att_def_nom"]  = evol_data.get("att_def_nom", "")
+    poke["att_def_desc"] = evol_data.get("att_def_desc", "")
+    poke["evolution_id"]  = evol_data.get("evolution_id")
+    poke["evolution_nom"] = evol_data.get("evolution_nom")
+    poke["evolution_ko"]  = evol_data.get("evolution_ko")
+    # On conserve xp_combats (les KO continuent de compter pour la prochaine évol)
+
+    appliquer_bonus_pv_synergies(joueur)
+    return True, f"🌟 {evol_nom} évolue depuis {poke['nom']} !"
+
+def verifier_evolutions(partie, joueur):
+    """Vérifie toutes les évolutions possibles après un combat. Retourne les messages."""
+    messages = []
+    for poke in joueur.get("pokemon", []):
+        ok, msg = faire_evoluer(partie, joueur, poke)
+        if ok:
+            messages.append(msg)
+    return messages
 
 def lancer_combat(partie):
     joueurs_actifs = {p: j for p, j in partie["joueurs"].items() if j.get("en_vie", True)}
@@ -633,6 +704,9 @@ async def traiter_action(code, pseudo, action):
             "faiblesses": faiblesses, "resistances": resistances, "immunites": immunites,
             "att_off_nom": att_off_nom, "att_off_desc": att_off_desc,
             "att_def_nom": att_def_nom, "att_def_desc": att_def_desc,
+            "evolution_id":  poke_data.get("evolution_id")  if poke_data else None,
+            "evolution_nom": poke_data.get("evolution_nom") if poke_data else None,
+            "evolution_ko":  poke_data.get("evolution_ko")  if poke_data else None,
             "bonus_pv_synergie": 0,
             "ko": False, "xp_combats": 0,
         })

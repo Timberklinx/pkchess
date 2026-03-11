@@ -129,6 +129,12 @@
         .pv-mini-bar{height:100%;border-radius:2px;background:var(--green);transition:width 0.4s;}
         .pv-mini-bar.medium{background:var(--gold);}
         .pv-mini-bar.low{background:var(--red);}
+        /* Barre XP pokemon */
+        .xp-mini-bg{position:absolute;bottom:17px;left:4px;right:4px;height:3px;background:rgba(0,0,0,0.4);border-radius:2px;}
+        .xp-mini-bar{height:100%;border-radius:2px;background:#74C0FC;transition:width 0.4s;}
+        /* Badge évolution disponible */
+        .evol-badge{position:absolute;top:4px;left:4px;background:linear-gradient(135deg,#FFD700,#FF8C00);color:#000;font-size:0.5em;font-weight:900;padding:2px 5px;border-radius:6px;font-family:'Press Start 2P',monospace;animation:pulse-evol 1s infinite alternate;}
+        @keyframes pulse-evol{from{opacity:0.7}to{opacity:1;box-shadow:0 0 8px #FFD700;}}
 
         /* Modal combat */
         .combat-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:350;align-items:center;justify-content:center;}
@@ -435,10 +441,14 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             var id4 = String(poke.id).padStart(4, '0');
             var pvPct = poke.pv_max > 0 ? Math.max(0, Math.min(100, Math.round(poke.pv / poke.pv_max * 100))) : 0;
             var pvCls = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
+            var xpPct = (poke.evolution_ko && poke.evolution_ko > 0) ? Math.min(100, Math.round((poke.xp_combats || 0) / poke.evolution_ko * 100)) : 100;
+            var peutEvoluer = poke.evolution_id && (poke.xp_combats || 0) >= poke.evolution_ko;
             el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
                 + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'' + pos + '\',' + i + ')">')
                 + (poke.ko ? '<div class="ko-badge">KO</div>' : '')
+                + (peutEvoluer ? '<div class="evol-badge">✨</div>' : '')
                 + '<div class="pv-mini-bg"><div class="pv-mini-bar' + pvCls + '" style="width:' + pvPct + '%"></div></div>'
+                + (poke.evolution_id ? '<div class="xp-mini-bg"><div class="xp-mini-bar" style="width:' + xpPct + '%"></div></div>' : '')
                 + '<div class="poke-nom">' + poke.nom + ' ' + poke.pv + '/' + poke.pv_max + '</div>';
             el.draggable = true;
             (function(p, s) {
