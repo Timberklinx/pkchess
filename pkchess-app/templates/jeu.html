@@ -449,12 +449,13 @@ function afficherBoutique() {
         const cout  = gratuit ? 0 : poke.niveau;
         const peux  = gratuit || pieces >= cout;
         const types = Array.isArray(poke.types) ? poke.types.join(', ') : poke.types || '';
-        return `<div class="boutique-carte ${peux ? '' : 'bloquee'}" onclick="${peux ? `selectionnerPoke(${idx})` : ''}">
-            <img src="${IMG_BASE}${id}.png" alt="${poke.nom}" ondblclick="event.stopPropagation();ouvrirZoom(this.src)" title="Double-clic pour agrandir">
-            <div class="cout">${gratuit ? '🎁 Gratuit' : cout + ' 🪙'}</div>
-            <div class="nom">${poke.nom}</div>
-            <div class="types">${types}</div>
-        </div>`;
+        const onclickStr = peux ? 'onclick="selectionnerPoke(' + idx + ')"'  : '';
+        return '<div class="boutique-carte ' + (peux ? '' : 'bloquee') + '" ' + onclickStr + '>' +
+            '<img src="' + IMG_BASE + id + '.png" alt="' + poke.nom + '" ondblclick="event.stopPropagation();ouvrirZoom(this.src)" title="Double-clic pour agrandir">' +
+            '<div class="cout">' + (gratuit ? '🎁 Gratuit' : cout + ' 🪙') + '</div>' +
+            '<div class="nom">' + poke.nom + '</div>' +
+            '<div class="types">' + types + '</div>' +
+            '</div>';
     }).join('');
 }
 
