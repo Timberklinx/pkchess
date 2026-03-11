@@ -1,4 +1,6 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.staticfiles import StaticFiles
+import os
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
@@ -6,6 +8,10 @@ import json, random, string, asyncio
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+
+# Servir les cartes PNG si le dossier existe
+if os.path.exists("cartes"):
+    app.mount("/cartes", StaticFiles(directory="cartes"), name="cartes")
 
 
 # ── Synergies ──────────────────────────────────────────────────────────────────
