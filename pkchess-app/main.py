@@ -160,6 +160,159 @@ def prix_vente(poke):
     """Prix de vente = niveau du Pokémon."""
     return poke.get("niveau", 1)
 
+# ── Logique de combat ─────────────────────────────────────────────────────────
+def points_force(poke):
+    """Points de force d'un Pokémon selon son niveau + bonus stade."""
+    niv = poke.get("niveau", 1)
+    if niv <= 3:   base = 1
+    elif niv <= 6: base = 2
+    else:          base = 3
+    bonus_stade = poke.get("stade", 0)  # +1 par stade (évolution)
+    return base + bonus_stade
+
+def equipe_terrain(joueur):
+    """Retourne les Pokémon en off/def non KO."""
+    return [p for p in joueur.get("pokemon", [])
+            if p["position"] in ("off", "def") and not p.get("ko", False)]
+
+def lancer_combat(partie):
+    """
+    Résolution des combats pour un tour.
+    Retourne une liste de résultats de combats pour diffusion.
+    """
+    joueurs_actifs = {
+        pseudo: j for pseudo, j in partie["joueurs"].items()
+        if j.get("en_vie", True)
+    }
+    pseudos = list(joueurs_actifs.keys())
+    random.shuffle(pseudos)
+
+    resultats = []
+    deja_apparies = set()
+
+    # Apparier les joueurs 2 par 2
+    paires = []
+    disponibles = [p for p in pseudos]
+    random.shuffle(disponibles)
+    while len(disponibles) >= 2:
+        a = disponibles.pop()
+        b = disponibles.pop()
+        paires.append((a, b))
+    # Si nombre impair → le dernier se bat contre un ghost (aucun adversaire)
+    solo = disponibles[0] if disponibles else None
+
+    for (p1, p2) in paires:
+        j1 = joueurs_actifs[p1]
+        j2 = joueurs_actifs[p2]
+        res = resoudre_duel(partie, p1, j1, p2, j2)
+        resultats.append(res)
+
+    if solo:
+        j_solo = joueurs_actifs[solo]
+        res = resoudre_duel_ghost(partie, solo, j_solo)
+        resultats.append(res)
+
+    return resultats
+
+def resoudre_duel(partie, p1, j1, p2, j2):
+    """Combat entre deux joueurs."""
+    equipe1 = equipe_terrain(j1)
+    equipe2 = equipe_terrain(j2)
+
+    pts1 = sum(points_force(p) for p in equipe1)
+    pts2 = sum(points_force(p) for p in equipe2)
+
+    logs = []
+    logs.append(f"⚔️ {p1} ({pts1} pts) vs {p2} ({pts2} pts)")
+
+    # Dégâts directs des Pokémon sans adversaire (équipe plus grande)
+    degats_directs_p2 = 0  # dégâts reçus par j2 de Pokémon sans adversaire de j1
+    degats_directs_p1 = 0
+
+    taille1, taille2 = len(equipe1), len(equipe2)
+    if taille1 > taille2:
+        sans_adv = sorted(equipe1, key=lambda p: points_force(p), reverse=True)[:taille1 - taille2]
+        for poke in sans_adv:
+            dmg = points_force(poke)
+            degats_directs_p2 += dmg
+            logs.append(f"💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p2}")
+    elif taille2 > taille1:
+        sans_adv = sorted(equipe2, key=lambda p: points_force(p), reverse=True)[:taille2 - taille1]
+        for poke in sans_adv:
+            dmg = points_force(poke)
+            degats_directs_p1 += dmg
+            logs.append(f"💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p1}")
+
+    # Résultat global
+    if pts1 > pts2:
+        ecart = pts1 - pts2
+        j2["pv"] = max(0, j2["pv"] - ecart - degats_directs_p2)
+        j1["serie_vic"] = j1.get("serie_vic", 0) + 1
+        j1["serie_def"] = 0
+        j2["serie_def"] = j2.get("serie_def", 0) + 1
+        j2["serie_vic"] = 0
+        logs.append(f"🏆 {p1} gagne ! {p2} perd {ecart + degats_directs_p2} PV → {j2['pv']} PV")
+        gagnant, perdant = p1, p2
+    elif pts2 > pts1:
+        ecart = pts2 - pts1
+        j1["pv"] = max(0, j1["pv"] - ecart - degats_directs_p1)
+        j2["serie_vic"] = j2.get("serie_vic", 0) + 1
+        j2["serie_def"] = 0
+        j1["serie_def"] = j1.get("serie_def", 0) + 1
+        j1["serie_vic"] = 0
+        logs.append(f"🏆 {p2} gagne ! {p1} perd {ecart + degats_directs_p1} PV → {j1['pv']} PV")
+        gagnant, perdant = p2, p1
+    else:
+        # Égalité
+        if degats_directs_p2 > 0:
+            j2["pv"] = max(0, j2["pv"] - degats_directs_p2)
+        if degats_directs_p1 > 0:
+            j1["pv"] = max(0, j1["pv"] - degats_directs_p1)
+        logs.append(f"🤝 Égalité !")
+        gagnant, perdant = None, None
+
+    # Vérifier éliminations
+    for pseudo, joueur in [(p1, j1), (p2, j2)]:
+        if joueur["pv"] <= 0:
+            joueur["en_vie"] = False
+            logs.append(f"💀 {pseudo} est éliminé !")
+
+    # Les Pokémon KO vont au banc
+    for joueur in [j1, j2]:
+        for poke in joueur.get("pokemon", []):
+            if poke["position"] in ("off", "def") and poke.get("ko", False):
+                slots_banc = {p["slot"] for p in joueur["pokemon"] if p["position"] == "banc"}
+                slot_libre = next((i for i in range(10) if i not in slots_banc), None)
+                if slot_libre is not None:
+                    poke["position"] = "banc"
+                    poke["slot"] = slot_libre
+
+    return {
+        "type_duel": "normal",
+        "joueurs": [p1, p2],
+        "pts": [pts1, pts2],
+        "gagnant": gagnant,
+        "perdant": perdant,
+        "logs": logs,
+        "pv_apres": {p1: j1["pv"], p2: j2["pv"]},
+    }
+
+def resoudre_duel_ghost(partie, pseudo, joueur):
+    """Joueur seul (nombre impair) : ses Pokémon sans adversaire font des dégâts directs."""
+    equipe = equipe_terrain(joueur)
+    pts = sum(points_force(p) for p in equipe)
+    logs = [f"👻 {pseudo} n'a pas d'adversaire ce tour"]
+    # Pas de dégâts reçus, pas de dégâts infligés, série neutre
+    return {
+        "type_duel": "ghost",
+        "joueurs": [pseudo],
+        "pts": [pts],
+        "gagnant": None,
+        "perdant": None,
+        "logs": logs,
+        "pv_apres": {pseudo: joueur["pv"]},
+    }
+
 # ── Connexions WebSocket ──────────────────────────────────────────────────────
 class GestionnaireConnexions:
     def __init__(self):
@@ -487,6 +640,28 @@ async def traiter_action(code, pseudo, action):
         await gestionnaire.diffuser(code, {
             "type": "etat_mis_a_jour", "etat": partie,
             "msg": f"↕️ {pseudo} déplace {poke['nom']}",
+        })
+
+    # ── Lancer combat ────────────────────────────────────────────────────────
+    elif t == "lancer_combat":
+        # Seul l'hôte peut déclencher le combat
+        if partie.get("hote") != pseudo:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Seul l'hôte peut lancer le combat !", "pour": pseudo})
+            return
+        if partie.get("phase") == "combat":
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Combat déjà en cours !", "pour": pseudo})
+            return
+
+        partie["phase"] = "combat"
+        resultats = lancer_combat(partie)
+        partie["phase"] = "preparation"
+
+        # Diffuser les résultats à tous
+        await gestionnaire.diffuser(code, {
+            "type": "resultat_combat",
+            "etat": partie,
+            "resultats": resultats,
+            "tour": partie["tour"],
         })
 
     # ── Retirer Pokémon → banc ────────────────────────────────────────────────
