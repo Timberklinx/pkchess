@@ -160,128 +160,158 @@ def prix_vente(poke):
     """Prix de vente = niveau du Pokémon."""
     return poke.get("niveau", 1)
 
-# ── Logique de combat ─────────────────────────────────────────────────────────
-def points_force(poke):
-    """Points de force d'un Pokémon selon son niveau + bonus stade."""
-    niv = poke.get("niveau", 1)
-    if niv <= 3:   base = 1
-    elif niv <= 6: base = 2
-    else:          base = 3
-    bonus_stade = poke.get("stade", 0)  # +1 par stade (évolution)
-    return base + bonus_stade
-
-def equipe_terrain(joueur):
-    """Retourne les Pokémon en off/def non KO."""
-    return [p for p in joueur.get("pokemon", [])
-            if p["position"] in ("off", "def") and not p.get("ko", False)]
-
-def lancer_combat(partie):
+# ── Logique de combat réelle ──────────────────────────────────────────────────
+def calculer_degats(attaquant, defenseur):
     """
-    Résolution des combats pour un tour.
-    Retourne une liste de résultats de combats pour diffusion.
+    Calcule les dégâts infligés par attaquant sur defenseur.
+    - x2 si le type de l'attaquant est une faiblesse du défenseur
+    - x0.5 si résistance
+    - x0 si immunité
     """
-    joueurs_actifs = {
-        pseudo: j for pseudo, j in partie["joueurs"].items()
-        if j.get("en_vie", True)
-    }
-    pseudos = list(joueurs_actifs.keys())
-    random.shuffle(pseudos)
+    degats_base = attaquant.get("degats", 20)
+    types_att = attaquant.get("types", [])
+    faiblesses  = defenseur.get("faiblesses", [])
+    resistances = defenseur.get("resistances", [])
+    immunites   = defenseur.get("immunites", [])
 
-    resultats = []
-    deja_apparies = set()
+    multiplicateur = 1.0
+    for t in types_att:
+        t_low = t.lower()
+        if t_low in [x.lower() for x in immunites]:
+            return 0, "immunité"
+        if t_low in [x.lower() for x in faiblesses]:
+            multiplicateur = max(multiplicateur, 2.0)
+        elif t_low in [x.lower() for x in resistances]:
+            multiplicateur = min(multiplicateur, 0.5)
 
-    # Apparier les joueurs 2 par 2
+    degats_final = int(degats_base * multiplicateur)
+    if multiplicateur >= 2.0:
+        effet = "super efficace"
+    elif multiplicateur <= 0.5:
+        effet = "pas très efficace"
+    else:
+        effet = "normal"
+    return degats_final, effet
+
+def resoudre_duel_complet(partie, p1, j1, p2, j2):
+    """
+    Combat réel entre deux joueurs.
+    Chaque Pokémon en off/def combat son vis-à-vis par colonne.
+    Ordre d'attaque = vitesse décroissante.
+    """
+    equipe1 = [p for p in j1.get("pokemon", []) if p["position"] in ("off", "def") and not p.get("ko", False)]
+    equipe2 = [p for p in j2.get("pokemon", []) if p["position"] in ("off", "def") and not p.get("ko", False)]
+
+    logs = [f"⚔️ {p1} vs {p2}"]
+    pts1, pts2 = 0, 0
+
+    # Construire les duels par colonne (off p1 vs off p2 en priorité, sinon premier dispo)
     paires = []
-    disponibles = [p for p in pseudos]
-    random.shuffle(disponibles)
-    while len(disponibles) >= 2:
-        a = disponibles.pop()
-        b = disponibles.pop()
-        paires.append((a, b))
-    # Si nombre impair → le dernier se bat contre un ghost (aucun adversaire)
-    solo = disponibles[0] if disponibles else None
+    slots1 = {p["slot"]: p for p in equipe1}
+    slots2 = {p["slot"]: p for p in equipe2}
 
-    for (p1, p2) in paires:
-        j1 = joueurs_actifs[p1]
-        j2 = joueurs_actifs[p2]
-        res = resoudre_duel(partie, p1, j1, p2, j2)
-        resultats.append(res)
+    tous_slots = sorted(set(list(slots1.keys()) + list(slots2.keys())))
+    apparies1, apparies2 = set(), set()
 
-    if solo:
-        j_solo = joueurs_actifs[solo]
-        res = resoudre_duel_ghost(partie, solo, j_solo)
-        resultats.append(res)
+    for slot in tous_slots:
+        a = slots1.get(slot)
+        b = slots2.get(slot)
+        if a and b and id(a) not in apparies1 and id(b) not in apparies2:
+            paires.append((a, b))
+            apparies1.add(id(a))
+            apparies2.add(id(b))
 
-    return resultats
+    # Pokémon sans adversaire → dégâts directs
+    sans_adv1 = [p for p in equipe1 if id(p) not in apparies1]
+    sans_adv2 = [p for p in equipe2 if id(p) not in apparies2]
 
-def resoudre_duel(partie, p1, j1, p2, j2):
-    """Combat entre deux joueurs."""
-    equipe1 = equipe_terrain(j1)
-    equipe2 = equipe_terrain(j2)
+    # Résoudre chaque duel Pokémon vs Pokémon
+    for (a, b) in paires:
+        logs.append(f"  🔸 {a['nom']} (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV) vs {b['nom']} (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
+        # Ordre par vitesse
+        if a.get("vitesse", 50) >= b.get("vitesse", 50):
+            premier, second = a, b
+        else:
+            premier, second = b, a
 
-    pts1 = sum(points_force(p) for p in equipe1)
-    pts2 = sum(points_force(p) for p in equipe2)
+        # 1er attaque
+        dmg1, eff1 = calculer_degats(premier, second)
+        second["pv"] = max(0, second.get("pv", 0) - dmg1)
+        logs.append(f"    ➤ {premier['nom']} attaque ({eff1}) → {dmg1} dégâts → {second['nom']} {second['pv']}PV")
 
-    logs = []
-    logs.append(f"⚔️ {p1} ({pts1} pts) vs {p2} ({pts2} pts)")
+        # Si second survit, il riposte
+        if second["pv"] > 0:
+            dmg2, eff2 = calculer_degats(second, premier)
+            premier["pv"] = max(0, premier.get("pv", 0) - dmg2)
+            logs.append(f"    ➤ {second['nom']} riposte ({eff2}) → {dmg2} dégâts → {premier['nom']} {premier['pv']}PV")
 
-    # Dégâts directs des Pokémon sans adversaire (équipe plus grande)
-    degats_directs_p2 = 0  # dégâts reçus par j2 de Pokémon sans adversaire de j1
-    degats_directs_p1 = 0
+        # KO ?
+        for poke, joueur_poke, adversaire_poke in [(a, j1, j2), (b, j2, j1)]:
+            if poke["pv"] <= 0 and not poke.get("ko", False):
+                poke["ko"] = True
+                poke["pv"] = 0
+                logs.append(f"    💀 {poke['nom']} est KO !")
+                # XP au vainqueur
+                if poke in equipe1:
+                    vainqueur_poke = next((x for x in equipe2 if x["slot"] == poke["slot"]), None)
+                    pts2 += 1
+                else:
+                    vainqueur_poke = next((x for x in equipe1 if x["slot"] == poke["slot"]), None)
+                    pts1 += 1
+                if vainqueur_poke:
+                    vainqueur_poke["xp_combats"] = vainqueur_poke.get("xp_combats", 0) + 1
+                    logs.append(f"    ⭐ {vainqueur_poke['nom']} gagne 1 XP combat !")
 
-    taille1, taille2 = len(equipe1), len(equipe2)
-    if taille1 > taille2:
-        sans_adv = sorted(equipe1, key=lambda p: points_force(p), reverse=True)[:taille1 - taille2]
-        for poke in sans_adv:
-            dmg = points_force(poke)
-            degats_directs_p2 += dmg
-            logs.append(f"💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p2}")
-    elif taille2 > taille1:
-        sans_adv = sorted(equipe2, key=lambda p: points_force(p), reverse=True)[:taille2 - taille1]
-        for poke in sans_adv:
-            dmg = points_force(poke)
-            degats_directs_p1 += dmg
-            logs.append(f"💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p1}")
+    # Dégâts directs des Pokémon sans adversaire
+    degats_directs_j1 = 0
+    degats_directs_j2 = 0
+    for poke in sans_adv1:
+        dmg = poke.get("degats", 20)
+        degats_directs_j2 += dmg
+        logs.append(f"  💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p2}")
+    for poke in sans_adv2:
+        dmg = poke.get("degats", 20)
+        degats_directs_j1 += dmg
+        logs.append(f"  💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p1}")
 
-    # Résultat global
+    # Résultat global : qui a mis le plus de KO ?
     if pts1 > pts2:
         ecart = pts1 - pts2
-        j2["pv"] = max(0, j2["pv"] - ecart - degats_directs_p2)
-        j1["serie_vic"] = j1.get("serie_vic", 0) + 1
-        j1["serie_def"] = 0
-        j2["serie_def"] = j2.get("serie_def", 0) + 1
-        j2["serie_vic"] = 0
-        logs.append(f"🏆 {p1} gagne ! {p2} perd {ecart + degats_directs_p2} PV → {j2['pv']} PV")
+        j2["pv"] = max(0, j2["pv"] - ecart)
+        j1["serie_vic"] = j1.get("serie_vic", 0) + 1; j1["serie_def"] = 0
+        j2["serie_def"] = j2.get("serie_def", 0) + 1; j2["serie_vic"] = 0
         gagnant, perdant = p1, p2
+        logs.append(f"🏆 {p1} gagne ! ({pts1} KO vs {pts2}) → {p2} perd {ecart} PV → {j2['pv']} PV")
     elif pts2 > pts1:
         ecart = pts2 - pts1
-        j1["pv"] = max(0, j1["pv"] - ecart - degats_directs_p1)
-        j2["serie_vic"] = j2.get("serie_vic", 0) + 1
-        j2["serie_def"] = 0
-        j1["serie_def"] = j1.get("serie_def", 0) + 1
-        j1["serie_vic"] = 0
-        logs.append(f"🏆 {p2} gagne ! {p1} perd {ecart + degats_directs_p1} PV → {j1['pv']} PV")
+        j1["pv"] = max(0, j1["pv"] - ecart)
+        j2["serie_vic"] = j2.get("serie_vic", 0) + 1; j2["serie_def"] = 0
+        j1["serie_def"] = j1.get("serie_def", 0) + 1; j1["serie_vic"] = 0
         gagnant, perdant = p2, p1
+        logs.append(f"🏆 {p2} gagne ! ({pts2} KO vs {pts1}) → {p1} perd {ecart} PV → {j1['pv']} PV")
     else:
-        # Égalité
-        if degats_directs_p2 > 0:
-            j2["pv"] = max(0, j2["pv"] - degats_directs_p2)
-        if degats_directs_p1 > 0:
-            j1["pv"] = max(0, j1["pv"] - degats_directs_p1)
-        logs.append(f"🤝 Égalité !")
         gagnant, perdant = None, None
+        logs.append(f"🤝 Égalité ! ({pts1} KO chacun)")
 
-    # Vérifier éliminations
-    for pseudo, joueur in [(p1, j1), (p2, j2)]:
-        if joueur["pv"] <= 0:
-            joueur["en_vie"] = False
-            logs.append(f"💀 {pseudo} est éliminé !")
+    # Appliquer dégâts directs
+    if degats_directs_j2 > 0:
+        j2["pv"] = max(0, j2["pv"] - degats_directs_j2)
+        logs.append(f"💢 {p2} subit {degats_directs_j2} dégâts directs → {j2['pv']} PV")
+    if degats_directs_j1 > 0:
+        j1["pv"] = max(0, j1["pv"] - degats_directs_j1)
+        logs.append(f"💢 {p1} subit {degats_directs_j1} dégâts directs → {j1['pv']} PV")
 
-    # Les Pokémon KO vont au banc
-    for joueur in [j1, j2]:
-        for poke in joueur.get("pokemon", []):
-            if poke["position"] in ("off", "def") and poke.get("ko", False):
-                slots_banc = {p["slot"] for p in joueur["pokemon"] if p["position"] == "banc"}
+    # Éliminations
+    for pseudo_check, joueur_check in [(p1, j1), (p2, j2)]:
+        if joueur_check["pv"] <= 0:
+            joueur_check["en_vie"] = False
+            logs.append(f"💀 {pseudo_check} est éliminé !")
+
+    # Remettre les KO au banc
+    for joueur_check in [j1, j2]:
+        for poke in joueur_check.get("pokemon", []):
+            if poke.get("ko") and poke["position"] in ("off", "def"):
+                slots_banc = {p["slot"] for p in joueur_check["pokemon"] if p["position"] == "banc"}
                 slot_libre = next((i for i in range(10) if i not in slots_banc), None)
                 if slot_libre is not None:
                     poke["position"] = "banc"
@@ -298,20 +328,31 @@ def resoudre_duel(partie, p1, j1, p2, j2):
     }
 
 def resoudre_duel_ghost(partie, pseudo, joueur):
-    """Joueur seul (nombre impair) : ses Pokémon sans adversaire font des dégâts directs."""
-    equipe = equipe_terrain(joueur)
-    pts = sum(points_force(p) for p in equipe)
-    logs = [f"👻 {pseudo} n'a pas d'adversaire ce tour"]
-    # Pas de dégâts reçus, pas de dégâts infligés, série neutre
+    equipe = [p for p in joueur.get("pokemon", []) if p["position"] in ("off", "def") and not p.get("ko", False)]
+    logs = [f"👻 {pseudo} n'a pas d'adversaire ce tour — aucun dégât reçu"]
     return {
         "type_duel": "ghost",
         "joueurs": [pseudo],
-        "pts": [pts],
+        "pts": [0],
         "gagnant": None,
         "perdant": None,
         "logs": logs,
         "pv_apres": {pseudo: joueur["pv"]},
     }
+
+def lancer_combat(partie):
+    joueurs_actifs = {p: j for p, j in partie["joueurs"].items() if j.get("en_vie", True)}
+    pseudos = list(joueurs_actifs.keys())
+    random.shuffle(pseudos)
+    paires, resultats = [], []
+    while len(pseudos) >= 2:
+        paires.append((pseudos.pop(), pseudos.pop()))
+    solo = pseudos[0] if pseudos else None
+    for (p1, p2) in paires:
+        resultats.append(resoudre_duel_complet(partie, p1, joueurs_actifs[p1], p2, joueurs_actifs[p2]))
+    if solo:
+        resultats.append(resoudre_duel_ghost(partie, solo, joueurs_actifs[solo]))
+    return resultats
 
 # ── Connexions WebSocket ──────────────────────────────────────────────────────
 class GestionnaireConnexions:
@@ -565,6 +606,16 @@ async def traiter_action(code, pseudo, action):
         types    = poke_data["types"] if poke_data else []
         niv_poke = poke_data["niveau"] if poke_data else 1
         stade    = poke_data.get("stade", 0) if poke_data else 0
+        pv_max   = poke_data.get("pv_max", 100) if poke_data else 100
+        vitesse  = poke_data.get("vitesse", 50)  if poke_data else 50
+        degats   = poke_data.get("degats", 20)   if poke_data else 20
+        faiblesses   = poke_data.get("faiblesses", [])  if poke_data else []
+        resistances  = poke_data.get("resistances", []) if poke_data else []
+        immunites    = poke_data.get("immunites", [])   if poke_data else []
+        att_off_nom  = poke_data.get("att_off_nom", "")  if poke_data else ""
+        att_off_desc = poke_data.get("att_off_desc", "") if poke_data else ""
+        att_def_nom  = poke_data.get("att_def_nom", "")  if poke_data else ""
+        att_def_desc = poke_data.get("att_def_desc", "") if poke_data else ""
 
         slots_banc = {p["slot"] for p in joueur["pokemon"] if p["position"] == "banc"}
         slot_libre = next((i for i in range(10) if i not in slots_banc), None)
@@ -576,9 +627,14 @@ async def traiter_action(code, pseudo, action):
             "id": pokemon_id, "nom": nom,
             "position": "banc", "slot": slot_libre,
             "niveau": niv_poke, "stade": stade,
-            "pv": 100, "pv_max": 100,
-            "types": types, "bonus_pv_synergie": 0,
-            "ko": False,
+            "pv": pv_max, "pv_max": pv_max,
+            "vitesse": vitesse, "degats": degats,
+            "types": types,
+            "faiblesses": faiblesses, "resistances": resistances, "immunites": immunites,
+            "att_off_nom": att_off_nom, "att_off_desc": att_off_desc,
+            "att_def_nom": att_def_nom, "att_def_desc": att_def_desc,
+            "bonus_pv_synergie": 0,
+            "ko": False, "xp_combats": 0,
         })
 
         await gestionnaire.diffuser(code, {
@@ -615,8 +671,7 @@ async def traiter_action(code, pseudo, action):
         if case_bloquee:
             await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Case non disponible à ce niveau !", "pour": pseudo})
             return
-        # Limite terrain = niveau dresseur
-        # On exclut le pokémon qu'on déplace ET les KO (ils ne comptent plus)
+        # Limite terrain = niveau dresseur (exclut le pokémon déplacé et les KO)
         nb_terrain = sum(1 for p in joueur["pokemon"]
                          if p["position"] in ("off", "def")
                          and not p.get("ko", False)
@@ -647,19 +702,15 @@ async def traiter_action(code, pseudo, action):
 
     # ── Lancer combat ────────────────────────────────────────────────────────
     elif t == "lancer_combat":
-        # Seul l'hôte peut déclencher le combat
         if partie.get("hote") != pseudo:
             await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Seul l'hôte peut lancer le combat !", "pour": pseudo})
             return
         if partie.get("phase") == "combat":
             await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Combat déjà en cours !", "pour": pseudo})
             return
-
         partie["phase"] = "combat"
         resultats = lancer_combat(partie)
         partie["phase"] = "preparation"
-
-        # Diffuser les résultats à tous
         await gestionnaire.diffuser(code, {
             "type": "resultat_combat",
             "etat": partie,

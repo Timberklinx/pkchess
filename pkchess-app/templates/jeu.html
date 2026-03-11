@@ -120,25 +120,27 @@
         .zoom-inner img{flex:1;min-height:0;width:auto;max-width:88vw;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(255,215,0,0.3);}
         .zoom-btns{display:flex;gap:16px;flex-shrink:0;}
 
-        /* Modal combat */
-        .combat-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:350;align-items:center;justify-content:center;}
-        .combat-bg.open{display:flex;}
-        .combat-modal{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:20px;padding:28px;border:2px solid var(--red);width:96vw;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(230,57,70,0.3);}
-        .combat-titre{font-family:'Press Start 2P',monospace;font-size:0.7em;color:var(--red);margin-bottom:20px;text-align:center;}
-        .combat-duel{background:rgba(0,0,0,0.3);border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(230,57,70,0.2);}
-        .combat-duel.gagnant-gauche{border-color:var(--green);}
-        .combat-duel.egalite{border-color:var(--gold);}
-        .combat-vs{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px;font-weight:900;font-size:1em;}
-        .combat-pts{font-family:'Press Start 2P',monospace;font-size:0.65em;padding:4px 12px;border-radius:20px;background:rgba(0,0,0,0.4);}
-        .combat-pts.win{color:var(--green);}
-        .combat-pts.lose{color:var(--red);}
-        .combat-pts.draw{color:var(--gold);}
-        .combat-log{font-size:0.8em;color:rgba(255,255,255,0.7);line-height:1.7;font-weight:600;}
-        .combat-log div{padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
-
         /* KO sur plateau */
         .case.ko-poke{filter:grayscale(0.85);opacity:0.6;}
         .ko-badge{position:absolute;top:4px;right:4px;background:var(--red);color:white;font-size:0.55em;font-weight:900;padding:2px 5px;border-radius:6px;font-family:'Press Start 2P',monospace;}
+
+        /* Barre PV mini sur les cases */
+        .pv-mini-bg{position:absolute;bottom:22px;left:4px;right:4px;height:4px;background:rgba(0,0,0,0.5);border-radius:2px;}
+        .pv-mini-bar{height:100%;border-radius:2px;background:var(--green);transition:width 0.4s;}
+        .pv-mini-bar.medium{background:var(--gold);}
+        .pv-mini-bar.low{background:var(--red);}
+
+        /* Modal combat */
+        .combat-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:350;align-items:center;justify-content:center;}
+        .combat-bg.open{display:flex;}
+        .combat-modal{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:20px;padding:28px;border:2px solid var(--red);width:96vw;max-width:720px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(230,57,70,0.3);}
+        .combat-titre{font-family:'Press Start 2P',monospace;font-size:0.7em;color:var(--red);margin-bottom:20px;text-align:center;}
+        .combat-duel{background:rgba(0,0,0,0.3);border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(230,57,70,0.2);}
+        .combat-vs{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px;font-weight:900;}
+        .combat-pts{font-family:'Press Start 2P',monospace;font-size:0.6em;padding:4px 10px;border-radius:20px;background:rgba(0,0,0,0.4);}
+        .combat-pts.win{color:var(--green);} .combat-pts.lose{color:var(--red);} .combat-pts.draw{color:var(--gold);}
+        .combat-log{font-size:0.8em;color:rgba(255,255,255,0.75);line-height:1.8;font-weight:600;max-height:220px;overflow-y:auto;}
+        .combat-log div{padding:1px 0;}
 
         /* Toast */
         .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;font-weight:800;z-index:400;display:none;font-size:0.9em;}
@@ -232,7 +234,7 @@
 <!-- Modal combat -->
 <div class="combat-bg" id="combat-bg" onclick="fermerCombat()">
     <div class="combat-modal" onclick="event.stopPropagation()">
-        <div class="combat-titre">⚔️ Résultats du Combat — Tour <span id="combat-tour">0</span></div>
+        <div class="combat-titre">⚔️ Résultats — Tour <span id="combat-tour">0</span></div>
         <div id="combat-resultats"></div>
         <div style="text-align:center;margin-top:18px;">
             <button class="btn btn-gray" onclick="fermerCombat()">✕ Fermer</button>
@@ -310,7 +312,7 @@ function connecterWS() {
         if (msg.type === 'resultat_combat') {
             if (msg.etat) { etat = msg.etat; majInterface(); }
             afficherResultatsCombat(msg.resultats, msg.tour);
-            addLog('⚔️ Combat du tour ' + msg.tour + ' résolu !', 'red');
+            addLog('⚔️ Combat tour ' + msg.tour + ' résolu !', 'red');
         }
         if (msg.type === 'boutique_offre' && msg.pour === PSEUDO) {
             boutique_offre = msg.offre || [];
@@ -337,9 +339,7 @@ function majInterface() {
 
     // Bouton combat visible uniquement pour l'hôte
     var btnCombat = document.getElementById('btn-combat');
-    if (btnCombat) {
-        btnCombat.style.display = (etat.hote === PSEUDO) ? 'inline-block' : 'none';
-    }
+    if (btnCombat) btnCombat.style.display = (etat.hote === PSEUDO) ? 'inline-block' : 'none';
 
     // Synergies
     var syns   = moi.synergies || {};
@@ -408,12 +408,12 @@ function renderRangee(containerId, pos, dispo, cssClass) {
         var niveau_j = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
         // Cases 0 et 4 (extrêmes) bloquées avant niveau 5, cases 1-2-3 toujours accessibles
         var bloquee = pos !== 'banc' && (i === 0 || i === 4) && niveau_j < 5;
-        // Compter les pokemon déjà sur le terrain (off + def), hors KO
+        // Compter les pokemon déjà sur le terrain (off + def)
         var nbTerrain = 0;
         if (etat && etat.joueurs && etat.joueurs[PSEUDO]) {
             var poks = etat.joueurs[PSEUDO].pokemon || [];
             for (var k = 0; k < poks.length; k++) {
-                if ((poks[k].position === 'off' || poks[k].position === 'def') && !poks[k].ko) nbTerrain++;
+                if (poks[k].position === 'off' || poks[k].position === 'def') nbTerrain++;
             }
         }
         // Terrain plein si nb pokemon sur terrain >= niveau dresseur
@@ -433,11 +433,13 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             el.classList.add('occupee');
             if (poke.ko) el.classList.add('ko-poke');
             var id4 = String(poke.id).padStart(4, '0');
-            var vraiSlot = poke.slot;
+            var pvPct = poke.pv_max > 0 ? Math.max(0, Math.min(100, Math.round(poke.pv / poke.pv_max * 100))) : 0;
+            var pvCls = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
             el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
-                + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'' + pos + '\',' + vraiSlot + ')">'
+                + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'' + pos + '\',' + i + ')">')
                 + (poke.ko ? '<div class="ko-badge">KO</div>' : '')
-                + '<div class="poke-nom">' + poke.nom + '</div>';
+                + '<div class="pv-mini-bg"><div class="pv-mini-bar' + pvCls + '" style="width:' + pvPct + '%"></div></div>'
+                + '<div class="poke-nom">' + poke.nom + ' ' + poke.pv + '/' + poke.pv_max + '</div>';
             el.draggable = true;
             (function(p, s) {
                 el.addEventListener('dragstart', function(e) {
@@ -449,7 +451,7 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                 el.addEventListener('dragend', function() {
                     el.style.opacity = '1';
                 });
-            })(pos, vraiSlot);
+            })(pos, i);
         } else {
             if (terrainPlein && pos !== 'banc') {
                 el.classList.add('bloquee');
@@ -626,9 +628,8 @@ function deplacerPokemon(fp, fs, tp, ts) {
 
 // ── Combat ────────────────────────────────────────────────────────────────────
 function lancerCombat() {
-    if (ws && ws.readyState === WebSocket.OPEN) {
+    if (ws && ws.readyState === WebSocket.OPEN)
         ws.send(JSON.stringify({type: 'lancer_combat'}));
-    }
 }
 
 function afficherResultatsCombat(resultats, tour) {
@@ -638,42 +639,32 @@ function afficherResultatsCombat(resultats, tour) {
     for (var r = 0; r < resultats.length; r++) {
         var res = resultats[r];
         var estGhost = res.type_duel === 'ghost';
-        var cls = '';
-        if (!estGhost) {
-            if (res.gagnant === null) cls = 'egalite';
-            else if (res.gagnant === res.joueurs[0]) cls = 'gagnant-gauche';
-        }
-        html += '<div class="combat-duel ' + cls + '">';
-
+        html += '<div class="combat-duel">';
         if (estGhost) {
             html += '<div class="combat-vs">👻 ' + res.joueurs[0] + ' — Pas d\'adversaire</div>';
         } else {
             var j1 = res.joueurs[0], j2 = res.joueurs[1];
             var pts1 = res.pts[0], pts2 = res.pts[1];
-            var cls1 = pts1 > pts2 ? 'win' : (pts1 < pts2 ? 'lose' : 'draw');
-            var cls2 = pts2 > pts1 ? 'win' : (pts2 < pts1 ? 'lose' : 'draw');
+            var c1 = pts1 > pts2 ? 'win' : (pts1 < pts2 ? 'lose' : 'draw');
+            var c2 = pts2 > pts1 ? 'win' : (pts2 < pts1 ? 'lose' : 'draw');
             var pv1 = res.pv_apres ? res.pv_apres[j1] : '?';
             var pv2 = res.pv_apres ? res.pv_apres[j2] : '?';
             html += '<div class="combat-vs">'
-                  + '<span class="combat-pts ' + cls1 + '">' + j1 + ' ' + pts1 + 'pts ❤️' + pv1 + '</span>'
-                  + '<span style="color:rgba(255,255,255,0.4);font-size:0.85em">VS</span>'
-                  + '<span class="combat-pts ' + cls2 + '">' + j2 + ' ' + pts2 + 'pts ❤️' + pv2 + '</span>'
+                  + '<span class="combat-pts ' + c1 + '">' + j1 + ' (' + pts1 + ' KO) ❤️' + pv1 + '</span>'
+                  + '<span style="color:rgba(255,255,255,0.3);font-size:0.8em">VS</span>'
+                  + '<span class="combat-pts ' + c2 + '">' + j2 + ' (' + pts2 + ' KO) ❤️' + pv2 + '</span>'
                   + '</div>';
         }
-
         html += '<div class="combat-log">';
-        for (var l = 0; l < res.logs.length; l++) {
+        for (var l = 0; l < res.logs.length; l++)
             html += '<div>' + res.logs[l] + '</div>';
-        }
         html += '</div></div>';
     }
-    container.innerHTML = html || '<div class="attente">Aucun combat ce tour.</div>';
+    container.innerHTML = html || '<div class="attente">Aucun combat.</div>';
     document.getElementById('combat-bg').classList.add('open');
 }
 
-function fermerCombat() {
-    document.getElementById('combat-bg').classList.remove('open');
-}
+function fermerCombat() { document.getElementById('combat-bg').classList.remove('open'); }
 
 function finTour() {
     if (ws && ws.readyState === WebSocket.OPEN) {
