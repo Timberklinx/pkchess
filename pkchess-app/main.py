@@ -589,6 +589,19 @@ async def traiter_action(code, pseudo, action):
             msgs_level = appliquer_xp(j, xp_gagnes=1)
             messages.extend(msgs_level)
             appliquer_bonus_pv_synergies(j)
+            # Centre Pokémon : décrémenter le compteur de soin
+            poke_centre = next((p for p in j.get("pokemon", []) if p["position"] == "centre"), None)
+            if poke_centre:
+                tours_restants = poke_centre.get("soin_tours_restants", 1) - 1
+                poke_centre["soin_tours_restants"] = tours_restants
+                if tours_restants <= 0:
+                    poke_centre["pv"] = poke_centre.get("pv_max", 100)
+                    poke_centre["position"] = "banc"
+                    slots_banc = {p["slot"] for p in j.get("pokemon", []) if p["position"] == "banc"}
+                    slot_libre = next((i for i in range(10) if i not in slots_banc), None)
+                    poke_centre["slot"] = slot_libre if slot_libre is not None else 0
+                    poke_centre.pop("soin_tours_restants", None)
+                    messages.append(f"💊 {poke_centre['nom']} de {pj} est soigné et retourne au banc !")
             # Nouvelle boutique (sauf si locked)
             locked = j.get("boutique_locked", False)
             j["boutique_offre"] = generer_offre_boutique(
@@ -768,6 +781,27 @@ async def traiter_action(code, pseudo, action):
             if not off_devant:
                 await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Pas d'offensif dans cette colonne !", "pour": pseudo})
                 return
+
+        if tp == "centre":
+            # Déjà quelqu'un au centre ?
+            if any(p["position"] == "centre" for p in joueur["pokemon"]):
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Le Centre Pokémon est déjà occupé !", "pour": pseudo})
+                return
+            poke_a_soigner = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
+            if poke_a_soigner and poke_a_soigner.get("ko"):
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Un Pokémon KO ne peut pas aller au Centre Pokémon !", "pour": pseudo})
+                return
+            if poke_a_soigner and poke_a_soigner.get("pv", 0) >= poke_a_soigner.get("pv_max", 100):
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Ce Pokémon est déjà à pleine santé !", "pour": pseudo})
+                return
+            if poke_a_soigner:
+                # Tours de soin = points_force de base (sans bonus stade)
+                niv = poke_a_soigner.get("niveau", 1)
+                if niv <= 3:    tours = 1
+                elif niv <= 6:  tours = 2
+                elif niv <= 9:  tours = 3
+                else:           tours = 4  # niveau 10-15
+                poke_a_soigner["soin_tours_restants"] = tours
 
         poke     = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
         if not poke: return
