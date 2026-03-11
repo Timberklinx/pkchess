@@ -47,34 +47,33 @@ SYNERGIES = {
 
 # ── Pool partagé par partie ───────────────────────────────────────────────────
 def init_pool(partie):
-    """Crée le pool global de la partie — chaque ID Pokémon est unique."""
+    """Crée le pool global de la partie — chaque ID est unique, stocké comme liste."""
     pool = [p["id"] for p in POKEMONS_DB]
     random.shuffle(pool)
-    partie["pool"] = pool
-    partie["pool_set"] = set(pool)  # pour retrait rapide
+    partie["pool"] = pool  # liste simple, JSON-sérialisable
 
 def piocher_depuis_pool(partie, niveau_joueur, n=5):
     """Pioche n Pokémon de base dispo dans le pool selon le niveau joueur."""
     max_niv = 10 if niveau_joueur >= 10 else niveau_joueur
-    eligibles = [
-        pid for pid in partie["pool"]
-        if pid in partie["pool_set"]
-        and _get_poke(pid) is not None
-        and _get_poke(pid)["stade"] == 0
-        and _get_poke(pid)["niveau"] <= max_niv
-    ]
+    pool = partie.get("pool", [])
+    eligibles = []
+    for pid in pool:
+        p = _get_poke(pid)
+        if p and p.get("stade", 0) == 0 and p["niveau"] <= max_niv:
+            eligibles.append(pid)
     choix = eligibles[:n]
-    # Retirer du pool temporairement (mis en boutique)
+    # Retirer du pool
     for pid in choix:
-        partie["pool_set"].discard(pid)
+        if pid in pool:
+            pool.remove(pid)
     return [_get_poke(pid) for pid in choix]
 
 def retourner_au_pool(partie, pokemon_ids):
-    """Remet des Pokémon dans le pool (invendus ou vendus)."""
+    """Remet des Pokémon dans le pool."""
+    pool = partie.get("pool", [])
     for pid in pokemon_ids:
-        if pid not in partie["pool_set"]:
-            partie["pool"].append(pid)
-            partie["pool_set"].add(pid)
+        if pid not in pool:
+            pool.append(pid)
 
 def _get_poke(pid):
     return next((p for p in POKEMONS_DB if p["id"] == pid), None)
@@ -179,15 +178,32 @@ class GestionnaireConnexions:
     async def diffuser(self, code, message):
         if code in self.connexions:
             morts = []
+            msg_serialisable = self._nettoyer(message)
             for pseudo, ws in self.connexions[code].items():
-                try:    await ws.send_json(message)
+                try:    await ws.send_json(msg_serialisable)
                 except: morts.append(pseudo)
             for p in morts: self.connexions[code].pop(p, None)
+
+    async def envoyer_a_raw(self, code, pseudo, message):
+        ws = self.connexions.get(code, {}).get(pseudo)
+        if ws:
+            try: await ws.send_json(self._nettoyer(message))
+            except: pass
+
+    def _nettoyer(self, obj):
+        """Rend un objet sérialisable JSON (retire les sets, etc.)"""
+        if isinstance(obj, dict):
+            return {k: self._nettoyer(v) for k, v in obj.items()}
+        elif isinstance(obj, (set, frozenset)):
+            return list(obj)
+        elif isinstance(obj, list):
+            return [self._nettoyer(i) for i in obj]
+        return obj
 
     async def envoyer_a(self, code, pseudo, message):
         ws = self.connexions.get(code, {}).get(pseudo)
         if ws:
-            try: await ws.send_json(message)
+            try: await ws.send_json(self._nettoyer(message))
             except: pass
 
 gestionnaire = GestionnaireConnexions()
@@ -219,7 +235,6 @@ async def creer_partie(data: dict):
         "hote":    pseudo,
         "joueurs": {pseudo: joueur},
         "pool":    [],
-        "pool_set": set(),
     }
     init_pool(partie)
     joueur["boutique_offre"] = generer_offre_boutique(partie, joueur["niveau"])
