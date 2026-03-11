@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PKChess - Partie {{ code }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #1a1a2e;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: #16213e;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #f0c040;
+        }
+        .header h1 { color: #f0c040; font-size: 1.4em; }
+        .code-partie {
+            background: #0f3460;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            color: #f0c040;
+        }
+        .statut-ws {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .statut-ws.connecte { background: #51cf66; }
+
+        /* ── Mon plateau ── */
+        .mon-plateau {
+            background: #16213e;
+            margin: 16px;
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid #f0c040;
+        }
+        .plateau-titre {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #f0c040;
+            margin-bottom: 16px;
+        }
+        .stats-joueur {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .stat-box {
+            background: #0f3460;
+            border-radius: 10px;
+            padding: 10px 16px;
+            text-align: center;
+            min-width: 80px;
+        }
+        .stat-box .val {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #f0c040;
+        }
+        .stat-box .label {
+            font-size: 0.75em;
+            color: #aaa;
+            margin-top: 2px;
+        }
+        .stat-box.pv .val { color: #ff6b6b; }
+        .stat-box.pieces .val { color: #f0c040; }
+        .stat-box.niveau .val { color: #51cf66; }
+
+        /* ── Actions ── */
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-jaune { background: #f0c040; color: #1a1a2e; }
+        .btn-vert  { background: #51cf66; color: #1a1a2e; }
+        .btn-rouge { background: #ff6b6b; color: white; }
+        .btn-bleu  { background: #4a90d9; color: white; }
+
+        /* ── Plateaux adversaires ── */
+        .section-titre {
+            color: #aaa;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 16px 8px;
+        }
+        .plateaux-adversaires {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin: 0 16px 16px;
+        }
+        .plateau-adversaire {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 16px;
+            border: 2px solid #0f3460;
+        }
+        .plateau-adversaire .nom {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ddd;
+        }
+        .plateau-adversaire .stats {
+            display: flex;
+            gap: 8px;
+        }
+        .mini-stat {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 6px 10px;
+            text-align: center;
+            font-size: 0.85em;
+        }
+        .mini-stat .v { font-weight: bold; color: #f0c040; }
+        .mini-stat.pv .v { color: #ff6b6b; }
+
+        /* ── Log ── */
+        .log {
+            background: #16213e;
+            margin: 0 16px 16px;
+            border-radius: 12px;
+            padding: 16px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .log-ligne {
+            font-size: 0.85em;
+            color: #aaa;
+            padding: 3px 0;
+            border-bottom: 1px solid #0f3460;
+        }
+        .log-ligne:last-child { border-bottom: none; }
+        .log-ligne.important { color: #f0c040; }
+
+        /* ── Synergies ── */
+        .synergies {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .synergie-badge {
+            background: #0f3460;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.8em;
+            border: 1px solid #333;
+        }
+        .synergie-badge.actif { border-color: #f0c040; color: #f0c040; }
+
+        .attente { text-align: center; color: #555; padding: 20px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>⚔️ PKChess</h1>
+    <div class="code-partie">{{ code }}</div>
+    <div>
+        <span class="statut-ws" id="statut-ws"></span>
+        <span id="statut-texte">Connexion...</span>
+    </div>
+</div>
+
+<!-- Mon plateau -->
+<div class="mon-plateau">
+    <div class="plateau-titre" id="mon-titre">Mon plateau</div>
+    <div class="stats-joueur">
+        <div class="stat-box pv">
+            <div class="val" id="mes-pv">100</div>
+            <div class="label">PV</div>
+        </div>
+        <div class="stat-box pieces">
+            <div class="val" id="mes-pieces">0</div>
+            <div class="label">Pièces</div>
+        </div>
+        <div class="stat-box niveau">
+            <div class="val" id="mon-niveau">1</div>
+            <div class="label">Niveau</div>
+        </div>
+        <div class="stat-box">
+            <div class="val" id="mon-tour">0</div>
+            <div class="label">Tour</div>
+        </div>
+    </div>
+    <div class="synergies" id="mes-synergies"></div>
+    <div class="actions">
+        <button class="btn btn-vert" onclick="finTour()">✅ Fin de tour</button>
+        <button class="btn btn-jaune" onclick="acheterExp()">📈 Exp (4 pièces)</button>
+    </div>
+</div>
+
+<!-- Plateaux adversaires -->
+<div class="section-titre">🎮 Autres joueurs</div>
+<div class="plateaux-adversaires" id="plateaux-adversaires">
+    <div class="attente">En attente des autres joueurs...</div>
+</div>
+
+<!-- Log -->
+<div class="section-titre">📋 Journal</div>
+<div class="log" id="log"></div>
+
+<script>
+const CODE   = "{{ code }}";
+const PSEUDO = new URLSearchParams(window.location.search).get('pseudo') || 'Joueur';
+let ws, etat;
+
+document.getElementById('mon-titre').textContent = `🎮 ${PSEUDO}`;
+
+function connecterWS() {
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    ws = new WebSocket(`${proto}://${location.host}/ws/${CODE}/${PSEUDO}`);
+
+    ws.onopen = () => {
+        document.getElementById('statut-ws').classList.add('connecte');
+        document.getElementById('statut-texte').textContent = 'Connecté';
+    };
+
+    ws.onclose = () => {
+        document.getElementById('statut-ws').classList.remove('connecte');
+        document.getElementById('statut-texte').textContent = 'Déconnecté - reconnexion...';
+        setTimeout(connecterWS, 2000);
+    };
+
+    ws.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        traiterMessage(msg);
+    };
+}
+
+function traiterMessage(msg) {
+    if (msg.etat) {
+        etat = msg.etat;
+        mettreAJourInterface();
+    }
+    if (msg.msg) {
+        ajouterLog(msg.msg, msg.type === 'etat_mis_a_jour');
+    }
+    if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) {
+        ajouterLog(`${msg.pseudo} a rejoint la partie`);
+    }
+    if (msg.type === 'joueur_deconnecte') {
+        ajouterLog(`${msg.pseudo} s'est déconnecté`);
+    }
+}
+
+function mettreAJourInterface() {
+    if (!etat || !etat.joueurs) return;
+    const moi = etat.joueurs[PSEUDO];
+    if (moi) {
+        document.getElementById('mes-pv').textContent     = moi.pv;
+        document.getElementById('mes-pieces').textContent = moi.pieces;
+        document.getElementById('mon-niveau').textContent = moi.niveau;
+        document.getElementById('mon-tour').textContent   = etat.tour || 0;
+        afficherSynergies(moi.synergies, 'mes-synergies');
+    }
+
+    // Plateaux adversaires
+    const container = document.getElementById('plateaux-adversaires');
+    const adversaires = Object.entries(etat.joueurs).filter(([p]) => p !== PSEUDO);
+    if (adversaires.length === 0) {
+        container.innerHTML = '<div class="attente">En attente des autres joueurs...</div>';
+        return;
+    }
+    container.innerHTML = adversaires.map(([pseudo, j]) => `
+        <div class="plateau-adversaire">
+            <div class="nom">👤 ${pseudo}</div>
+            <div class="stats">
+                <div class="mini-stat pv"><div class="v">${j.pv}</div><div>PV</div></div>
+                <div class="mini-stat"><div class="v">${j.pieces}</div><div>Pièces</div></div>
+                <div class="mini-stat"><div class="v">${j.niveau}</div><div>Niv.</div></div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function afficherSynergies(synergies, containerId) {
+    const el = document.getElementById(containerId);
+    if (!synergies || Object.keys(synergies).length === 0) {
+        el.innerHTML = '<span style="color:#555;font-size:0.8em">Aucune synergie active</span>';
+        return;
+    }
+    el.innerHTML = Object.entries(synergies).map(([type, niv]) =>
+        `<span class="synergie-badge ${niv >= 3 ? 'actif' : ''}">${type} ${niv}</span>`
+    ).join('');
+}
+
+function finTour() {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({type: 'fin_tour'}));
+    }
+}
+
+function acheterExp() {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({type: 'depenser_pieces', montant: 4, raison: 'exp'}));
+    }
+}
+
+function ajouterLog(msg, important = false) {
+    const log = document.getElementById('log');
+    const ligne = document.createElement('div');
+    ligne.className = 'log-ligne' + (important ? ' important' : '');
+    const heure = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    ligne.textContent = `[${heure}] ${msg}`;
+    log.prepend(ligne);
+    // Garder max 50 lignes
+    while (log.children.length > 50) log.removeChild(log.lastChild);
+}
+
+// Démarrage
+connecterWS();
+</script>
+</body>
+</html>
