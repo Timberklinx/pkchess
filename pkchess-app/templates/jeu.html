@@ -442,8 +442,7 @@ function renderCentre(containerId) {
     if (pokeCentre) {
         var id4 = String(pokeCentre.id).padStart(4, '0');
         var toursRestants = pokeCentre.soin_tours_restants || 0;
-        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom
-            + '" onclick="ouvrirZoom('' + IMG + id4 + '.png','centre',0)">'
+        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',0)">'
             + '<div class="poke-nom">⏳' + toursRestants + ' tour' + (toursRestants > 1 ? 's' : '') + '</div>';
         el.draggable = true;
         (function() {
