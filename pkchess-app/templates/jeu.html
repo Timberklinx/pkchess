@@ -456,7 +456,7 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             var xpPct = (poke.evolution_ko && poke.evolution_ko > 0) ? Math.min(100, Math.round((poke.xp_combats || 0) / poke.evolution_ko * 100)) : 100;
             var peutEvoluer = poke.evolution_id && (poke.xp_combats || 0) >= poke.evolution_ko;
             el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
-                + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'' + pos + '\',' + i + ')">')
+                + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'' + pos + '\',' + i + ')">'
                 + (poke.ko ? '<div class="ko-badge">KO</div>' : '')
                 + (peutEvoluer ? '<div class="evol-badge">✨</div>' : '')
                 + '<div class="pv-mini-bg"><div class="pv-mini-bar' + pvCls + '" style="width:' + pvPct + '%"></div></div>'
