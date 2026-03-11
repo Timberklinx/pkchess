@@ -433,8 +433,10 @@ function renderCentre(containerId) {
     container.innerHTML = '';
     if (!etat || !etat.joueurs || !etat.joueurs[PSEUDO]) return;
     var pokemons = etat.joueurs[PSEUDO].pokemon || [];
-    // La case centre = position "centre", slot 0
-    var pokeCentre = pokemons.find(function(p) { return p.position === 'centre'; });
+    var pokeCentre = null;
+    for (var i = 0; i < pokemons.length; i++) {
+        if (pokemons[i].position === 'centre') { pokeCentre = pokemons[i]; break; }
+    }
     var el = document.createElement('div');
     el.className = 'case centre' + (pokeCentre ? ' occupee' : '');
     el.dataset.pos  = 'centre';
@@ -442,8 +444,7 @@ function renderCentre(containerId) {
     if (pokeCentre) {
         var id4 = String(pokeCentre.id).padStart(4, '0');
         var toursRestants = pokeCentre.soin_tours_restants || 0;
-        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom
-            + '" onclick="ouvrirZoom('' + IMG + id4 + '.png','centre',0)">'
+        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',0)">'
             + '<div class="poke-nom">⏳' + toursRestants + ' tour' + (toursRestants > 1 ? 's' : '') + '</div>';
         el.draggable = true;
         (function() {
@@ -457,7 +458,6 @@ function renderCentre(containerId) {
     } else {
         el.innerHTML = '<span class="plus" style="color:rgba(82,183,136,0.4)">+</span>';
     }
-    // Drop sur la case centre
     el.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('droppable'); });
     el.addEventListener('dragleave', function() { this.classList.remove('droppable'); });
     el.addEventListener('drop', function(e) {
@@ -469,6 +469,7 @@ function renderCentre(containerId) {
     });
     container.appendChild(el);
 }
+
 
 function renderRangee(containerId, pos, dispo, cssClass) {
     var container = document.getElementById(containerId);
