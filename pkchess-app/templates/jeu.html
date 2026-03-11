@@ -107,11 +107,11 @@
         .modal-title{font-family:'Press Start 2P',monospace;font-size:0.65em;color:var(--gold);}
         .modal-info{font-size:0.85em;color:rgba(255,255,255,0.6);font-weight:700;}
         .boutique-cartes{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;flex:1;overflow-y:auto;align-content:flex-start;padding:8px 0;}
-        .boutique-carte{width:140px;text-align:center;cursor:pointer;transition:transform 0.2s;border-radius:12px;padding:8px;border:2px solid transparent;}
+        .boutique-carte{width:190px;text-align:center;cursor:pointer;transition:transform 0.2s;border-radius:12px;padding:8px;border:2px solid transparent;}
         .boutique-carte:hover:not(.bloquee){transform:translateY(-6px);}
         .boutique-carte.selected{border-color:var(--gold);background:rgba(255,215,0,0.1);}
         .boutique-carte.bloquee{opacity:0.35;cursor:not-allowed;}
-        .boutique-carte img{width:130px;height:182px;object-fit:cover;border-radius:8px;display:block;margin:0 auto;}
+        .boutique-carte img{width:175px;height:245px;object-fit:cover;border-radius:8px;display:block;margin:0 auto;}
         .boutique-carte .cout{font-size:0.85em;font-weight:800;color:var(--gold);margin-top:8px;}
         .boutique-carte .nom{font-size:0.8em;color:rgba(255,255,255,0.8);margin-top:3px;font-weight:700;}
         .boutique-carte .types{font-size:0.72em;color:rgba(255,255,255,0.5);margin-top:2px;}
@@ -208,7 +208,13 @@
 
 <!-- Zoom carte -->
 <div class="zoom-bg" id="zoom-bg" onclick="fermerZoom()">
-    <img id="zoom-img" src="" alt="">
+    <div onclick="event.stopPropagation()" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <img id="zoom-img" src="" alt="" style="max-width:380px;max-height:78vh;border-radius:12px;box-shadow:0 0 40px rgba(255,215,0,0.3);">
+        <div style="display:flex;gap:12px;">
+            <button id="zoom-vendre" class="btn btn-red" onclick="vendrePokemon()" style="display:none;">💸 Vendre</button>
+            <button class="btn" style="background:rgba(255,255,255,0.1);color:white;" onclick="fermerZoom()">✕ Fermer</button>
+        </div>
+    </div>
 </div>
 <!-- Toast -->
 <div class="toast" id="toast"></div>
@@ -306,9 +312,9 @@ function majInterface() {
 function renderPlateau() {
     const niveau = etat?.joueurs?.[PSEUDO]?.niveau || 1;
     const dispo  = niveau >= 5 ? 5 : 3;
-    renderRangee('rangee-off',   'off',   dispo, 'offensive');
-    renderRangee('rangee-def',   'def',   dispo, 'defensive');
-    renderRangee('rangee-boite', 'banc',  5,     'boite');
+    renderRangee('rangee-off',   'off',   dispo, 5, 'offensive');
+    renderRangee('rangee-def',   'def',   dispo, 5, 'defensive');
+    renderRangee('rangee-boite', 'banc',  5,    5, 'boite');
 }
 
 function getPoke(pos, slot) {
@@ -334,7 +340,7 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             el.classList.add('occupee', 'draggable');
             const id = String(poke.id).padStart(4, '0');
             el.innerHTML = `
-                <img src="${IMG_BASE}${id}.png" alt="${poke.nom}" onerror="this.style.opacity='0.3'" ondblclick="ouvrirZoom(this.src)" title="Double-clic pour agrandir">
+                <img src="${IMG_BASE}${id}.png" alt="${poke.nom}" onerror="this.style.opacity='0.3'" ondblclick="ouvrirZoom(this.src,'${pos}',${i})" title="Double-clic pour agrandir">
                 <div class="poke-nom">${poke.nom}</div>
                 <button class="suppr" onclick="retirerPokemon('${pos}',${i},event)">✕</button>`;
             el.draggable = true;
@@ -390,11 +396,37 @@ function toggleLock() {
         toast('Boutique déverrouillée', false);
     }
 }
-function ouvrirZoom(src) {
+let zoom_poke_pos = null, zoom_poke_slot = null;
+function ouvrirZoom(src, pos, slot) {
     document.getElementById('zoom-img').src = src;
     document.getElementById('zoom-bg').classList.add('open');
+    zoom_poke_pos  = pos  !== undefined ? pos  : null;
+    zoom_poke_slot = slot !== undefined ? slot : null;
+    const btnVendre = document.getElementById('zoom-vendre');
+    if (btnVendre) {
+        if (pos !== undefined && slot !== undefined) {
+            const poke = getPokeFromEtat(pos, slot);
+            const prix = poke ? poke.niveau : 0;
+            btnVendre.style.display = 'inline-block';
+            btnVendre.textContent   = `💸 Vendre (${prix} 🪙)`;
+        } else {
+            btnVendre.style.display = 'none';
+        }
+    }
 }
-function fermerZoom() { document.getElementById('zoom-bg').classList.remove('open'); }
+function fermerZoom() {
+    document.getElementById('zoom-bg').classList.remove('open');
+    zoom_poke_pos = zoom_poke_slot = null;
+}
+function getPokeFromEtat(pos, slot) {
+    return etat?.joueurs?.[PSEUDO]?.pokemon?.find(p => p.position === pos && p.slot === slot);
+}
+function vendrePokemon() {
+    if (zoom_poke_pos === null || zoom_poke_slot === null) return;
+    if (ws?.readyState === WebSocket.OPEN)
+        ws.send(JSON.stringify({type:'vendre_pokemon', position: zoom_poke_pos, slot: zoom_poke_slot}));
+    fermerZoom();
+}
 function fermerBoutique() {
     document.getElementById('modal-boutique').classList.remove('open');
     boutique_selection = null;
@@ -430,6 +462,7 @@ function selectionnerPoke(idx) {
     boutique_selection = idx;
     document.querySelectorAll('.boutique-carte').forEach((el, i) => el.classList.toggle('selected', i === idx));
     document.getElementById('btn-acheter').disabled = false;
+    document.getElementById('btn-acheter').textContent = gratuit ? '🎁 Capturer gratuitement' : '⚡ Capturer';
 }
 
 function acheterPokemon() {
