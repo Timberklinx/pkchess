@@ -362,7 +362,18 @@ function renderRangee(containerId, pos, dispo, cssClass) {
     var container = document.getElementById(containerId);
     container.innerHTML = '';
     for (var i = 0; i < 5; i++) {
+        // Compter les pokemon déjà sur le terrain (off + def)
+        var nbTerrain = 0;
+        if (etat && etat.joueurs && etat.joueurs[PSEUDO]) {
+            var poks = etat.joueurs[PSEUDO].pokemon || [];
+            for (var k = 0; k < poks.length; k++) {
+                if (poks[k].position === 'off' || poks[k].position === 'def') nbTerrain++;
+            }
+        }
+        var niveau_j  = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
         var bloquee   = pos !== 'banc' && i >= dispo;
+        // Bloquer drop si terrain plein (sauf si la case est déjà occupée)
+        var terrainPlein = !getPoke(pos, i) && pos !== 'banc' && nbTerrain >= niveau_j;
         var offDevant = pos === 'def' && !bloquee && !getPoke('off', i);
         var poke      = getPoke(pos, i);
 
@@ -393,7 +404,12 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                 });
             })(pos, i);
         } else {
-            el.innerHTML = '<span class="plus">+</span>';
+            if (terrainPlein && pos !== 'banc') {
+                el.classList.add('bloquee');
+                el.innerHTML = '<span class="lock-icon">🚫</span>';
+            } else {
+                el.innerHTML = '<span class="plus">+</span>';
+            }
         }
 
         // Drop
@@ -442,7 +458,8 @@ function afficherBoutique(tour, tour1_gratuit) {
     var moi       = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
     var pieces    = moi ? moi.pieces : 0;
     var t         = (tour !== undefined) ? tour : (etat ? etat.tour : 0);
-    var gratuit   = tour1_gratuit && !(moi && moi.a_achete_tour1);
+    var t_actuel  = etat ? etat.tour : 0;
+    var gratuit   = (t_actuel === 0) && tour1_gratuit && !(moi && moi.a_achete_tour1);
 
     document.getElementById('boutique-info').textContent = gratuit
         ? '🎁 Capture un Pokémon gratuitement !'
@@ -484,7 +501,7 @@ function selectionnerPoke(idx) {
     btnC.disabled = false;
     var moi    = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
     var t      = etat ? etat.tour : 0;
-    var gratuit = t <= 1 && !(moi && moi.a_achete_tour1);
+    var gratuit = (t === 0) && !(moi && moi.a_achete_tour1);
     btnC.textContent = gratuit ? '🎁 Capturer gratuitement' : '⚡ Capturer';
 }
 
@@ -493,7 +510,7 @@ function capturerPokemon() {
     var poke    = boutique_offre[boutique_selection];
     var moi     = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
     var t       = etat ? etat.tour : 0;
-    var gratuit = t <= 1 && !(moi && moi.a_achete_tour1);
+    var gratuit = (t === 0) && !(moi && moi.a_achete_tour1);
     var cout    = gratuit ? 0 : poke.niveau;
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'capturer_pokemon', pokemon_id: poke.id, cout: cout}));
