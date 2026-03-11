@@ -1,0 +1,4 @@
+Cartes générées : 1317
+Sprites manquants : 0
+Erreurs : 0
+
