@@ -312,9 +312,18 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             joueur_check["en_vie"] = False
             logs.append(f"💀 {pseudo_check} est éliminé !")
 
-    # Remettre les KO au banc
+    # Remettre les KO au banc + avancer le défensif si l'offensif KO
     for joueur_check in [j1, j2]:
-        for poke in joueur_check.get("pokemon", []):
+        for poke in list(joueur_check.get("pokemon", [])):
+            if poke.get("ko") and poke["position"] == "off":
+                slot_ko = poke["slot"]
+                # Chercher un défensif dans la même colonne → il avance en off
+                defensif = next((p for p in joueur_check["pokemon"]
+                                 if p["position"] == "def" and p["slot"] == slot_ko
+                                 and not p.get("ko", False)), None)
+                if defensif:
+                    defensif["position"] = "off"
+                    logs.append(f"  ↑ {defensif['nom']} avance en position offensive (colonne {slot_ko})")
             if poke.get("ko") and poke["position"] in ("off", "def"):
                 slots_banc = {p["slot"] for p in joueur_check["pokemon"] if p["position"] == "banc"}
                 slot_libre = next((i for i in range(10) if i not in slots_banc), None)
@@ -790,6 +799,26 @@ async def traiter_action(code, pseudo, action):
             "etat": partie,
             "resultats": resultats,
             "tour": partie["tour"],
+        })
+
+    # ── Racheter Pokémon KO (soigner) ────────────────────────────────────────
+    elif t == "racheter_pokemon":
+        position = action.get("position")
+        slot     = action.get("slot")
+        poke = next((p for p in joueur["pokemon"] if p["position"] == position and p["slot"] == slot), None)
+        if not poke or not poke.get("ko"):
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Pokémon introuvable ou non KO !", "pour": pseudo})
+            return
+        cout = poke.get("niveau", 1) * 2
+        if joueur["pieces"] < cout:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": f"Pas assez de pièces ! ({cout} 🪙 requis)", "pour": pseudo})
+            return
+        joueur["pieces"] -= cout
+        poke["ko"]  = False
+        poke["pv"]  = poke.get("pv_max", 100)  # PV remis à fond
+        await gestionnaire.diffuser(code, {
+            "type": "etat_mis_a_jour", "etat": partie,
+            "msg": f"💊 {pseudo} rachète {poke['nom']} (-{cout} 🪙)",
         })
 
     # ── Retirer Pokémon → banc ────────────────────────────────────────────────

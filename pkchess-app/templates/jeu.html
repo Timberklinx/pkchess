@@ -43,6 +43,9 @@
         .dot-rouge{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;}
         .dot-bleu{width:8px;height:8px;border-radius:50%;background:#4A90D9;display:inline-block;}
         .dot-noir{width:8px;height:8px;border-radius:50%;background:#555;display:inline-block;}
+        .dot-vert{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;}
+        .case.centre{border-color:rgba(82,183,136,0.4);}
+        .case.occupee.centre{border-style:solid;border-color:var(--green);}
         .rangee{display:flex;gap:10px;margin-bottom:12px;justify-content:center;}
         .sep{height:1px;background:rgba(255,255,255,0.07);margin:4px 0 12px;}
 
@@ -183,6 +186,9 @@
             <div class="rangee-label"><span class="dot-bleu"></span> Arène Défensive</div>
             <div class="rangee" id="rangee-def"></div>
             <div class="sep"></div>
+            <div class="rangee-label"><span class="dot-vert"></span> Centre Pokémon</div>
+            <div class="rangee" id="rangee-centre" style="justify-content:flex-start"></div>
+            <div class="sep"></div>
             <div class="rangee-label"><span class="dot-noir"></span> Boîte</div>
             <div class="rangee" id="rangee-boite"></div>
         </div>
@@ -253,8 +259,9 @@
     <div class="zoom-inner" onclick="event.stopPropagation()">
         <img id="zoom-img" src="" alt="">
         <div class="zoom-btns">
-            <button class="btn btn-red"  id="btn-vendre" onclick="vendrePokemon()" style="display:none">💸 Vendre</button>
-            <button class="btn btn-gray" onclick="fermerZoom()">✕ Fermer</button>
+            <button class="btn btn-red"    id="btn-vendre"   onclick="vendrePokemon()"   style="display:none">💸 Vendre</button>
+            <button class="btn btn-green"  id="btn-racheter" onclick="racheterPokemon()" style="display:none">💊 Racheter</button>
+            <button class="btn btn-gray"   onclick="fermerZoom()">✕ Fermer</button>
         </div>
     </div>
 </div>
@@ -414,9 +421,41 @@ function getPoke(pos, slot) {
 function renderPlateau() {
     var niveau = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
     var dispo  = niveau >= 5 ? 5 : 3;
-    renderRangee('rangee-off',   'off',  dispo, 'offensive');
-    renderRangee('rangee-def',   'def',  dispo, 'defensive');
-    renderRangee('rangee-boite', 'banc', 5,     'boite');
+    renderRangee('rangee-off',    'off',    dispo, 'offensive');
+    renderRangee('rangee-def',    'def',    dispo, 'defensive');
+    renderCentre('rangee-centre');
+    renderRangee('rangee-boite',  'banc',   5,     'boite');
+}
+
+function renderCentre(containerId) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    if (!etat || !etat.joueurs || !etat.joueurs[PSEUDO]) return;
+    var pokemons = etat.joueurs[PSEUDO].pokemon || [];
+    // Afficher uniquement les pokémon KO (au banc, ko:true)
+    var kos = pokemons.filter(function(p) { return p.ko && p.position === 'banc'; });
+    if (kos.length === 0) {
+        var vide = document.createElement('div');
+        vide.style.cssText = 'color:rgba(255,255,255,0.2);font-size:0.75em;font-weight:700;padding:8px 0;';
+        vide.textContent = 'Aucun Pokémon blessé';
+        container.appendChild(vide);
+        return;
+    }
+    for (var i = 0; i < kos.length; i++) {
+        var poke = kos[i];
+        var id4 = String(poke.id).padStart(4, '0');
+        var el = document.createElement('div');
+        el.className = 'case centre occupee ko-poke';
+        el.dataset.pos  = poke.position;
+        el.dataset.slot = poke.slot;
+        var coutRachat = poke.niveau * 2;
+        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
+            + '" onclick="ouvrirZoom('' + IMG + id4 + '.png','' + poke.position + '',' + poke.slot + ')">'
+            + '<div class="ko-badge">KO</div>'
+            + '<div class="poke-nom">' + poke.nom + ' 💊' + coutRachat + '🪙</div>';
+        container.appendChild(el);
+    }
 }
 
 function renderRangee(containerId, pos, dispo, cssClass) {
@@ -462,7 +501,7 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                 + '<div class="pv-mini-bg"><div class="pv-mini-bar' + pvCls + '" style="width:' + pvPct + '%"></div></div>'
                 + (poke.evolution_id ? '<div class="xp-mini-bg"><div class="xp-mini-bar" style="width:' + xpPct + '%"></div></div>' : '')
                 + '<div class="poke-nom">' + poke.nom + ' ' + poke.pv + '/' + poke.pv_max + '</div>';
-            el.draggable = true;
+            el.draggable = !poke.ko;
             (function(p, s) {
                 el.addEventListener('dragstart', function(e) {
                     drag_pos  = p;
@@ -618,13 +657,21 @@ function ouvrirZoom(src, pos, slot) {
     zoom_pos  = pos;
     zoom_slot = slot;
     var btnV = document.getElementById('btn-vendre');
+    var btnR = document.getElementById('btn-racheter');
+    btnV.style.display = 'none';
+    btnR.style.display = 'none';
     if (pos !== null && slot !== null) {
         var poke = getPoke(pos, slot);
-        var prix = poke ? poke.niveau : 0;
-        btnV.style.display  = 'inline-block';
-        btnV.textContent    = '💸 Vendre (' + prix + ' 🪙)';
-    } else {
-        btnV.style.display = 'none';
+        if (poke && poke.ko) {
+            // Pokémon KO : proposer de racheter (soigner)
+            var coutRachat = poke.niveau * 2;
+            btnR.style.display  = 'inline-block';
+            btnR.textContent    = '💊 Racheter (' + coutRachat + ' 🪙)';
+        } else if (poke) {
+            // Pokémon normal : proposer de vendre
+            btnV.style.display  = 'inline-block';
+            btnV.textContent    = '💸 Vendre (' + poke.niveau + ' 🪙)';
+        }
     }
 }
 
@@ -637,6 +684,14 @@ function vendrePokemon() {
     if (zoom_pos === null || zoom_slot === null) return;
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'vendre_pokemon', position: zoom_pos, slot: zoom_slot}));
+    }
+    fermerZoom();
+}
+
+function racheterPokemon() {
+    if (zoom_pos === null || zoom_slot === null) return;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({type: 'racheter_pokemon', position: zoom_pos, slot: zoom_slot}));
     }
     fermerZoom();
 }
