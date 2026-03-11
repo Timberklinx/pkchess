@@ -456,10 +456,18 @@ async def traiter_action(code, pseudo, action):
         fp, fs = action.get("from_pos"), action.get("from_slot")
         tp, ts = action.get("to_pos"), action.get("to_slot")
         niveau_joueur = joueur["niveau"]
-        cases_dispo = 5 if niveau_joueur >= 5 else 3
+        # Cases 0 et 4 (extrêmes) bloquées avant niveau 5
+        case_bloquee = tp in ("off", "def") and (ts == 0 or ts == 4) and niveau_joueur < 5
 
-        if tp in ("off", "def") and ts >= cases_dispo:
-            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Case non disponible !", "pour": pseudo})
+        if case_bloquee:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Case non disponible à ce niveau !", "pour": pseudo})
+            return
+        # Limite terrain = niveau dresseur
+        nb_terrain = sum(1 for p in joueur["pokemon"] if p["position"] in ("off", "def") and not getPoke_joueur(joueur, p["position"], p["slot"]) == getPoke_joueur(joueur, tp, ts))
+        nb_terrain = sum(1 for p in joueur["pokemon"] if p["position"] in ("off", "def"))
+        poke_existant = next((p for p in joueur["pokemon"] if p["position"] == tp and p["slot"] == ts), None)
+        if tp in ("off", "def") and not poke_existant and nb_terrain >= niveau_joueur:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Terrain plein pour ce niveau !", "pour": pseudo})
             return
         if tp == "def":
             off_devant = any(p["position"] == "off" and p["slot"] == ts for p in joueur["pokemon"])

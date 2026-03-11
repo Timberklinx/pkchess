@@ -362,6 +362,9 @@ function renderRangee(containerId, pos, dispo, cssClass) {
     var container = document.getElementById(containerId);
     container.innerHTML = '';
     for (var i = 0; i < 5; i++) {
+        var niveau_j = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
+        // Cases 0 et 4 (extrêmes) bloquées avant niveau 5, cases 1-2-3 toujours accessibles
+        var bloquee = pos !== 'banc' && (i === 0 || i === 4) && niveau_j < 5;
         // Compter les pokemon déjà sur le terrain (off + def)
         var nbTerrain = 0;
         if (etat && etat.joueurs && etat.joueurs[PSEUDO]) {
@@ -370,10 +373,8 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                 if (poks[k].position === 'off' || poks[k].position === 'def') nbTerrain++;
             }
         }
-        var niveau_j  = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
-        var bloquee   = pos !== 'banc' && i >= dispo;
-        // Bloquer drop si terrain plein (sauf si la case est déjà occupée)
-        var terrainPlein = !getPoke(pos, i) && pos !== 'banc' && nbTerrain >= niveau_j;
+        // Terrain plein si nb pokemon sur terrain >= niveau dresseur
+        var terrainPlein = !getPoke(pos, i) && pos !== 'banc' && !bloquee && nbTerrain >= niveau_j;
         var offDevant = pos === 'def' && !bloquee && !getPoke('off', i);
         var poke      = getPoke(pos, i);
 
