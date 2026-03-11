@@ -7,107 +7,123 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #FFD700; --gold-dark: #C8A800;
-            --blue-deep: #0D1B3E; --blue-mid: #1A2F5E;
-            --blue-light: #243D7A; --blue-card: #162447;
-            --red: #E63946; --green: #52B788; --white: #F8F9FA;
+            --gold:#FFD700;--gold-dark:#C8A800;--blue-deep:#0D1B3E;--blue-mid:#1A2F5E;
+            --blue-light:#243D7A;--blue-card:#162447;--red:#E63946;--green:#52B788;--white:#F8F9FA;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--blue-deep); color: var(--white); font-family: 'Nunito', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:var(--blue-deep);color:var(--white);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
 
-        .header { background: linear-gradient(90deg, var(--blue-mid), var(--blue-light)); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--gold); box-shadow: 0 4px 20px rgba(0,0,0,0.4); position: sticky; top: 0; z-index: 100; }
-        .header-logo { font-family: 'Press Start 2P', monospace; font-size: 0.9em; color: var(--gold); }
-        .header-code { font-family: 'Press Start 2P', monospace; font-size: 0.75em; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 20px; color: var(--gold); border: 1px solid rgba(255,215,0,0.3); letter-spacing: 4px; }
-        .header-status { display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 700; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); transition: all 0.3s; }
-        .dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse-dot 2s infinite; }
-        @keyframes pulse-dot { 0%,100%{box-shadow:0 0 6px var(--green)} 50%{box-shadow:0 0 14px var(--green)} }
+        .header{background:linear-gradient(90deg,var(--blue-mid),var(--blue-light));padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:100;}
+        .header-logo{font-family:'Press Start 2P',monospace;font-size:0.9em;color:var(--gold);}
+        .header-code{font-family:'Press Start 2P',monospace;font-size:0.75em;background:rgba(0,0,0,0.3);padding:8px 16px;border-radius:20px;color:var(--gold);border:1px solid rgba(255,215,0,0.3);letter-spacing:4px;}
+        .header-status{display:flex;align-items:center;gap:8px;font-size:0.85em;font-weight:700;}
+        .dot{width:10px;height:10px;border-radius:50%;background:var(--red);transition:all 0.3s;}
+        .dot.on{background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse-dot 2s infinite;}
+        @keyframes pulse-dot{0%,100%{box-shadow:0 0 6px var(--green)}50%{box-shadow:0 0 14px var(--green)}}
 
-        .game-wrap { display: flex; gap: 14px; padding: 14px; flex: 1; }
-        .main-col { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+        .game-wrap{display:flex;gap:14px;padding:14px;flex:1;}
+        .main-col{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0;}
 
-        .stats-bar { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 14px; padding: 12px 18px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255,215,0,0.2); flex-wrap: wrap; }
-        .player-name { font-family: 'Press Start 2P', monospace; font-size: 0.55em; color: var(--gold); }
-        .stat-pill { display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.25); border-radius: 20px; padding: 5px 12px; font-weight: 800; font-size: 0.85em; }
-        .stat-pill .val { font-family: 'Press Start 2P', monospace; font-size: 0.8em; }
-        .stat-pill.hp .val { color: #FF6B6B; } .stat-pill.gp .val { color: var(--gold); }
-        .stat-pill.lv .val { color: var(--green); } .stat-pill.xp .val { color: #74C0FC; }
-        .pv-bar-bg { flex: 1; min-width: 60px; background: rgba(0,0,0,0.3); border-radius: 10px; height: 8px; overflow: hidden; }
-        .pv-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #FF6B6B, #E63946); transition: width 0.6s ease; }
+        .stats-bar{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:14px;padding:12px 18px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,215,0,0.2);flex-wrap:wrap;}
+        .player-name{font-family:'Press Start 2P',monospace;font-size:0.55em;color:var(--gold);}
+        .stat-pill{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.25);border-radius:20px;padding:5px 12px;font-weight:800;font-size:0.85em;}
+        .stat-pill .val{font-family:'Press Start 2P',monospace;font-size:0.8em;}
+        .stat-pill.hp .val{color:#FF6B6B;}.stat-pill.gp .val{color:var(--gold);}.stat-pill.lv .val{color:var(--green);}.stat-pill.xp .val{color:#74C0FC;}
+        .pv-bar-bg{flex:1;min-width:60px;background:rgba(0,0,0,0.3);border-radius:10px;height:8px;overflow:hidden;}
+        .pv-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,#FF6B6B,#E63946);transition:width 0.6s ease;}
 
-        .plateau-wrap { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 18px; padding: 16px; border: 2px solid var(--gold); box-shadow: 0 0 30px rgba(255,215,0,0.08); }
-        .rangee-label { font-size: 0.62em; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.6); }
-        .dot-rouge { width: 8px; height: 8px; border-radius: 50%; background: var(--red); display:inline-block; }
-        .dot-bleu  { width: 8px; height: 8px; border-radius: 50%; background: #4A90D9; display:inline-block; }
-        .dot-noir  { width: 8px; height: 8px; border-radius: 50%; background: #555; display:inline-block; }
-        .rangee { display: flex; gap: 10px; margin-bottom: 12px; justify-content: center; }
-        .sep { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0 12px; }
+        .plateau-wrap{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:18px;padding:16px;border:2px solid var(--gold);}
+        .rangee-label{font-size:0.62em;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.6);}
+        .dot-rouge{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;}
+        .dot-bleu{width:8px;height:8px;border-radius:50%;background:#4A90D9;display:inline-block;}
+        .dot-noir{width:8px;height:8px;border-radius:50%;background:#555;display:inline-block;}
+        .rangee{display:flex;gap:10px;margin-bottom:12px;justify-content:center;}
+        .sep{height:1px;background:rgba(255,255,255,0.07);margin:4px 0 12px;}
 
-        .case { width: 100px; height: 140px; border-radius: 10px; border: 2px dashed rgba(255,255,255,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; position: relative; overflow: hidden; flex-shrink: 0; }
-        .case:hover:not(.bloquee) { transform: translateY(-3px); }
-        .case.offensive { border-color: rgba(230,57,70,0.35); }
-        .case.offensive:hover:not(.bloquee) { border-color: var(--red); background: rgba(230,57,70,0.08); }
-        .case.defensive { border-color: rgba(74,144,217,0.35); }
-        .case.defensive:hover:not(.bloquee) { border-color: #4A90D9; background: rgba(74,144,217,0.08); }
-        .case.boite { border-color: rgba(255,255,255,0.1); }
-        .case.boite:hover:not(.bloquee) { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
-        .case.bloquee { opacity: 0.25; cursor: not-allowed; }
-        .case .plus { font-size: 1.4em; color: rgba(255,255,255,0.2); }
-        .case.occupee { border-style: solid; cursor: default; }
-        .case.occupee.offensive { border-color: var(--red); box-shadow: 0 0 12px rgba(230,57,70,0.2); }
-        .case.occupee.defensive { border-color: #4A90D9; box-shadow: 0 0 12px rgba(74,144,217,0.2); }
-        .case.occupee.boite { border-color: #555; }
-        .case img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-        .suppr { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.75); border: none; color: #FF6B6B; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7em; cursor: pointer; display: none; align-items: center; justify-content: center; font-weight: 900; }
-        .case.occupee:hover .suppr { display: flex; }
+        /* Cases */
+        .case{width:100px;height:140px;border-radius:10px;border:2px dashed rgba(255,255,255,0.12);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:border-color 0.2s,background 0.2s,transform 0.15s;position:relative;overflow:hidden;flex-shrink:0;}
+        .case.droppable{border-style:solid!important;border-color:var(--gold)!important;background:rgba(255,215,0,0.08)!important;}
+        .case.offensive{border-color:rgba(230,57,70,0.3);}
+        .case.defensive{border-color:rgba(74,144,217,0.3);}
+        .case.boite{border-color:rgba(255,255,255,0.1);}
+        .case.bloquee{opacity:0.25;cursor:not-allowed;}
+        .case:not(.bloquee):not(.occupee){cursor:pointer;}
+        .case:not(.bloquee):not(.occupee):hover{transform:translateY(-2px);}
+        .case.offensive:not(.bloquee):not(.occupee):hover{border-color:var(--red);background:rgba(230,57,70,0.06);}
+        .case.defensive:not(.bloquee):not(.occupee):hover{border-color:#4A90D9;background:rgba(74,144,217,0.06);}
+        .case.occupee{border-style:solid;}
+        .case.occupee.offensive{border-color:var(--red);}
+        .case.occupee.defensive{border-color:#4A90D9;}
+        .case.occupee.boite{border-color:#444;}
+        .case img{width:100%;height:100%;object-fit:cover;border-radius:8px;pointer-events:none;}
+        .plus{font-size:1.4em;color:rgba(255,255,255,0.15);}
+        .lock-icon{font-size:0.6em;color:rgba(255,255,255,0.15);}
 
-        .actions-bar { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn { padding: 10px 18px; border: none; border-radius: 12px; font-weight: 900; font-family: 'Nunito', sans-serif; cursor: pointer; font-size: 0.88em; transition: transform 0.15s, opacity 0.2s; }
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
-        .btn:active { transform: translateY(0); }
-        .btn-gold  { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--blue-deep); }
-        .btn-green { background: linear-gradient(135deg, #52B788, #2D8A60); color: white; }
-        .btn-blue  { background: linear-gradient(135deg, #3A7BFF, #1A55D0); color: white; }
-        .btn-red   { background: linear-gradient(135deg, #E63946, #C1121F); color: white; }
+        /* Drag */
+        .draggable{cursor:grab;}
+        .draggable:active{cursor:grabbing;}
+        .dragging{opacity:0.4;}
 
-        .sidebar { width: 270px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
-        .panel { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.07); }
-        .panel-title { font-size: 0.62em; font-weight: 800; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
-        .syn-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
-        .syn-badge { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 12px; font-size: 0.78em; font-weight: 800; }
-        .syn-badge.actif { background: rgba(255,215,0,0.15); border-color: var(--gold); color: var(--gold); }
-        .adversaire { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; }
-        .adversaire:last-child { margin-bottom: 0; }
-        .adv-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: 800; flex-shrink: 0; }
-        .adv-info { flex: 1; min-width: 0; }
-        .adv-nom { font-weight: 800; font-size: 0.85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .adv-stats { display: flex; gap: 8px; margin-top: 3px; font-size: 0.75em; font-weight: 700; }
-        .adv-hp { color: #FF6B6B; } .adv-gp { color: var(--gold); } .adv-lv { color: var(--green); }
-        .log-list { max-height: 160px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,215,0,0.2) transparent; }
-        .log-item { font-size: 0.78em; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); display: flex; gap: 6px; font-weight: 600; }
-        .log-item:last-child { border-bottom: none; }
-        .log-item .time { color: rgba(255,255,255,0.3); flex-shrink: 0; }
-        .log-item.gold { color: var(--gold); } .log-item.green { color: var(--green); } .log-item.red { color: #FF6B6B; }
-        .attente { text-align: center; color: rgba(255,255,255,0.3); padding: 16px; font-style: italic; font-size: 0.85em; }
+        /* Bouton suppr */
+        .suppr{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.75);border:none;color:#FF6B6B;border-radius:50%;width:20px;height:20px;font-size:0.7em;cursor:pointer;display:none;align-items:center;justify-content:center;font-weight:900;z-index:5;}
+        .case.occupee:hover .suppr{display:flex;}
 
-        .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; }
-        .modal-bg.open { display: flex; }
-        .modal { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 20px; padding: 28px; border: 2px solid var(--gold); max-width: 620px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
-        .modal-title { font-family: 'Press Start 2P', monospace; font-size: 0.65em; color: var(--gold); margin-bottom: 20px; }
-        .boutique-cartes { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
-        .boutique-carte { width: 90px; text-align: center; cursor: pointer; transition: transform 0.2s; }
-        .boutique-carte:hover:not(.bloquee) { transform: translateY(-6px); }
-        .boutique-carte img { width: 90px; height: 126px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(255,255,255,0.15); display: block; }
-        .boutique-carte.selected img { border-color: var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.4); }
-        .boutique-carte.bloquee { opacity: 0.4; cursor: not-allowed; }
-        .boutique-carte .cout { font-size: 0.8em; font-weight: 800; color: var(--gold); margin-top: 6px; }
-        .boutique-carte .nom  { font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        /* Badge nom */
+        .poke-nom{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.65);font-size:0.6em;font-weight:800;text-align:center;padding:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-        @keyframes fadeInUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-        .fade-in { animation: fadeInUp 0.4s ease both; }
-        @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.3)} 100%{transform:scale(1)} }
-        .pop { animation: pop 0.35s ease; }
+        .actions-bar{display:flex;gap:10px;flex-wrap:wrap;}
+        .btn{padding:10px 18px;border:none;border-radius:12px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;font-size:0.88em;transition:transform 0.15s,opacity 0.2s;}
+        .btn:hover{transform:translateY(-2px);opacity:0.9;}.btn:active{transform:translateY(0);}
+        .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--blue-deep);}
+        .btn-green{background:linear-gradient(135deg,#52B788,#2D8A60);color:white;}
+        .btn-blue{background:linear-gradient(135deg,#3A7BFF,#1A55D0);color:white;}
+        .btn-red{background:linear-gradient(135deg,#E63946,#C1121F);color:white;}
+
+        .sidebar{width:270px;flex-shrink:0;display:flex;flex-direction:column;gap:12px;}
+        .panel{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.07);}
+        .panel-title{font-size:0.62em;font-weight:800;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
+        .syn-wrap{display:flex;gap:6px;flex-wrap:wrap;}
+        .syn-badge{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:4px 12px;font-size:0.78em;font-weight:800;}
+        .syn-badge.actif{background:rgba(255,215,0,0.15);border-color:var(--gold);color:var(--gold);}
+        .adversaire{background:rgba(0,0,0,0.2);border-radius:10px;padding:10px 12px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px;}
+        .adversaire:last-child{margin-bottom:0;}
+        .adv-avatar{width:32px;height:32px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:0.85em;font-weight:800;flex-shrink:0;}
+        .adv-info{flex:1;min-width:0;}
+        .adv-nom{font-weight:800;font-size:0.85em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .adv-stats{display:flex;gap:8px;margin-top:3px;font-size:0.75em;font-weight:700;}
+        .adv-hp{color:#FF6B6B;}.adv-gp{color:var(--gold);}.adv-lv{color:var(--green);}
+        .log-list{max-height:160px;overflow-y:auto;scrollbar-width:thin;}
+        .log-item{font-size:0.78em;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);display:flex;gap:6px;font-weight:600;}
+        .log-item:last-child{border-bottom:none;}
+        .log-item .time{color:rgba(255,255,255,0.3);flex-shrink:0;}
+        .log-item.gold{color:var(--gold);}.log-item.green{color:var(--green);}.log-item.red{color:#FF6B6B;}
+        .attente{text-align:center;color:rgba(255,255,255,0.3);padding:16px;font-style:italic;font-size:0.85em;}
+
+        /* ── MODAL BOUTIQUE ── */
+        .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center;}
+        .modal-bg.open{display:flex;}
+        .modal{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:20px;padding:28px;border:2px solid var(--gold);width:95vw;max-width:900px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.7);}
+        .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+        .modal-title{font-family:'Press Start 2P',monospace;font-size:0.65em;color:var(--gold);}
+        .modal-info{font-size:0.85em;color:rgba(255,255,255,0.6);font-weight:700;}
+        .boutique-cartes{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+        .boutique-carte{width:140px;text-align:center;cursor:pointer;transition:transform 0.2s;border-radius:12px;padding:8px;border:2px solid transparent;}
+        .boutique-carte:hover:not(.bloquee){transform:translateY(-6px);}
+        .boutique-carte.selected{border-color:var(--gold);background:rgba(255,215,0,0.1);}
+        .boutique-carte.bloquee{opacity:0.35;cursor:not-allowed;}
+        .boutique-carte img{width:130px;height:182px;object-fit:cover;border-radius:8px;display:block;margin:0 auto;}
+        .boutique-carte .cout{font-size:0.85em;font-weight:800;color:var(--gold);margin-top:8px;}
+        .boutique-carte .nom{font-size:0.8em;color:rgba(255,255,255,0.8);margin-top:3px;font-weight:700;}
+        .boutique-carte .types{font-size:0.72em;color:rgba(255,255,255,0.5);margin-top:2px;}
+        .modal-actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+        .modal-actions-left{display:flex;gap:10px;}
+        .modal-actions-right{display:flex;gap:10px;}
+
+        /* Toast erreur */
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#E63946;color:white;padding:12px 24px;border-radius:12px;font-weight:800;z-index:300;display:none;animation:fadeInUp 0.3s ease;}
+        @keyframes fadeInUp{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+        @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(1)}}
+        .pop{animation:pop 0.35s ease;}
     </style>
 </head>
 <body>
@@ -122,8 +138,7 @@
 </div>
 
 <div class="game-wrap">
-    <div class="main-col fade-in">
-
+    <div class="main-col">
         <div class="stats-bar">
             <div class="player-name" id="player-name">🎮 Dresseur</div>
             <div class="stat-pill hp">❤️ <span class="val" id="mes-pv">100</span></div>
@@ -149,7 +164,6 @@
             <button class="btn btn-green" onclick="finTour()">✅ Fin de tour</button>
             <button class="btn btn-gold"  onclick="ouvrirBoutique()">🛒 Boutique</button>
             <button class="btn btn-blue"  onclick="acheterXp()">📈 XP (4🪙)</button>
-            <button class="btn btn-red"   onclick="roll()">🎲 Roll (2🪙)</button>
         </div>
     </div>
 
@@ -169,16 +183,28 @@
     </div>
 </div>
 
+<!-- Modal boutique -->
 <div class="modal-bg" id="modal-boutique">
     <div class="modal">
-        <div class="modal-title">🛒 Boutique — Choisissez un Pokémon</div>
+        <div class="modal-header">
+            <div class="modal-title">🛒 Boutique</div>
+            <div class="modal-info" id="boutique-info"></div>
+        </div>
         <div class="boutique-cartes" id="boutique-cartes"><div class="attente">Chargement...</div></div>
         <div class="modal-actions">
-            <button class="btn btn-red" onclick="fermerBoutique()">Annuler</button>
-            <button class="btn btn-gold" id="btn-acheter" onclick="acheterPokemon()" disabled>Capturer</button>
+            <div class="modal-actions-left">
+                <button class="btn btn-blue" onclick="roll()">🎲 Roll (2🪙)</button>
+            </div>
+            <div class="modal-actions-right">
+                <button class="btn btn-red"  id="btn-passer"  onclick="fermerBoutique()">Passer</button>
+                <button class="btn btn-gold" id="btn-acheter" onclick="acheterPokemon()" disabled>⚡ Capturer</button>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
 const CODE    = "{{ code }}";
@@ -186,28 +212,45 @@ const PSEUDO  = new URLSearchParams(window.location.search).get('pseudo') || 'Dr
 const IMG_BASE = "https://media.githubusercontent.com/media/Timberklinx/pkchess/master/pkchess-app/cartes/";
 
 let ws, etat, pvMax = 100;
-let boutique_selection = null;
 let boutique_offre = [];
-let cible_slot = null;
-let premier_pokemon = true;
+let boutique_selection = null;
+let tour1_gratuit = false;
+let a_achete_tour1 = false;
+
+// Drag & drop
+let drag_from_pos  = null;
+let drag_from_slot = null;
 
 document.getElementById('player-name').textContent = '🎮 ' + PSEUDO;
 
+// ── WebSocket ────────────────────────────────────────────────────────────────
 function connecterWS() {
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     ws = new WebSocket(`${proto}://${location.host}/ws/${CODE}/${PSEUDO}`);
-    ws.onopen = () => { document.getElementById('dot').classList.add('on'); document.getElementById('statut-txt').textContent = 'Connecté'; };
+    ws.onopen  = () => { document.getElementById('dot').classList.add('on'); document.getElementById('statut-txt').textContent = 'Connecté'; };
     ws.onclose = () => { document.getElementById('dot').classList.remove('on'); document.getElementById('statut-txt').textContent = 'Reconnexion...'; setTimeout(connecterWS, 2000); };
     ws.onmessage = (e) => {
         const msg = JSON.parse(e.data);
         if (msg.etat) { etat = msg.etat; majInterface(); }
-        if (msg.msg) log(msg.msg, msg.type === 'etat_mis_a_jour' ? 'gold' : '');
+        if (msg.msg) log(msg.msg, msg.type === 'fin_tour' || msg.type === 'etat_mis_a_jour' ? 'gold' : '');
         if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) log(`${msg.pseudo} a rejoint`, 'green');
         if (msg.type === 'joueur_deconnecte') log(`${msg.pseudo} déconnecté`, 'red');
-        if (msg.type === 'boutique_offre' && msg.pour === PSEUDO) { boutique_offre = msg.offre; afficherBoutique(); }
+        if (msg.type === 'erreur' && msg.pour === PSEUDO) toast(msg.msg, true);
+        if (msg.type === 'boutique_offre' && msg.pour === PSEUDO) {
+            boutique_offre  = msg.offre;
+            tour1_gratuit   = msg.tour1_gratuit;
+            afficherBoutique();
+            // Auto-ouverture à chaque nouveau tour
+            if (msg.auto) document.getElementById('modal-boutique').classList.add('open');
+        }
+        if (msg.type === 'fin_tour') {
+            // Ouvrir boutique automatiquement
+            ouvrirBoutique(true);
+        }
     };
 }
 
+// ── Interface ────────────────────────────────────────────────────────────────
 function animVal(id, newVal) {
     const el = document.getElementById(id);
     if (el && el.textContent != newVal) { el.textContent = newVal; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
@@ -224,85 +267,103 @@ function majInterface() {
         document.getElementById('tour-num').textContent = etat.tour || 0;
         const pct = Math.max(0, Math.min(100, (moi.pv / pvMax) * 100));
         document.getElementById('pv-bar').style.width = pct + '%';
+        a_achete_tour1 = moi.a_achete_tour1 || false;
 
         const synEl = document.getElementById('mes-synergies');
-        const syns = moi.synergies || {};
-        if (Object.keys(syns).length === 0) {
-            synEl.innerHTML = '<span style="color:rgba(255,255,255,0.3);font-size:0.8em;font-weight:700">Aucune synergie</span>';
-        } else {
-            synEl.innerHTML = Object.entries(syns).map(([t,n]) => `<span class="syn-badge ${n>=3?'actif':''}">${t} ${n}</span>`).join('');
-        }
+        const syns  = moi.synergies || {};
+        synEl.innerHTML = Object.keys(syns).length === 0
+            ? '<span style="color:rgba(255,255,255,0.3);font-size:0.8em;font-weight:700">Aucune synergie</span>'
+            : Object.entries(syns).map(([t,n]) => `<span class="syn-badge ${n>=3?'actif':''}">${t} ${n}</span>`).join('');
     }
 
     const advEl = document.getElementById('adversaires-list');
-    const advs = Object.entries(etat.joueurs).filter(([p]) => p !== PSEUDO);
-    if (advs.length === 0) { advEl.innerHTML = '<div class="attente">En attente...</div>'; }
-    else {
-        advEl.innerHTML = advs.map(([pseudo, j]) => `
+    const advs  = Object.entries(etat.joueurs).filter(([p]) => p !== PSEUDO);
+    advEl.innerHTML = advs.length === 0 ? '<div class="attente">En attente...</div>'
+        : advs.map(([pseudo, j]) => `
             <div class="adversaire">
                 <div class="adv-avatar">${pseudo.substring(0,2).toUpperCase()}</div>
                 <div class="adv-info">
                     <div class="adv-nom">${pseudo}</div>
-                    <div class="adv-stats">
-                        <span class="adv-hp">❤️${j.pv}</span>
-                        <span class="adv-gp">🪙${j.pieces}</span>
-                        <span class="adv-lv">⭐${j.niveau}</span>
-                    </div>
+                    <div class="adv-stats"><span class="adv-hp">❤️${j.pv}</span><span class="adv-gp">🪙${j.pieces}</span><span class="adv-lv">⭐${j.niveau}</span></div>
                 </div>
             </div>`).join('');
-    }
 
     renderPlateau();
 }
 
+// ── Plateau ──────────────────────────────────────────────────────────────────
 function renderPlateau() {
     const niveau = etat?.joueurs?.[PSEUDO]?.niveau || 1;
-    const casesDisponibles = niveau >= 5 ? 5 : 3;
-    renderRangee('rangee-off',   'off',   casesDisponibles, 'offensive');
-    renderRangee('rangee-def',   'def',   casesDisponibles, 'defensive');
-    renderRangee('rangee-boite', 'boite', 5,                'boite');
+    const dispo  = niveau >= 5 ? 5 : 3;
+    renderRangee('rangee-off',   'off',   dispo, 'offensive');
+    renderRangee('rangee-def',   'def',   dispo, 'defensive');
+    renderRangee('rangee-boite', 'banc',  5,     'boite');
 }
 
-function getPokemonSlot(position, slot) {
-    return etat?.joueurs?.[PSEUDO]?.pokemon?.find(p => p.position === position && p.slot === slot) || null;
+function getPoke(pos, slot) {
+    return etat?.joueurs?.[PSEUDO]?.pokemon?.find(p => p.position === pos && p.slot === slot) || null;
 }
 
-function renderRangee(containerId, position, casesDisponibles, cssClass) {
+function renderRangee(containerId, pos, dispo, cssClass) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
     for (let i = 0; i < 5; i++) {
-        const bloquee = i >= casesDisponibles;
-        const offPokemon = getPokemonSlot('off', i);
-        const defBloquee = position === 'def' && !offPokemon && !bloquee;
-        const pokemon = getPokemonSlot(position, i);
+        const bloquee   = pos !== 'banc' && i >= dispo;
+        const offDevant = pos === 'def' && !getPoke('off', i) && !bloquee;
+        const poke      = getPoke(pos, i);
+        const el        = document.createElement('div');
+        el.className    = `case ${cssClass}`;
+        el.dataset.pos  = pos;
+        el.dataset.slot = i;
 
-        const el = document.createElement('div');
-        el.className = `case ${cssClass}`;
-        if (bloquee || defBloquee) el.classList.add('bloquee');
-        if (pokemon) el.classList.add('occupee');
-
-        if (pokemon) {
-            const id = String(pokemon.id).padStart(4, '0');
-            el.innerHTML = `<img src="${IMG_BASE}${id}.png" alt="${pokemon.nom}" onerror="this.style.opacity='0.3'"><button class="suppr" onclick="retirerPokemon('${position}',${i},event)">✕</button>`;
-        } else if (!bloquee && !defBloquee) {
-            el.innerHTML = `<span class="plus">+</span>`;
-            el.onclick = () => ouvrirBoutiqueSlot(position, i);
+        if (bloquee || offDevant) {
+            el.classList.add('bloquee');
+            el.innerHTML = `<span class="lock-icon">🔒</span>`;
+        } else if (poke) {
+            el.classList.add('occupee', 'draggable');
+            const id = String(poke.id).padStart(4, '0');
+            el.innerHTML = `
+                <img src="${IMG_BASE}${id}.png" alt="${poke.nom}" onerror="this.style.opacity='0.3'">
+                <div class="poke-nom">${poke.nom}</div>
+                <button class="suppr" onclick="retirerPokemon('${pos}',${i},event)">✕</button>`;
+            el.draggable = true;
+            el.addEventListener('dragstart', (e) => {
+                drag_from_pos  = pos;
+                drag_from_slot = i;
+                el.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            el.addEventListener('dragend', () => el.classList.remove('dragging'));
         } else {
-            el.innerHTML = `<span style="font-size:0.55em;color:rgba(255,255,255,0.2)">🔒</span>`;
+            el.innerHTML = `<span class="plus">+</span>`;
         }
+
+        // Drop target
+        el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('droppable'); });
+        el.addEventListener('dragleave', () => el.classList.remove('droppable'));
+        el.addEventListener('drop', (e) => {
+            e.preventDefault();
+            el.classList.remove('droppable');
+            if (drag_from_pos !== null && !el.classList.contains('bloquee')) {
+                if (drag_from_pos !== pos || drag_from_slot !== i) {
+                    deplacerPokemon(drag_from_pos, drag_from_slot, pos, i);
+                }
+            }
+            drag_from_pos = drag_from_slot = null;
+        });
+
         container.appendChild(el);
     }
 }
 
-function ouvrirBoutique() { ouvrirBoutiqueSlot('off', 0); }
-
-function ouvrirBoutiqueSlot(position, slot) {
-    cible_slot = { position, slot };
+// ── Boutique ─────────────────────────────────────────────────────────────────
+function ouvrirBoutique(auto = false) {
     document.getElementById('modal-boutique').classList.add('open');
     document.getElementById('boutique-cartes').innerHTML = '<div class="attente">Chargement...</div>';
     boutique_selection = null;
     document.getElementById('btn-acheter').disabled = true;
-    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'demander_boutique' }));
+    if (ws?.readyState === WebSocket.OPEN)
+        ws.send(JSON.stringify({ type: 'demander_boutique', auto }));
 }
 
 function fermerBoutique() {
@@ -312,17 +373,26 @@ function fermerBoutique() {
 
 function afficherBoutique() {
     const container = document.getElementById('boutique-cartes');
-    const pieces = etat?.joueurs?.[PSEUDO]?.pieces || 0;
-    if (!boutique_offre.length) { container.innerHTML = '<div class="attente">Aucune offre disponible</div>'; return; }
+    const pieces    = etat?.joueurs?.[PSEUDO]?.pieces || 0;
+    const tour      = etat?.tour || 0;
+    const gratuit   = tour === 1 && !a_achete_tour1;
+
+    document.getElementById('boutique-info').textContent = gratuit
+        ? '🎁 Tour 1 — Capture un Pokémon gratuitement !'
+        : `🪙 ${pieces} pièces disponibles`;
+
+    if (!boutique_offre.length) { container.innerHTML = '<div class="attente">Aucune offre</div>'; return; }
+
     container.innerHTML = boutique_offre.map((poke, idx) => {
-        const id = String(poke.id).padStart(4, '0');
-        const estGratuit = premier_pokemon && idx === 0;
-        const cout = estGratuit ? 0 : (poke.niveau || 1);
-        const peutAcheter = pieces >= cout;
-        return `<div class="boutique-carte ${peutAcheter ? '' : 'bloquee'}" onclick="${peutAcheter ? `selectionnerPoke(${idx})` : ''}">
+        const id    = String(poke.id).padStart(4, '0');
+        const cout  = gratuit ? 0 : poke.niveau;
+        const peux  = pieces >= cout;
+        const types = Array.isArray(poke.types) ? poke.types.join(', ') : poke.types || '';
+        return `<div class="boutique-carte ${peux ? '' : 'bloquee'}" onclick="${peux ? `selectionnerPoke(${idx})` : ''}">
             <img src="${IMG_BASE}${id}.png" alt="${poke.nom}">
-            <div class="cout">${estGratuit ? '🎁 Gratuit' : cout + ' 🪙'}</div>
+            <div class="cout">${gratuit ? '🎁 Gratuit' : cout + ' 🪙'}</div>
             <div class="nom">${poke.nom}</div>
+            <div class="types">${types}</div>
         </div>`;
     }).join('');
 }
@@ -334,26 +404,35 @@ function selectionnerPoke(idx) {
 }
 
 function acheterPokemon() {
-    if (boutique_selection === null || !cible_slot) return;
-    const poke = boutique_offre[boutique_selection];
-    const estGratuit = premier_pokemon;
-    const cout = estGratuit ? 0 : (poke.niveau || 1);
-    if (ws?.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: 'capturer_pokemon', pokemon_id: poke.id, position: cible_slot.position, slot: cible_slot.slot, cout }));
-    }
-    premier_pokemon = false;
+    if (boutique_selection === null) return;
+    const poke  = boutique_offre[boutique_selection];
+    const tour  = etat?.tour || 0;
+    const gratuit = tour === 1 && !a_achete_tour1;
+    const cout  = gratuit ? 0 : poke.niveau;
+    if (ws?.readyState === WebSocket.OPEN)
+        ws.send(JSON.stringify({ type: 'capturer_pokemon', pokemon_id: poke.id, cout }));
     fermerBoutique();
 }
 
-function retirerPokemon(position, slot, event) {
-    event.stopPropagation();
-    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'retirer_pokemon', position, slot }));
+function roll() {
+    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'roll'}));
 }
 
-function finTour()  { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'fin_tour'})); }
-function acheterXp(){ if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'acheter_xp'})); }
-function roll()     { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'roll'})); }
+// ── Actions ───────────────────────────────────────────────────────────────────
+function deplacerPokemon(fp, fs, tp, ts) {
+    if (ws?.readyState === WebSocket.OPEN)
+        ws.send(JSON.stringify({type:'deplacer_pokemon', from_pos:fp, from_slot:fs, to_pos:tp, to_slot:ts}));
+}
 
+function retirerPokemon(pos, slot, event) {
+    event.stopPropagation();
+    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'retirer_pokemon', position:pos, slot}));
+}
+
+function finTour()   { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'fin_tour'})); }
+function acheterXp() { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'acheter_xp'})); }
+
+// ── Log ───────────────────────────────────────────────────────────────────────
 function log(msg, cls='') {
     const list = document.getElementById('log-list');
     const item = document.createElement('div');
@@ -362,6 +441,15 @@ function log(msg, cls='') {
     item.innerHTML = `<span class="time">${h}</span><span>${msg}</span>`;
     list.prepend(item);
     while (list.children.length > 60) list.removeChild(list.lastChild);
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function toast(msg, erreur=false) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.background = erreur ? '#E63946' : '#52B788';
+    el.style.display = 'block';
+    setTimeout(() => el.style.display = 'none', 3000);
 }
 
 connecterWS();

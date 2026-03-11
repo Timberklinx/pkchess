@@ -1,70 +1,29 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.staticfiles import StaticFiles
-import os
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
-import json, random, string, asyncio
+import json, random, string, os
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-# Servir les cartes PNG si le dossier existe
-if os.path.exists("cartes"):
-    app.mount("/cartes", StaticFiles(directory="cartes"), name="cartes")
+# ── Charger la base Pokémon ───────────────────────────────────────────────────
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pokemons_db.json")
+with open(DB_PATH, encoding="utf-8") as f:
+    POKEMONS_DB = json.load(f)
 
-
-# ── Synergies ──────────────────────────────────────────────────────────────────
-
-SYNERGIES = {
-    "Acier":    {3: "1/3 esquive effet supp.", 6: "2/3 esquive effet supp.", 9: "3/3 esquive effet supp."},
-    "Combat":   {3: "Soigne Combat +10PV/niv au KO", 6: "+20PV/niv au KO", 9: "+30PV/niv au KO"},
-    "Dragon":   {3: "+10 dégâts offensifs", 6: "+20 dégâts offensifs", 9: "+40 dégâts offensifs"},
-    "Eau":      {3: "+10 Vitesse", 6: "+20 Vitesse", 9: "+40 Vitesse"},
-    "Electrik": {3: "1/3 Paralyser (offensif)", 6: "2/3 Paralyser", 9: "3/3 Paralyser"},
-    "Fée":      {3: "+1 pièce fin combat", 6: "+2 pièces", 9: "+4 pièces"},
-    "Feu":      {3: "1/3 Brûler (offensif)", 6: "2/3 Brûler", 9: "3/3 Brûler"},
-    "Glace":    {3: "1/3 Geler (offensif)", 6: "2/3 Geler", 9: "3/3 Geler"},
-    "Insecte":  {3: "+1 pt Force/Insecte", 6: "+2 pts Force/Insecte", 9: "+3 pts Force/Insecte"},
-    "Normal":   {3: "+10 PV MAX", 6: "+20 PV MAX", 9: "+40 PV MAX"},
-    "Plante":   {3: "+10 PV soignés fin combat", 6: "+20 PV soignés", 9: "+40 PV soignés"},
-    "Poison":   {3: "1/3 Empoisonner (offensif)", 6: "2/3 Empoisonner", 9: "3/3 Empoisonner"},
-    "Psy":      {3: "1/3 Confusion (offensif)", 6: "2/3 Confusion", 9: "3/3 Confusion"},
-    "Roche":    {3: "-10 dégâts reçus", 6: "-20 dégâts reçus", 9: "-30 dégâts reçus"},
-    "Sol":      {3: "1/3 Piéger (offensif)", 6: "2/3 Piéger", 9: "3/3 Piéger"},
-    "Spectre":  {3: "KO -> 10 dégâts x niv col. adverse", 6: "20 dégâts x niv", 9: "30 dégâts x niv"},
-    "Ténèbre":  {3: "1/3 Apeurer (offensif)", 6: "2/3 Apeurer", 9: "3/3 Apeurer"},
-    "Vol":      {3: "1/3 cible Support +10 dégâts", 6: "2/3 +20 dégâts", 9: "3/3 +30 dégâts"},
-}
-
-def calculer_synergies(joueur):
-    """Compte les types sur le terrain (arene_off + arene_def) et retourne les synergies actives."""
-    comptage = {}
-    terrain = joueur.get("arene_off", []) + joueur.get("arene_def", [])
-    for pokemon in terrain:
-        for type_ in pokemon.get("types", []):
-            comptage[type_] = comptage.get(type_, 0) + 1
-
-    synergies_actives = {}
-    for type_, nb in comptage.items():
-        if nb >= 9:   palier = 9
-        elif nb >= 6: palier = 6
-        elif nb >= 3: palier = 3
-        else: continue
-        synergies_actives[type_] = {
-            "nb": nb,
-            "palier": palier,
-            "bonus": SYNERGIES.get(type_, {}).get(palier, ""),
-        }
-    return synergies_actives
+# Index par niveau pour la pioche
+POKEMONS_PAR_NIVEAU = {}
+for p in POKEMONS_DB:
+    niv = p["niveau"]
+    if niv not in POKEMONS_PAR_NIVEAU:
+        POKEMONS_PAR_NIVEAU[niv] = []
+    POKEMONS_PAR_NIVEAU[niv].append(p)
 
 # ── Constantes économie ───────────────────────────────────────────────────────
-
-# Bonus de série (victoires ou défaites) — index = nb de séries consécutives
-# Série 0→0, 1→0, 2→1, 3→1, 4→2, 5+→3
-BONUS_SERIE = [0, 0, 1, 1, 2, 3]
-
-# ── Synergies ─────────────────────────────────────────────────────────────────
+BONUS_SERIE    = [0, 0, 1, 1, 2, 3]
+XP_PAR_NIVEAU  = [0, 1, 1, 2, 4, 8, 16, 24, 32, 40]
+BONUS_PV_SYNERGIE = {3: 10, 6: 20, 9: 40}
 
 SYNERGIES = {
     "Acier":    {3: "1/3 esquive effet supp.", 6: "2/3 esquive", 9: "3/3 esquive"},
@@ -87,61 +46,21 @@ SYNERGIES = {
     "Vol":      {3: "1/3 cible Support+10 dég",6:"2/3+20 dég",   9:"3/3+30 dég"},
 }
 
-# Bonus PV MAX universel par palier de synergie
-BONUS_PV_SYNERGIE = {3: 10, 6: 20, 9: 40}
+# ── Pioche ────────────────────────────────────────────────────────────────────
+def generer_offre_boutique(niveau_joueur: int, n: int = 5) -> list:
+    """Génère n Pokémon disponibles selon le niveau du joueur.
+    Niveau 10+ : tous les Pokémon de base (niv 1-10) disponibles.
+    """
+    pool = []
+    max_niv = 10 if niveau_joueur >= 10 else niveau_joueur
+    for niv in range(1, max_niv + 1):
+        pool.extend(POKEMONS_PAR_NIVEAU.get(niv, []))
 
-def calculer_synergies(joueur):
-    """Calcule les synergies actives basées sur les Pokémon en arène (offensifs + défensifs)."""
-    # Compter les types sur le terrain (arène rouge + arène bleue)
-    terrain = joueur.get("pokemon", [])  # liste de dicts avec "types": ["Feu", "Vol"]
-    compteur_types = {}
-    for poke in terrain:
-        types = poke.get("types", [])
-        for t in types:
-            compteur_types[t] = compteur_types.get(t, 0) + 1
+    if not pool:
+        return []
 
-    synergies_actives = {}
-    for type_poke, count in compteur_types.items():
-        if count >= 9:
-            synergies_actives[type_poke] = 9
-        elif count >= 6:
-            synergies_actives[type_poke] = 6
-        elif count >= 3:
-            synergies_actives[type_poke] = 3
-
-    return synergies_actives
-
-def appliquer_bonus_pv_synergies(joueur):
-    """Applique les bonus de PV MAX liés aux synergies. Retourne les messages."""
-    messages = []
-    synergies = calculer_synergies(joueur)
-    joueur["synergies"] = synergies
-
-    for poke in joueur.get("pokemon", []):
-        # Trouver le meilleur bonus PV parmi les types du Pokémon
-        meilleur_bonus = 0
-        for t in poke.get("types", []):
-            if t in synergies:
-                palier = synergies[t]
-                bonus = BONUS_PV_SYNERGIE.get(palier, 0)
-                meilleur_bonus = max(meilleur_bonus, bonus)
-
-        # Appliquer le bonus PV MAX (si pas déjà appliqué)
-        ancien_bonus = poke.get("bonus_pv_synergie", 0)
-        if meilleur_bonus != ancien_bonus:
-            diff = meilleur_bonus - ancien_bonus
-            poke["pv_max"] = poke.get("pv_max", poke.get("pv", 100)) + diff
-            poke["pv"] = min(poke.get("pv", 100), poke["pv_max"])
-            poke["bonus_pv_synergie"] = meilleur_bonus
-            if diff != 0:
-                messages.append(f"✨ {poke.get('nom','?')} : {'+'if diff>0 else ''}{diff} PV MAX (synergie)")
-
-    return messages
-
-
-
-# XP nécessaire pour passer au niveau suivant (index = niveau actuel)
-XP_PAR_NIVEAU = [0, 1, 1, 2, 4, 8, 16, 24, 32, 40]
+    choix = random.sample(pool, min(n, len(pool)))
+    return [{"id": p["id"], "nom": p["nom"], "types": p["types"], "niveau": p["niveau"]} for p in choix]
 
 # ── État initial ──────────────────────────────────────────────────────────────
 parties = {}
@@ -154,48 +73,34 @@ def generer_code():
 
 def etat_initial_joueur(pseudo):
     return {
-        "pseudo":     pseudo,
-        "pv":         100,
-        "pieces":     0,
-        "niveau":     1,
-        "exp":        0,
-        "serie_vic":  0,
-        "serie_def":  0,
-        "arene_off":  [],  # Pokémon offensifs (cases rouges)
-        "arene_def":  [],  # Pokémon défensifs (cases bleues)
-        "pokemon":    [],
-        "banc":       [],
-        "synergies":  {},
-        "inventaire": [],
-        "en_vie":     True,
+        "pseudo":          pseudo,
+        "pv":              100,
+        "pieces":          0,
+        "niveau":          1,
+        "exp":             0,
+        "serie_vic":       0,
+        "serie_def":       0,
+        "pokemon":         [],
+        "synergies":       {},
+        "inventaire":      [],
+        "en_vie":          True,
+        "a_achete_tour1":  False,  # a déjà acheté au tour 1
+        "boutique_offre":  [],     # offre actuelle de la boutique
     }
 
 # ── Logique économique ────────────────────────────────────────────────────────
-
 def calculer_bonus_serie(joueur):
     serie = max(joueur["serie_vic"], joueur["serie_def"])
-    idx = min(serie, len(BONUS_SERIE) - 1)
-    return BONUS_SERIE[idx]
+    return BONUS_SERIE[min(serie, len(BONUS_SERIE) - 1)]
 
 def calculer_interets(pieces):
     return min(pieces // 10, 5)
-
-def calculer_gain_pieces(joueur):
-    niveau   = joueur["niveau"]
-    interets = calculer_interets(joueur["pieces"])
-    serie    = calculer_bonus_serie(joueur)
-    return niveau, interets, serie
-
-def calculer_xp_necessaire(niveau):
-    if niveau >= len(XP_PAR_NIVEAU):
-        return 999
-    return XP_PAR_NIVEAU[niveau]
 
 def appliquer_xp(joueur, xp_gagnes=1):
     messages = []
     joueur["exp"] += xp_gagnes
     while joueur["niveau"] < 10:
-        xp_needed = calculer_xp_necessaire(joueur["niveau"])
+        xp_needed = XP_PAR_NIVEAU[joueur["niveau"]] if joueur["niveau"] < len(XP_PAR_NIVEAU) else 999
         if joueur["exp"] >= xp_needed:
             joueur["exp"] -= xp_needed
             joueur["niveau"] += 1
@@ -204,37 +109,71 @@ def appliquer_xp(joueur, xp_gagnes=1):
             break
     return messages
 
+def calculer_synergies(joueur):
+    terrain = [p for p in joueur.get("pokemon", []) if p["position"] in ("off", "def")]
+    compteur = {}
+    for poke in terrain:
+        for t in poke.get("types", []):
+            compteur[t] = compteur.get(t, 0) + 1
+    synergies = {}
+    for t, count in compteur.items():
+        if count >= 9:   synergies[t] = 9
+        elif count >= 6: synergies[t] = 6
+        elif count >= 3: synergies[t] = 3
+    return synergies
+
+def appliquer_bonus_pv_synergies(joueur):
+    messages = []
+    synergies = calculer_synergies(joueur)
+    joueur["synergies"] = synergies
+    for poke in joueur.get("pokemon", []):
+        meilleur = 0
+        for t in poke.get("types", []):
+            if t in synergies:
+                meilleur = max(meilleur, BONUS_PV_SYNERGIE.get(synergies[t], 0))
+        ancien = poke.get("bonus_pv_synergie", 0)
+        if meilleur != ancien:
+            diff = meilleur - ancien
+            poke["pv_max"] = poke.get("pv_max", 100) + diff
+            poke["pv"] = min(poke.get("pv", 100), poke["pv_max"])
+            poke["bonus_pv_synergie"] = meilleur
+            if diff != 0:
+                messages.append(f"✨ {poke.get('nom','?')} : {'+' if diff>0 else ''}{diff} PV MAX")
+    return messages
+
 # ── Connexions WebSocket ──────────────────────────────────────────────────────
 class GestionnaireConnexions:
     def __init__(self):
-        self.connexions: dict[str, list[WebSocket]] = {}
+        self.connexions: dict[str, dict[str, WebSocket]] = {}  # code → pseudo → ws
 
-    async def connecter(self, code: str, ws: WebSocket):
+    async def connecter(self, code: str, pseudo: str, ws: WebSocket):
         await ws.accept()
         if code not in self.connexions:
-            self.connexions[code] = []
-        self.connexions[code].append(ws)
+            self.connexions[code] = {}
+        self.connexions[code][pseudo] = ws
 
-    def deconnecter(self, code: str, ws: WebSocket):
-        if code in self.connexions:
-            try:
-                self.connexions[code].remove(ws)
-            except ValueError:
-                pass
+    def deconnecter(self, code: str, pseudo: str):
+        if code in self.connexions and pseudo in self.connexions[code]:
+            del self.connexions[code][pseudo]
 
     async def diffuser(self, code: str, message: dict):
         if code in self.connexions:
             morts = []
-            for ws in self.connexions[code]:
+            for pseudo, ws in self.connexions[code].items():
                 try:
                     await ws.send_json(message)
                 except:
-                    morts.append(ws)
-            for ws in morts:
-                try:
-                    self.connexions[code].remove(ws)
-                except ValueError:
-                    pass
+                    morts.append(pseudo)
+            for p in morts:
+                self.connexions[code].pop(p, None)
+
+    async def envoyer_a(self, code: str, pseudo: str, message: dict):
+        ws = self.connexions.get(code, {}).get(pseudo)
+        if ws:
+            try:
+                await ws.send_json(message)
+            except:
+                pass
 
 gestionnaire = GestionnaireConnexions()
 
@@ -251,11 +190,13 @@ async def jeu(request: Request, code: str):
 async def creer_partie(data: dict):
     pseudo = data.get("pseudo", "Joueur")
     code = generer_code()
+    joueur = etat_initial_joueur(pseudo)
     parties[code] = {
         "code":    code,
         "tour":    0,
         "phase":   "attente",
-        "joueurs": {pseudo: etat_initial_joueur(pseudo)},
+        "hote":    pseudo,
+        "joueurs": {pseudo: joueur},
     }
     return {"code": code}
 
@@ -279,18 +220,25 @@ async def etat_partie(code: str):
 # ── WebSocket ─────────────────────────────────────────────────────────────────
 @app.websocket("/ws/{code}/{pseudo}")
 async def websocket_endpoint(ws: WebSocket, code: str, pseudo: str):
-    await gestionnaire.connecter(code, ws)
+    await gestionnaire.connecter(code, pseudo, ws)
+    partie = parties.get(code, {})
+    # Générer offre boutique initiale
+    if pseudo in partie.get("joueurs", {}):
+        joueur = partie["joueurs"][pseudo]
+        if not joueur.get("boutique_offre"):
+            joueur["boutique_offre"] = generer_offre_boutique(joueur["niveau"])
+
     await gestionnaire.diffuser(code, {
         "type":   "joueur_connecte",
         "pseudo": pseudo,
-        "etat":   parties.get(code, {}),
+        "etat":   partie,
     })
     try:
         while True:
             data = await ws.receive_json()
             await traiter_action(code, pseudo, data)
     except WebSocketDisconnect:
-        gestionnaire.deconnecter(code, ws)
+        gestionnaire.deconnecter(code, pseudo)
         await gestionnaire.diffuser(code, {"type": "joueur_deconnecte", "pseudo": pseudo})
 
 async def traiter_action(code: str, pseudo: str, action: dict):
@@ -310,25 +258,59 @@ async def traiter_action(code: str, pseudo: str, action: dict):
         for pseudo_j, j in partie["joueurs"].items():
             if not j.get("en_vie", True):
                 continue
-            niveau, interets, serie = calculer_gain_pieces(j)
-            gain_total = niveau + interets + serie
-            j["pieces"] += gain_total
+            niveau    = j["niveau"]
+            interets  = calculer_interets(j["pieces"])
+            serie     = calculer_bonus_serie(j)
+            gain      = niveau + interets + serie
+            j["pieces"] += gain
             detail = f"+{niveau} niv."
-            if serie > 0:   detail += f" +{serie} série"
+            if serie > 0:    detail += f" +{serie} série"
             if interets > 0: detail += f" +{interets} intérêts"
-            messages.append(f"💰 {pseudo_j} +{gain_total} pièces ({detail})")
-            j["synergies"] = calculer_synergies(j)
+            messages.append(f"💰 {pseudo_j} +{gain} ({detail})")
             msgs_level = appliquer_xp(j, xp_gagnes=1)
             messages.extend(msgs_level)
-            # Recalculer les synergies
             msgs_syn = appliquer_bonus_pv_synergies(j)
             messages.extend(msgs_syn)
+            # Nouvelle offre boutique pour ce tour
+            j["boutique_offre"] = generer_offre_boutique(j["niveau"])
+            j["a_achete_tour1"] = False  # reset achat gratuit tour suivant si tour > 1
 
         await gestionnaire.diffuser(code, {
-            "type": "etat_mis_a_jour",
+            "type": "fin_tour",
             "etat": partie,
             "msg":  f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
         })
+
+    # ── Demander boutique ─────────────────────────────────────────────────────
+    elif t == "demander_boutique":
+        offre = joueur.get("boutique_offre") or generer_offre_boutique(joueur["niveau"])
+        joueur["boutique_offre"] = offre
+        await gestionnaire.envoyer_a(code, pseudo, {
+            "type":      "boutique_offre",
+            "pour":      pseudo,
+            "offre":     offre,
+            "tour":      partie["tour"],
+            "tour1_gratuit": partie["tour"] == 1,
+        })
+
+    # ── Roll (renouveler boutique) ────────────────────────────────────────────
+    elif t == "roll":
+        cout = 2
+        if joueur["pieces"] >= cout:
+            joueur["pieces"] -= cout
+            joueur["boutique_offre"] = generer_offre_boutique(joueur["niveau"])
+            await gestionnaire.envoyer_a(code, pseudo, {
+                "type":  "boutique_offre",
+                "pour":  pseudo,
+                "offre": joueur["boutique_offre"],
+                "tour":  partie["tour"],
+                "tour1_gratuit": partie["tour"] == 1,
+            })
+            await gestionnaire.diffuser(code, {
+                "type": "etat_mis_a_jour",
+                "etat": partie,
+                "msg":  f"🎲 {pseudo} reroll pour {cout} pièces",
+            })
 
     # ── Achat XP ─────────────────────────────────────────────────────────────
     elif t == "acheter_xp":
@@ -339,103 +321,118 @@ async def traiter_action(code: str, pseudo: str, action: dict):
             msg = f"📈 {pseudo} achète 2 XP pour {cout} pièces"
             if msgs: msg += " — " + " ".join(msgs)
             await gestionnaire.diffuser(code, {"type": "etat_mis_a_jour", "etat": partie, "msg": msg})
-        else:
-            await gestionnaire.diffuser(code, {"type": "erreur", "msg": "Pas assez de pièces ou niveau max", "pour": pseudo})
 
-    # ── Roll ─────────────────────────────────────────────────────────────────
-    elif t == "roll":
-        cout = 2
-        if joueur["pieces"] >= cout:
-            joueur["pieces"] -= cout
-            await gestionnaire.diffuser(code, {
-                "type": "etat_mis_a_jour",
-                "etat": partie,
-                "msg":  f"🎲 {pseudo} reroll pour {cout} pièces",
-            })
-
-    # ── Dépenser générique ────────────────────────────────────────────────────
-    elif t == "depenser_pieces":
-        montant = action.get("montant", 0)
-        raison  = action.get("raison", "")
-        if joueur["pieces"] >= montant:
-            joueur["pieces"] -= montant
-            await gestionnaire.diffuser(code, {"type": "etat_mis_a_jour", "etat": partie,
-                "msg": f"💸 {pseudo} dépense {montant} pièces ({raison})"})
-
-
-    # ── Demander boutique (5 Pokémon aléatoires) ─────────────────────────────
-    elif t == "demander_boutique":
-        import random as _random
-        niveau = joueur["niveau"]
-        # Pool simple : IDs de 1 à 151 pour l'instant, pondérés par niveau
-        pool_max = min(151 + (niveau - 1) * 50, 898)
-        offre = []
-        ids_deja = set()
-        while len(offre) < 5:
-            pid = _random.randint(1, pool_max)
-            if pid not in ids_deja:
-                ids_deja.add(pid)
-                # Niveau du Pokémon = aléatoire entre 1 et niveau joueur
-                niv_poke = _random.randint(1, max(1, niveau))
-                offre.append({"id": pid, "nom": f"#{str(pid).zfill(4)}", "niveau": niv_poke})
-        # Envoyer seulement au joueur qui demande
-        for ws_client in gestionnaire.connexions.get(code, []):
-            try:
-                await ws_client.send_json({"type": "boutique_offre", "pour": pseudo, "offre": offre})
-                break  # on envoie qu'au premier WS qui correspond — améliorer plus tard
-            except:
-                pass
-
-    # ── Capturer un Pokémon ────────────────────────────────────────────────
+    # ── Capturer Pokémon → va sur le banc ────────────────────────────────────
     elif t == "capturer_pokemon":
-        pokemon_id = action.get("pokemon_id")
-        position   = action.get("position", "off")  # off / def / boite
-        slot       = action.get("slot", 0)
+        pokemon_id = str(action.get("pokemon_id", ""))
         cout       = action.get("cout", 0)
+        tour       = partie["tour"]
 
+        # Vérif pièces
         if joueur["pieces"] < cout:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Pas assez de pièces !"})
             return
+
+        # Tour 1 : un seul achat gratuit
+        if tour == 1 and cout == 0:
+            if joueur.get("a_achete_tour1"):
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Tu as déjà capturé ton Pokémon gratuit !"})
+                return
+            joueur["a_achete_tour1"] = True
 
         joueur["pieces"] -= cout
 
-        # Retirer un éventuel Pokémon déjà sur ce slot
-        joueur["pokemon"] = [p for p in joueur.get("pokemon", [])
-                             if not (p["position"] == position and p["slot"] == slot)]
+        # Trouver infos du Pokémon dans la DB
+        poke_data = next((p for p in POKEMONS_DB if str(p["id"]) == pokemon_id), None)
+        nom  = poke_data["nom"]  if poke_data else f"#{pokemon_id}"
+        types = poke_data["types"] if poke_data else []
+        niv_poke = poke_data["niveau"] if poke_data else 1
 
-        # Ajouter le nouveau
+        # Trouver un slot libre sur le banc (positions 0-4)
+        slots_banc = {p["slot"] for p in joueur["pokemon"] if p["position"] == "banc"}
+        slot_libre = next((i for i in range(5) if i not in slots_banc), None)
+        if slot_libre is None:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Banc plein !"})
+            return
+
         joueur["pokemon"].append({
             "id":       pokemon_id,
-            "nom":      f"#{str(pokemon_id).zfill(4)}",
-            "position": position,
-            "slot":     slot,
-            "niveau":   1,
+            "nom":      nom,
+            "position": "banc",
+            "slot":     slot_libre,
+            "niveau":   niv_poke,
             "pv":       100,
             "pv_max":   100,
-            "types":    [],
+            "types":    types,
             "bonus_pv_synergie": 0,
         })
 
-        # Recalculer synergies
+        await gestionnaire.diffuser(code, {
+            "type": "etat_mis_a_jour",
+            "etat": partie,
+            "msg":  f"⚡ {pseudo} capture {nom} !",
+        })
+
+    # ── Déplacer Pokémon (banc ↔ arène) ──────────────────────────────────────
+    elif t == "deplacer_pokemon":
+        from_pos  = action.get("from_pos")
+        from_slot = action.get("from_slot")
+        to_pos    = action.get("to_pos")
+        to_slot   = action.get("to_slot")
+        niveau_joueur = joueur["niveau"]
+
+        # Vérif cases disponibles
+        cases_dispo = 5 if niveau_joueur >= 5 else 3
+        if to_pos in ("off", "def") and to_slot >= cases_dispo:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Case non disponible à ce niveau !"})
+            return
+
+        # Vérif case défensive : doit avoir offensif devant
+        if to_pos == "def":
+            off_devant = any(p["position"] == "off" and p["slot"] == to_slot for p in joueur["pokemon"])
+            if not off_devant:
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Il faut un Pokémon offensif dans cette colonne !"})
+                return
+
+        # Trouver le Pokémon source
+        poke = next((p for p in joueur["pokemon"] if p["position"] == from_pos and p["slot"] == from_slot), None)
+        if not poke:
+            return
+
+        # Échanger avec l'éventuel occupant de la destination
+        occupant = next((p for p in joueur["pokemon"] if p["position"] == to_pos and p["slot"] == to_slot), None)
+        if occupant:
+            occupant["position"] = from_pos
+            occupant["slot"]     = from_slot
+
+        poke["position"] = to_pos
+        poke["slot"]     = to_slot
+
         appliquer_bonus_pv_synergies(joueur)
 
         await gestionnaire.diffuser(code, {
             "type": "etat_mis_a_jour",
             "etat": partie,
-            "msg":  f"⚡ {pseudo} capture #{str(pokemon_id).zfill(4)} en {position} slot {slot+1}",
+            "msg":  f"↕️ {pseudo} déplace {poke['nom']}",
         })
 
-    # ── Retirer un Pokémon ─────────────────────────────────────────────────
+    # ── Retirer Pokémon → banc ────────────────────────────────────────────────
     elif t == "retirer_pokemon":
-        position = action.get("position", "off")
-        slot     = action.get("slot", 0)
-        joueur["pokemon"] = [p for p in joueur.get("pokemon", [])
-                             if not (p["position"] == position and p["slot"] == slot)]
-        appliquer_bonus_pv_synergies(joueur)
-        await gestionnaire.diffuser(code, {
-            "type": "etat_mis_a_jour",
-            "etat": partie,
-            "msg":  f"↩️ {pseudo} retire un Pokémon",
-        })
+        position = action.get("position")
+        slot     = action.get("slot")
+        poke = next((p for p in joueur["pokemon"] if p["position"] == position and p["slot"] == slot), None)
+        if poke:
+            slots_banc = {p["slot"] for p in joueur["pokemon"] if p["position"] == "banc"}
+            slot_libre = next((i for i in range(5) if i not in slots_banc), None)
+            if slot_libre is not None:
+                poke["position"] = "banc"
+                poke["slot"]     = slot_libre
+            appliquer_bonus_pv_synergies(joueur)
+            await gestionnaire.diffuser(code, {
+                "type": "etat_mis_a_jour",
+                "etat": partie,
+                "msg":  f"↩️ {pseudo} retire {poke['nom']} vers le banc",
+            })
 
     else:
         await gestionnaire.diffuser(code, {"type": "action", "pseudo": pseudo, "action": action, "etat": partie})
