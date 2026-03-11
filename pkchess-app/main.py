@@ -153,7 +153,7 @@ def appliquer_bonus_pv_synergies(joueur):
         if meilleur != ancien:
             diff = meilleur - ancien
             poke["pv_max"] = poke.get("pv_max", 100) + diff
-            poke["pv"] = min(poke.get("pv", 100), poke["pv_max"])
+            poke["pv"] = min(poke.get("pv", 100) + diff, poke["pv_max"])
             poke["bonus_pv_synergie"] = meilleur
 
 def prix_vente(poke):
@@ -312,18 +312,9 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             joueur_check["en_vie"] = False
             logs.append(f"💀 {pseudo_check} est éliminé !")
 
-    # Remettre les KO au banc + avancer le défensif si l'offensif KO
+    # Remettre les KO au banc
     for joueur_check in [j1, j2]:
-        for poke in list(joueur_check.get("pokemon", [])):
-            if poke.get("ko") and poke["position"] == "off":
-                slot_ko = poke["slot"]
-                # Chercher un défensif dans la même colonne → il avance en off
-                defensif = next((p for p in joueur_check["pokemon"]
-                                 if p["position"] == "def" and p["slot"] == slot_ko
-                                 and not p.get("ko", False)), None)
-                if defensif:
-                    defensif["position"] = "off"
-                    logs.append(f"  ↑ {defensif['nom']} avance en position offensive (colonne {slot_ko})")
+        for poke in joueur_check.get("pokemon", []):
             if poke.get("ko") and poke["position"] in ("off", "def"):
                 slots_banc = {p["slot"] for p in joueur_check["pokemon"] if p["position"] == "banc"}
                 slot_libre = next((i for i in range(10) if i not in slots_banc), None)
@@ -589,19 +580,6 @@ async def traiter_action(code, pseudo, action):
             msgs_level = appliquer_xp(j, xp_gagnes=1)
             messages.extend(msgs_level)
             appliquer_bonus_pv_synergies(j)
-            # Centre Pokémon : décrémenter le compteur de soin
-            poke_centre = next((p for p in j.get("pokemon", []) if p["position"] == "centre"), None)
-            if poke_centre:
-                tours_restants = poke_centre.get("soin_tours_restants", 1) - 1
-                poke_centre["soin_tours_restants"] = tours_restants
-                if tours_restants <= 0:
-                    poke_centre["pv"] = poke_centre.get("pv_max", 100)
-                    poke_centre["position"] = "banc"
-                    slots_banc = {p["slot"] for p in j.get("pokemon", []) if p["position"] == "banc"}
-                    slot_libre = next((i for i in range(10) if i not in slots_banc), None)
-                    poke_centre["slot"] = slot_libre if slot_libre is not None else 0
-                    poke_centre.pop("soin_tours_restants", None)
-                    messages.append(f"💊 {poke_centre['nom']} de {pj} est soigné et retourne au banc !")
             # Nouvelle boutique (sauf si locked)
             locked = j.get("boutique_locked", False)
             j["boutique_offre"] = generer_offre_boutique(
@@ -782,27 +760,6 @@ async def traiter_action(code, pseudo, action):
                 await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Pas d'offensif dans cette colonne !", "pour": pseudo})
                 return
 
-        if tp == "centre":
-            # Déjà quelqu'un au centre ?
-            if any(p["position"] == "centre" for p in joueur["pokemon"]):
-                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Le Centre Pokémon est déjà occupé !", "pour": pseudo})
-                return
-            poke_a_soigner = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
-            if poke_a_soigner and poke_a_soigner.get("ko"):
-                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Un Pokémon KO ne peut pas aller au Centre Pokémon !", "pour": pseudo})
-                return
-            if poke_a_soigner and poke_a_soigner.get("pv", 0) >= poke_a_soigner.get("pv_max", 100):
-                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Ce Pokémon est déjà à pleine santé !", "pour": pseudo})
-                return
-            if poke_a_soigner:
-                # Tours de soin = points_force de base (sans bonus stade)
-                niv = poke_a_soigner.get("niveau", 1)
-                if niv <= 3:    tours = 1
-                elif niv <= 6:  tours = 2
-                elif niv <= 9:  tours = 3
-                else:           tours = 4  # niveau 10-15
-                poke_a_soigner["soin_tours_restants"] = tours
-
         poke     = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
         if not poke: return
         occupant = next((p for p in joueur["pokemon"] if p["position"] == tp and p["slot"] == ts), None)
@@ -823,8 +780,8 @@ async def traiter_action(code, pseudo, action):
             await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Seul l'hôte peut lancer le combat !", "pour": pseudo})
             return
         if partie.get("phase") == "combat":
-            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Combat déjà en cours !", "pour": pseudo})
-            return
+            partie["phase"] = "preparation"  # reset si bloqué
+        # 1. Lancer le combat
         partie["phase"] = "combat"
         resultats = lancer_combat(partie)
         partie["phase"] = "preparation"
@@ -834,26 +791,53 @@ async def traiter_action(code, pseudo, action):
             "resultats": resultats,
             "tour": partie["tour"],
         })
-
-    # ── Racheter Pokémon KO (soigner) ────────────────────────────────────────
-    elif t == "racheter_pokemon":
-        position = action.get("position")
-        slot     = action.get("slot")
-        poke = next((p for p in joueur["pokemon"] if p["position"] == position and p["slot"] == slot), None)
-        if not poke or not poke.get("ko"):
-            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Pokémon introuvable ou non KO !", "pour": pseudo})
-            return
-        cout = poke.get("niveau", 1) * 2
-        if joueur["pieces"] < cout:
-            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": f"Pas assez de pièces ! ({cout} 🪙 requis)", "pour": pseudo})
-            return
-        joueur["pieces"] -= cout
-        poke["ko"]  = False
-        poke["pv"]  = poke.get("pv_max", 100)  # PV remis à fond
+        # 2. Enchaîner la fin de tour automatiquement
+        partie["tour"] += 1
+        messages = []
+        for pj, j in partie["joueurs"].items():
+            if not j.get("en_vie", True): continue
+            niveau   = j["niveau"]
+            interets = calculer_interets(j["pieces"])
+            serie    = calculer_bonus_serie(j)
+            gain     = niveau + interets + serie
+            j["pieces"] += gain
+            detail = f"+{niveau} niv."
+            if serie > 0:    detail += f" +{serie} série"
+            if interets > 0: detail += f" +{interets} intérêts"
+            messages.append(f"💰 {pj} +{gain} ({detail})")
+            msgs_level = appliquer_xp(j, xp_gagnes=1)
+            messages.extend(msgs_level)
+            appliquer_bonus_pv_synergies(j)
+            poke_centre = next((p for p in j.get("pokemon", []) if p["position"] == "centre"), None)
+            if poke_centre:
+                tours_restants = poke_centre.get("soin_tours_restants", 1) - 1
+                poke_centre["soin_tours_restants"] = tours_restants
+                if tours_restants <= 0:
+                    poke_centre["pv"] = poke_centre.get("pv_max", 100)
+                    poke_centre["position"] = "banc"
+                    slots_banc = {p["slot"] for p in j.get("pokemon", []) if p["position"] == "banc"}
+                    slot_libre = next((i for i in range(10) if i not in slots_banc), None)
+                    poke_centre["slot"] = slot_libre if slot_libre is not None else 0
+                    poke_centre.pop("soin_tours_restants", None)
+                    messages.append(f"💊 {poke_centre['nom']} de {pj} est soigné !")
+            locked = j.get("boutique_locked", False)
+            j["boutique_offre"] = generer_offre_boutique(
+                partie, j["niveau"], ancienne_offre=j["boutique_offre"], locked=locked
+            )
+            j["boutique_locked"] = False
+            j["a_achete_tour1"]  = False
         await gestionnaire.diffuser(code, {
-            "type": "etat_mis_a_jour", "etat": partie,
-            "msg": f"💊 {pseudo} rachète {poke['nom']} (-{cout} 🪙)",
+            "type": "fin_tour", "etat": partie,
+            "msg": f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
         })
+        for pj, j in partie["joueurs"].items():
+            await gestionnaire.envoyer_a(code, pj, {
+                "type": "boutique_offre", "pour": pj,
+                "offre": j["boutique_offre"],
+                "tour": partie["tour"],
+                "tour1_gratuit": partie["tour"] <= 1,
+                "auto": True,
+            })
 
     # ── Retirer Pokémon → banc ────────────────────────────────────────────────
     elif t == "retirer_pokemon":

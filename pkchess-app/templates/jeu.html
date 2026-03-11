@@ -194,10 +194,9 @@
         </div>
 
         <div class="actions-bar">
-            <button class="btn btn-green" id="btn-fin-tour" onclick="finTour()">✅ Fin de tour</button>
+            <button class="btn btn-red"    id="btn-fin-tour" onclick="lancerCombat()" style="display:none">⚔️ Fin de tour &amp; Combat</button>
             <button class="btn btn-gold"  onclick="ouvrirBoutique()">🛒 Boutique</button>
             <button class="btn btn-blue"  onclick="acheterXp()">📈 XP (4🪙)</button>
-            <button class="btn btn-red"   id="btn-combat" onclick="lancerCombat()" style="display:none">⚔️ Combat !</button>
         </div>
 
     </div>
@@ -313,6 +312,7 @@ function connecterWS() {
             var cls = (msg.type === 'fin_tour') ? 'gold' : '';
             addLog(msg.msg, cls);
         }
+        if (msg.type === 'fin_tour') { finTour(); }
         if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) {
             addLog(msg.pseudo + ' a rejoint', 'green');
         }
@@ -362,9 +362,9 @@ function majInterface() {
     document.getElementById('tour-num').textContent   = etat.tour || 0;
     document.getElementById('pv-bar').style.width     = Math.max(0, Math.min(100, moi.pv)) + '%';
 
-    // Bouton combat visible uniquement pour l'hôte
-    var btnCombat = document.getElementById('btn-combat');
-    if (btnCombat) btnCombat.style.display = (etat.hote === PSEUDO) ? 'inline-block' : 'none';
+    // Bouton fin de tour + combat visible uniquement pour l'hôte
+    var btnFinTour = document.getElementById('btn-fin-tour');
+    if (btnFinTour) btnFinTour.style.display = (etat.hote === PSEUDO) ? 'inline-block' : 'none';
 
     // Synergies
     var syns   = moi.synergies || {};
@@ -433,10 +433,8 @@ function renderCentre(containerId) {
     container.innerHTML = '';
     if (!etat || !etat.joueurs || !etat.joueurs[PSEUDO]) return;
     var pokemons = etat.joueurs[PSEUDO].pokemon || [];
-    var pokeCentre = null;
-    for (var i = 0; i < pokemons.length; i++) {
-        if (pokemons[i].position === 'centre') { pokeCentre = pokemons[i]; break; }
-    }
+    // La case centre = position "centre", slot 0
+    var pokeCentre = pokemons.find(function(p) { return p.position === 'centre'; });
     var el = document.createElement('div');
     el.className = 'case centre' + (pokeCentre ? ' occupee' : '');
     el.dataset.pos  = 'centre';
@@ -444,7 +442,8 @@ function renderCentre(containerId) {
     if (pokeCentre) {
         var id4 = String(pokeCentre.id).padStart(4, '0');
         var toursRestants = pokeCentre.soin_tours_restants || 0;
-        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',0)">'
+        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom
+            + '" onclick="ouvrirZoom('' + IMG + id4 + '.png','centre',0)">'
             + '<div class="poke-nom">⏳' + toursRestants + ' tour' + (toursRestants > 1 ? 's' : '') + '</div>';
         el.draggable = true;
         (function() {
@@ -458,6 +457,7 @@ function renderCentre(containerId) {
     } else {
         el.innerHTML = '<span class="plus" style="color:rgba(82,183,136,0.4)">+</span>';
     }
+    // Drop sur la case centre
     el.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('droppable'); });
     el.addEventListener('dragleave', function() { this.classList.remove('droppable'); });
     el.addEventListener('drop', function(e) {
@@ -469,7 +469,6 @@ function renderCentre(containerId) {
     });
     container.appendChild(el);
 }
-
 
 function renderRangee(containerId, pos, dispo, cssClass) {
     var container = document.getElementById(containerId);
@@ -758,10 +757,7 @@ function afficherResultatsCombat(resultats, tour) {
 function fermerCombat() { document.getElementById('combat-bg').classList.remove('open'); }
 
 function finTour() {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({type: 'fin_tour', boutique_locked: boutique_locked}));
-    }
-    // Reset lock visuellement après fin de tour
+    // Appelé automatiquement après combat via msg fin_tour
     boutique_locked = false;
     var btn = document.getElementById('btn-lock');
     if (btn) { btn.textContent = '🔓 Garder'; btn.classList.remove('locked'); }
