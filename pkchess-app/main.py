@@ -7,11 +7,132 @@ import json, random, string, asyncio
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
+
+# ── Synergies ──────────────────────────────────────────────────────────────────
+
+SYNERGIES = {
+    "Acier":    {3: "1/3 esquive effet supp.", 6: "2/3 esquive effet supp.", 9: "3/3 esquive effet supp."},
+    "Combat":   {3: "Soigne Combat +10PV/niv au KO", 6: "+20PV/niv au KO", 9: "+30PV/niv au KO"},
+    "Dragon":   {3: "+10 dégâts offensifs", 6: "+20 dégâts offensifs", 9: "+40 dégâts offensifs"},
+    "Eau":      {3: "+10 Vitesse", 6: "+20 Vitesse", 9: "+40 Vitesse"},
+    "Electrik": {3: "1/3 Paralyser (offensif)", 6: "2/3 Paralyser", 9: "3/3 Paralyser"},
+    "Fée":      {3: "+1 pièce fin combat", 6: "+2 pièces", 9: "+4 pièces"},
+    "Feu":      {3: "1/3 Brûler (offensif)", 6: "2/3 Brûler", 9: "3/3 Brûler"},
+    "Glace":    {3: "1/3 Geler (offensif)", 6: "2/3 Geler", 9: "3/3 Geler"},
+    "Insecte":  {3: "+1 pt Force/Insecte", 6: "+2 pts Force/Insecte", 9: "+3 pts Force/Insecte"},
+    "Normal":   {3: "+10 PV MAX", 6: "+20 PV MAX", 9: "+40 PV MAX"},
+    "Plante":   {3: "+10 PV soignés fin combat", 6: "+20 PV soignés", 9: "+40 PV soignés"},
+    "Poison":   {3: "1/3 Empoisonner (offensif)", 6: "2/3 Empoisonner", 9: "3/3 Empoisonner"},
+    "Psy":      {3: "1/3 Confusion (offensif)", 6: "2/3 Confusion", 9: "3/3 Confusion"},
+    "Roche":    {3: "-10 dégâts reçus", 6: "-20 dégâts reçus", 9: "-30 dégâts reçus"},
+    "Sol":      {3: "1/3 Piéger (offensif)", 6: "2/3 Piéger", 9: "3/3 Piéger"},
+    "Spectre":  {3: "KO -> 10 dégâts x niv col. adverse", 6: "20 dégâts x niv", 9: "30 dégâts x niv"},
+    "Ténèbre":  {3: "1/3 Apeurer (offensif)", 6: "2/3 Apeurer", 9: "3/3 Apeurer"},
+    "Vol":      {3: "1/3 cible Support +10 dégâts", 6: "2/3 +20 dégâts", 9: "3/3 +30 dégâts"},
+}
+
+def calculer_synergies(joueur):
+    """Compte les types sur le terrain (arene_off + arene_def) et retourne les synergies actives."""
+    comptage = {}
+    terrain = joueur.get("arene_off", []) + joueur.get("arene_def", [])
+    for pokemon in terrain:
+        for type_ in pokemon.get("types", []):
+            comptage[type_] = comptage.get(type_, 0) + 1
+
+    synergies_actives = {}
+    for type_, nb in comptage.items():
+        if nb >= 9:   palier = 9
+        elif nb >= 6: palier = 6
+        elif nb >= 3: palier = 3
+        else: continue
+        synergies_actives[type_] = {
+            "nb": nb,
+            "palier": palier,
+            "bonus": SYNERGIES.get(type_, {}).get(palier, ""),
+        }
+    return synergies_actives
+
 # ── Constantes économie ───────────────────────────────────────────────────────
 
 # Bonus de série (victoires ou défaites) — index = nb de séries consécutives
 # Série 0→0, 1→0, 2→1, 3→1, 4→2, 5+→3
 BONUS_SERIE = [0, 0, 1, 1, 2, 3]
+
+# ── Synergies ─────────────────────────────────────────────────────────────────
+
+SYNERGIES = {
+    "Acier":    {3: "1/3 esquive effet supp.", 6: "2/3 esquive", 9: "3/3 esquive"},
+    "Combat":   {3: "Soigne 10PV/niv KO",     6: "20PV/niv KO", 9: "30PV/niv KO"},
+    "Dragon":   {3: "+10 dégâts offensifs",    6: "+20 dégâts",  9: "+40 dégâts"},
+    "Eau":      {3: "+10 Vitesse",             6: "+20 Vitesse", 9: "+40 Vitesse"},
+    "Electrik": {3: "1/3 Paralyse",            6: "2/3 Paralyse",9: "3/3 Paralyse"},
+    "Fée":      {3: "+1 pièce fin combat",     6: "+2 pièces",   9: "+4 pièces"},
+    "Feu":      {3: "1/3 Brûlure",             6: "2/3 Brûlure", 9: "3/3 Brûlure"},
+    "Glace":    {3: "1/3 Gel",                 6: "2/3 Gel",     9: "3/3 Gel"},
+    "Insecte":  {3: "+1 pt Force/Insecte",     6: "+2 pts",      9: "+3 pts"},
+    "Normal":   {3: "+10 PV MAX",              6: "+20 PV MAX",  9: "+40 PV MAX"},
+    "Plante":   {3: "+10 PV soignés fin combat",6:"+20 PV",      9: "+40 PV"},
+    "Poison":   {3: "1/3 Empoisonnement",      6: "2/3",         9: "3/3"},
+    "Psy":      {3: "1/3 Confusion",           6: "2/3",         9: "3/3"},
+    "Roche":    {3: "-10 dégâts reçus",        6: "-20 dégâts",  9: "-30 dégâts"},
+    "Sol":      {3: "1/3 Piège",               6: "2/3",         9: "3/3"},
+    "Spectre":  {3: "KO→10 dégâts×niv adverse",6:"KO→20 dégâts", 9:"KO→30 dégâts"},
+    "Ténèbre":  {3: "1/3 Peur",                6: "2/3",         9: "3/3"},
+    "Vol":      {3: "1/3 cible Support+10 dég",6:"2/3+20 dég",   9:"3/3+30 dég"},
+}
+
+# Bonus PV MAX universel par palier de synergie
+BONUS_PV_SYNERGIE = {3: 10, 6: 20, 9: 40}
+
+def calculer_synergies(joueur):
+    """Calcule les synergies actives basées sur les Pokémon en arène (offensifs + défensifs)."""
+    # Compter les types sur le terrain (arène rouge + arène bleue)
+    terrain = joueur.get("pokemon", [])  # liste de dicts avec "types": ["Feu", "Vol"]
+    compteur_types = {}
+    for poke in terrain:
+        types = poke.get("types", [])
+        for t in types:
+            compteur_types[t] = compteur_types.get(t, 0) + 1
+
+    synergies_actives = {}
+    for type_poke, count in compteur_types.items():
+        if count >= 9:
+            synergies_actives[type_poke] = 9
+        elif count >= 6:
+            synergies_actives[type_poke] = 6
+        elif count >= 3:
+            synergies_actives[type_poke] = 3
+
+    return synergies_actives
+
+def appliquer_bonus_pv_synergies(joueur):
+    """Applique les bonus de PV MAX liés aux synergies. Retourne les messages."""
+    messages = []
+    synergies = calculer_synergies(joueur)
+    joueur["synergies"] = synergies
+
+    for poke in joueur.get("pokemon", []):
+        # Trouver le meilleur bonus PV parmi les types du Pokémon
+        meilleur_bonus = 0
+        for t in poke.get("types", []):
+            if t in synergies:
+                palier = synergies[t]
+                bonus = BONUS_PV_SYNERGIE.get(palier, 0)
+                meilleur_bonus = max(meilleur_bonus, bonus)
+
+        # Appliquer le bonus PV MAX (si pas déjà appliqué)
+        ancien_bonus = poke.get("bonus_pv_synergie", 0)
+        if meilleur_bonus != ancien_bonus:
+            diff = meilleur_bonus - ancien_bonus
+            poke["pv_max"] = poke.get("pv_max", poke.get("pv", 100)) + diff
+            poke["pv"] = min(poke.get("pv", 100), poke["pv_max"])
+            poke["bonus_pv_synergie"] = meilleur_bonus
+            if diff != 0:
+                messages.append(f"✨ {poke.get('nom','?')} : {'+'if diff>0 else ''}{diff} PV MAX (synergie)")
+
+    return messages
+
+
 
 # XP nécessaire pour passer au niveau suivant (index = niveau actuel)
 XP_PAR_NIVEAU = [0, 1, 1, 2, 4, 8, 16, 24, 32, 40]
@@ -34,6 +155,8 @@ def etat_initial_joueur(pseudo):
         "exp":        0,
         "serie_vic":  0,
         "serie_def":  0,
+        "arene_off":  [],  # Pokémon offensifs (cases rouges)
+        "arene_def":  [],  # Pokémon défensifs (cases bleues)
         "pokemon":    [],
         "banc":       [],
         "synergies":  {},
@@ -188,8 +311,12 @@ async def traiter_action(code: str, pseudo: str, action: dict):
             if serie > 0:   detail += f" +{serie} série"
             if interets > 0: detail += f" +{interets} intérêts"
             messages.append(f"💰 {pseudo_j} +{gain_total} pièces ({detail})")
+            j["synergies"] = calculer_synergies(j)
             msgs_level = appliquer_xp(j, xp_gagnes=1)
             messages.extend(msgs_level)
+            # Recalculer les synergies
+            msgs_syn = appliquer_bonus_pv_synergies(j)
+            messages.extend(msgs_syn)
 
         await gestionnaire.diffuser(code, {
             "type": "etat_mis_a_jour",
