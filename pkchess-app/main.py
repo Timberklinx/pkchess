@@ -362,5 +362,80 @@ async def traiter_action(code: str, pseudo: str, action: dict):
             await gestionnaire.diffuser(code, {"type": "etat_mis_a_jour", "etat": partie,
                 "msg": f"💸 {pseudo} dépense {montant} pièces ({raison})"})
 
+
+    # ── Demander boutique (5 Pokémon aléatoires) ─────────────────────────────
+    elif t == "demander_boutique":
+        import random as _random
+        niveau = joueur["niveau"]
+        # Pool simple : IDs de 1 à 151 pour l'instant, pondérés par niveau
+        pool_max = min(151 + (niveau - 1) * 50, 898)
+        offre = []
+        ids_deja = set()
+        while len(offre) < 5:
+            pid = _random.randint(1, pool_max)
+            if pid not in ids_deja:
+                ids_deja.add(pid)
+                # Niveau du Pokémon = aléatoire entre 1 et niveau joueur
+                niv_poke = _random.randint(1, max(1, niveau))
+                offre.append({"id": pid, "nom": f"#{str(pid).zfill(4)}", "niveau": niv_poke})
+        # Envoyer seulement au joueur qui demande
+        for ws_client in gestionnaire.connexions.get(code, []):
+            try:
+                await ws_client.send_json({"type": "boutique_offre", "pour": pseudo, "offre": offre})
+                break  # on envoie qu'au premier WS qui correspond — améliorer plus tard
+            except:
+                pass
+
+    # ── Capturer un Pokémon ────────────────────────────────────────────────
+    elif t == "capturer_pokemon":
+        pokemon_id = action.get("pokemon_id")
+        position   = action.get("position", "off")  # off / def / boite
+        slot       = action.get("slot", 0)
+        cout       = action.get("cout", 0)
+
+        if joueur["pieces"] < cout:
+            return
+
+        joueur["pieces"] -= cout
+
+        # Retirer un éventuel Pokémon déjà sur ce slot
+        joueur["pokemon"] = [p for p in joueur.get("pokemon", [])
+                             if not (p["position"] == position and p["slot"] == slot)]
+
+        # Ajouter le nouveau
+        joueur["pokemon"].append({
+            "id":       pokemon_id,
+            "nom":      f"#{str(pokemon_id).zfill(4)}",
+            "position": position,
+            "slot":     slot,
+            "niveau":   1,
+            "pv":       100,
+            "pv_max":   100,
+            "types":    [],
+            "bonus_pv_synergie": 0,
+        })
+
+        # Recalculer synergies
+        appliquer_bonus_pv_synergies(joueur)
+
+        await gestionnaire.diffuser(code, {
+            "type": "etat_mis_a_jour",
+            "etat": partie,
+            "msg":  f"⚡ {pseudo} capture #{str(pokemon_id).zfill(4)} en {position} slot {slot+1}",
+        })
+
+    # ── Retirer un Pokémon ─────────────────────────────────────────────────
+    elif t == "retirer_pokemon":
+        position = action.get("position", "off")
+        slot     = action.get("slot", 0)
+        joueur["pokemon"] = [p for p in joueur.get("pokemon", [])
+                             if not (p["position"] == position and p["slot"] == slot)]
+        appliquer_bonus_pv_synergies(joueur)
+        await gestionnaire.diffuser(code, {
+            "type": "etat_mis_a_jour",
+            "etat": partie,
+            "msg":  f"↩️ {pseudo} retire un Pokémon",
+        })
+
     else:
         await gestionnaire.diffuser(code, {"type": "action", "pseudo": pseudo, "action": action, "etat": partie})

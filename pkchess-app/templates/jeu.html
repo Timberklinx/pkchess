@@ -7,292 +7,111 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #FFD700;
-            --gold-dark: #C8A800;
-            --blue-deep: #0D1B3E;
-            --blue-mid: #1A2F5E;
-            --blue-light: #243D7A;
-            --blue-card: #162447;
-            --red: #E63946;
-            --green: #52B788;
-            --white: #F8F9FA;
+            --gold: #FFD700; --gold-dark: #C8A800;
+            --blue-deep: #0D1B3E; --blue-mid: #1A2F5E;
+            --blue-light: #243D7A; --blue-card: #162447;
+            --red: #E63946; --green: #52B788; --white: #F8F9FA;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--blue-deep); color: var(--white); font-family: 'Nunito', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
 
-        body {
-            background: var(--blue-deep);
-            color: var(--white);
-            font-family: 'Nunito', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ── HEADER ── */
-        .header {
-            background: linear-gradient(90deg, var(--blue-mid), var(--blue-light));
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 3px solid var(--gold);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            position: sticky; top: 0; z-index: 100;
-        }
-
-        .header-logo {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 0.9em;
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(255,215,0,0.5);
-        }
-
-        .header-code {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 0.75em;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            color: var(--gold);
-            border: 1px solid rgba(255,215,0,0.3);
-            letter-spacing: 4px;
-        }
-
-        .header-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85em;
-            font-weight: 700;
-        }
-        .dot {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            background: var(--red);
-            box-shadow: 0 0 6px var(--red);
-            transition: all 0.3s;
-        }
+        .header { background: linear-gradient(90deg, var(--blue-mid), var(--blue-light)); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--gold); box-shadow: 0 4px 20px rgba(0,0,0,0.4); position: sticky; top: 0; z-index: 100; }
+        .header-logo { font-family: 'Press Start 2P', monospace; font-size: 0.9em; color: var(--gold); }
+        .header-code { font-family: 'Press Start 2P', monospace; font-size: 0.75em; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 20px; color: var(--gold); border: 1px solid rgba(255,215,0,0.3); letter-spacing: 4px; }
+        .header-status { display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 700; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); transition: all 0.3s; }
         .dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse-dot 2s infinite; }
         @keyframes pulse-dot { 0%,100%{box-shadow:0 0 6px var(--green)} 50%{box-shadow:0 0 14px var(--green)} }
 
-        /* ── LAYOUT ── */
-        .game-layout {
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            grid-template-rows: auto 1fr;
-            gap: 16px;
-            padding: 16px;
-            flex: 1;
-        }
+        .game-wrap { display: flex; gap: 14px; padding: 14px; flex: 1; }
+        .main-col { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 
-        @media (max-width: 900px) {
-            .game-layout { grid-template-columns: 1fr; }
-        }
+        .stats-bar { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 14px; padding: 12px 18px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255,215,0,0.2); flex-wrap: wrap; }
+        .player-name { font-family: 'Press Start 2P', monospace; font-size: 0.55em; color: var(--gold); }
+        .stat-pill { display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.25); border-radius: 20px; padding: 5px 12px; font-weight: 800; font-size: 0.85em; }
+        .stat-pill .val { font-family: 'Press Start 2P', monospace; font-size: 0.8em; }
+        .stat-pill.hp .val { color: #FF6B6B; } .stat-pill.gp .val { color: var(--gold); }
+        .stat-pill.lv .val { color: var(--green); } .stat-pill.xp .val { color: #74C0FC; }
+        .pv-bar-bg { flex: 1; min-width: 60px; background: rgba(0,0,0,0.3); border-radius: 10px; height: 8px; overflow: hidden; }
+        .pv-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #FF6B6B, #E63946); transition: width 0.6s ease; }
 
-        /* ── MON PLATEAU ── */
-        .mon-plateau {
-            grid-column: 1;
-            background: linear-gradient(135deg, var(--blue-mid), var(--blue-card));
-            border-radius: 20px;
-            padding: 24px;
-            border: 2px solid var(--gold);
-            box-shadow: 0 0 30px rgba(255,215,0,0.1), 0 8px 32px rgba(0,0,0,0.4);
-        }
+        .plateau-wrap { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 18px; padding: 16px; border: 2px solid var(--gold); box-shadow: 0 0 30px rgba(255,215,0,0.08); }
+        .rangee-label { font-size: 0.62em; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.6); }
+        .dot-rouge { width: 8px; height: 8px; border-radius: 50%; background: var(--red); display:inline-block; }
+        .dot-bleu  { width: 8px; height: 8px; border-radius: 50%; background: #4A90D9; display:inline-block; }
+        .dot-noir  { width: 8px; height: 8px; border-radius: 50%; background: #555; display:inline-block; }
+        .rangee { display: flex; gap: 10px; margin-bottom: 12px; justify-content: center; }
+        .sep { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0 12px; }
 
-        .plateau-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .plateau-nom {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 0.7em;
-            color: var(--gold);
-        }
-        .tour-badge {
-            background: rgba(255,215,0,0.15);
-            border: 1px solid rgba(255,215,0,0.3);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-size: 0.8em;
-            font-weight: 800;
-            color: rgba(255,255,255,0.8);
-        }
+        .case { width: 100px; height: 140px; border-radius: 10px; border: 2px dashed rgba(255,255,255,0.15); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; position: relative; overflow: hidden; flex-shrink: 0; }
+        .case:hover:not(.bloquee) { transform: translateY(-3px); }
+        .case.offensive { border-color: rgba(230,57,70,0.35); }
+        .case.offensive:hover:not(.bloquee) { border-color: var(--red); background: rgba(230,57,70,0.08); }
+        .case.defensive { border-color: rgba(74,144,217,0.35); }
+        .case.defensive:hover:not(.bloquee) { border-color: #4A90D9; background: rgba(74,144,217,0.08); }
+        .case.boite { border-color: rgba(255,255,255,0.1); }
+        .case.boite:hover:not(.bloquee) { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+        .case.bloquee { opacity: 0.25; cursor: not-allowed; }
+        .case .plus { font-size: 1.4em; color: rgba(255,255,255,0.2); }
+        .case.occupee { border-style: solid; cursor: default; }
+        .case.occupee.offensive { border-color: var(--red); box-shadow: 0 0 12px rgba(230,57,70,0.2); }
+        .case.occupee.defensive { border-color: #4A90D9; box-shadow: 0 0 12px rgba(74,144,217,0.2); }
+        .case.occupee.boite { border-color: #555; }
+        .case img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .suppr { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.75); border: none; color: #FF6B6B; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7em; cursor: pointer; display: none; align-items: center; justify-content: center; font-weight: 900; }
+        .case.occupee:hover .suppr { display: flex; }
 
-        /* Stats bars */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: rgba(0,0,0,0.25);
-            border-radius: 14px;
-            padding: 14px 10px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: transform 0.2s;
-        }
-        .stat-card:hover { transform: translateY(-2px); }
-        .stat-icon { font-size: 1.4em; margin-bottom: 6px; }
-        .stat-val {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 1.1em;
-            font-weight: 900;
-            margin-bottom: 4px;
-            transition: color 0.3s;
-        }
-        .stat-label { font-size: 0.7em; color: rgba(255,255,255,0.5); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-        .stat-card.pv .stat-val { color: #FF6B6B; }
-        .stat-card.pieces .stat-val { color: var(--gold); }
-        .stat-card.niveau .stat-val { color: var(--green); }
-        .stat-card.tour .stat-val { color: #74C0FC; }
-
-        /* PV bar */
-        .pv-bar-wrap { margin-bottom: 20px; }
-        .pv-bar-label { display: flex; justify-content: space-between; font-size: 0.8em; color: rgba(255,255,255,0.5); margin-bottom: 6px; font-weight: 700; }
-        .pv-bar-bg { background: rgba(0,0,0,0.3); border-radius: 10px; height: 10px; overflow: hidden; }
-        .pv-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #FF6B6B, #E63946); transition: width 0.6s ease; box-shadow: 0 0 8px rgba(230,57,70,0.5); }
-
-        /* Synergies */
-        .synergies-titre {
-            font-size: 0.75em; font-weight: 800; color: rgba(255,255,255,0.5);
-            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
-        }
-        .synergies-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; min-height: 36px; }
-        .syn-badge {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 20px;
-            padding: 5px 14px;
-            font-size: 0.8em;
-            font-weight: 800;
-            transition: all 0.3s;
-        }
-        .syn-badge.actif {
-            background: rgba(255,215,0,0.15);
-            border-color: var(--gold);
-            color: var(--gold);
-            box-shadow: 0 0 10px rgba(255,215,0,0.2);
-        }
-
-        /* Actions */
-        .actions-titre {
-            font-size: 0.75em; font-weight: 800; color: rgba(255,255,255,0.5);
-            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
-        }
-        .actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn {
-            padding: 11px 20px;
-            border: none; border-radius: 12px;
-            font-weight: 900; font-family: 'Nunito', sans-serif;
-            cursor: pointer; font-size: 0.9em;
-            transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
-            position: relative; overflow: hidden;
-        }
-        .btn:hover { transform: translateY(-2px); opacity: 0.92; }
+        .actions-bar { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 18px; border: none; border-radius: 12px; font-weight: 900; font-family: 'Nunito', sans-serif; cursor: pointer; font-size: 0.88em; transition: transform 0.15s, opacity 0.2s; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
         .btn:active { transform: translateY(0); }
-        .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--blue-deep); box-shadow: 0 4px 16px rgba(255,215,0,0.25); }
-        .btn-green { background: linear-gradient(135deg, #52B788, #2D8A60); color: white; box-shadow: 0 4px 16px rgba(82,183,136,0.25); }
-        .btn-red { background: linear-gradient(135deg, #E63946, #C1121F); color: white; }
-        .btn-blue { background: linear-gradient(135deg, #3A7BFF, #1A55D0); color: white; }
+        .btn-gold  { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--blue-deep); }
+        .btn-green { background: linear-gradient(135deg, #52B788, #2D8A60); color: white; }
+        .btn-blue  { background: linear-gradient(135deg, #3A7BFF, #1A55D0); color: white; }
+        .btn-red   { background: linear-gradient(135deg, #E63946, #C1121F); color: white; }
 
-        /* ── SIDEBAR ── */
-        .sidebar {
-            grid-column: 2;
-            grid-row: 1 / 3;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .panel {
-            background: linear-gradient(135deg, var(--blue-mid), var(--blue-card));
-            border-radius: 16px;
-            padding: 18px;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .panel-title {
-            font-size: 0.7em; font-weight: 800; color: rgba(255,255,255,0.5);
-            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        /* Adversaires */
-        .adversaire {
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-            padding: 12px 14px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(255,255,255,0.06);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: border-color 0.2s;
-        }
+        .sidebar { width: 270px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
+        .panel { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.07); }
+        .panel-title { font-size: 0.62em; font-weight: 800; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .syn-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
+        .syn-badge { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 12px; font-size: 0.78em; font-weight: 800; }
+        .syn-badge.actif { background: rgba(255,215,0,0.15); border-color: var(--gold); color: var(--gold); }
+        .adversaire { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; }
         .adversaire:last-child { margin-bottom: 0; }
-        .adversaire:hover { border-color: rgba(255,255,255,0.15); }
-        .adv-avatar {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--blue-light), var(--blue-mid));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.1em; border: 2px solid rgba(255,255,255,0.1);
-            flex-shrink: 0;
-        }
+        .adv-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: 800; flex-shrink: 0; }
         .adv-info { flex: 1; min-width: 0; }
-        .adv-nom { font-weight: 800; font-size: 0.9em; truncate; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .adv-stats { display: flex; gap: 8px; margin-top: 4px; }
-        .adv-stat { font-size: 0.75em; font-weight: 700; }
-        .adv-stat.hp { color: #FF6B6B; }
-        .adv-stat.gp { color: var(--gold); }
-        .adv-stat.lv { color: var(--green); }
-
-        /* Log */
-        .log-panel { flex: 1; }
-        .log-list {
-            max-height: 200px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255,215,0,0.2) transparent;
-        }
-        .log-item {
-            font-size: 0.8em;
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            color: rgba(255,255,255,0.6);
-            display: flex;
-            gap: 8px;
-            font-weight: 600;
-        }
+        .adv-nom { font-weight: 800; font-size: 0.85em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .adv-stats { display: flex; gap: 8px; margin-top: 3px; font-size: 0.75em; font-weight: 700; }
+        .adv-hp { color: #FF6B6B; } .adv-gp { color: var(--gold); } .adv-lv { color: var(--green); }
+        .log-list { max-height: 160px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,215,0,0.2) transparent; }
+        .log-item { font-size: 0.78em; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); display: flex; gap: 6px; font-weight: 600; }
         .log-item:last-child { border-bottom: none; }
-        .log-item .time { color: rgba(255,255,255,0.3); flex-shrink: 0; font-size: 0.9em; }
-        .log-item.gold { color: var(--gold); }
-        .log-item.green { color: var(--green); }
-        .log-item.red { color: #FF6B6B; }
+        .log-item .time { color: rgba(255,255,255,0.3); flex-shrink: 0; }
+        .log-item.gold { color: var(--gold); } .log-item.green { color: var(--green); } .log-item.red { color: #FF6B6B; }
+        .attente { text-align: center; color: rgba(255,255,255,0.3); padding: 16px; font-style: italic; font-size: 0.85em; }
 
-        /* Attente */
-        .attente { text-align: center; color: rgba(255,255,255,0.3); padding: 20px; font-style: italic; font-size: 0.9em; }
+        .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: center; justify-content: center; }
+        .modal-bg.open { display: flex; }
+        .modal { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 20px; padding: 28px; border: 2px solid var(--gold); max-width: 620px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+        .modal-title { font-family: 'Press Start 2P', monospace; font-size: 0.65em; color: var(--gold); margin-bottom: 20px; }
+        .boutique-cartes { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+        .boutique-carte { width: 90px; text-align: center; cursor: pointer; transition: transform 0.2s; }
+        .boutique-carte:hover:not(.bloquee) { transform: translateY(-6px); }
+        .boutique-carte img { width: 90px; height: 126px; object-fit: cover; border-radius: 8px; border: 2px solid rgba(255,255,255,0.15); display: block; }
+        .boutique-carte.selected img { border-color: var(--gold); box-shadow: 0 0 15px rgba(255,215,0,0.4); }
+        .boutique-carte.bloquee { opacity: 0.4; cursor: not-allowed; }
+        .boutique-carte .cout { font-size: 0.8em; font-weight: 800; color: var(--gold); margin-top: 6px; }
+        .boutique-carte .nom  { font-size: 0.7em; color: rgba(255,255,255,0.7); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
         .fade-in { animation: fadeInUp 0.4s ease both; }
-
-        .stat-val.changed {
-            animation: pop 0.4s ease both;
-        }
         @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.3)} 100%{transform:scale(1)} }
+        .pop { animation: pop 0.35s ease; }
     </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
     <div class="header-logo">⚔️ PKChess</div>
     <div class="header-code">{{ code }}</div>
@@ -302,185 +121,247 @@
     </div>
 </div>
 
-<!-- Game layout -->
-<div class="game-layout">
+<div class="game-wrap">
+    <div class="main-col fade-in">
 
-    <!-- Mon plateau -->
-    <div class="mon-plateau fade-in">
-        <div class="plateau-header">
-            <div class="plateau-nom" id="mon-nom">🎮 Dresseur</div>
-            <div class="tour-badge">Tour <span id="tour-num">0</span></div>
+        <div class="stats-bar">
+            <div class="player-name" id="player-name">🎮 Dresseur</div>
+            <div class="stat-pill hp">❤️ <span class="val" id="mes-pv">100</span></div>
+            <div class="pv-bar-bg"><div class="pv-bar" id="pv-bar" style="width:100%"></div></div>
+            <div class="stat-pill gp">🪙 <span class="val" id="mes-pieces">0</span></div>
+            <div class="stat-pill lv">⭐ Niv.<span class="val" id="mon-niveau">1</span></div>
+            <div class="stat-pill xp">📊 <span class="val" id="mon-exp">0</span> XP</div>
+            <div style="font-size:0.82em;font-weight:800;color:rgba(255,255,255,0.5)">Tour <span id="tour-num">0</span></div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card pv">
-                <div class="stat-icon">❤️</div>
-                <div class="stat-val" id="mes-pv">100</div>
-                <div class="stat-label">PV</div>
-            </div>
-            <div class="stat-card pieces">
-                <div class="stat-icon">🪙</div>
-                <div class="stat-val" id="mes-pieces">0</div>
-                <div class="stat-label">Pièces</div>
-            </div>
-            <div class="stat-card niveau">
-                <div class="stat-icon">⭐</div>
-                <div class="stat-val" id="mon-niveau">1</div>
-                <div class="stat-label">Niveau</div>
-            </div>
-            <div class="stat-card tour">
-                <div class="stat-icon">🔄</div>
-                <div class="stat-val" id="mon-exp">0</div>
-                <div class="stat-label">EXP</div>
-            </div>
+        <div class="plateau-wrap">
+            <div class="rangee-label"><span class="dot-rouge"></span> Arène Offensive</div>
+            <div class="rangee" id="rangee-off"></div>
+            <div class="sep"></div>
+            <div class="rangee-label"><span class="dot-bleu"></span> Arène Défensive</div>
+            <div class="rangee" id="rangee-def"></div>
+            <div class="sep"></div>
+            <div class="rangee-label"><span class="dot-noir"></span> Boîte</div>
+            <div class="rangee" id="rangee-boite"></div>
         </div>
 
-        <div class="pv-bar-wrap">
-            <div class="pv-bar-label">
-                <span>Points de vie</span>
-                <span id="pv-label">100/100</span>
-            </div>
-            <div class="pv-bar-bg">
-                <div class="pv-bar" id="pv-bar" style="width:100%"></div>
-            </div>
-        </div>
-
-        <div class="synergies-titre">Synergies actives</div>
-        <div class="synergies-wrap" id="mes-synergies">
-            <span style="color:rgba(255,255,255,0.3);font-size:0.85em;font-weight:700">Aucune synergie active</span>
-        </div>
-
-        <div class="actions-titre">Actions</div>
-        <div class="actions">
+        <div class="actions-bar">
             <button class="btn btn-green" onclick="finTour()">✅ Fin de tour</button>
-            <button class="btn btn-gold" onclick="acheterExp()">📈 Exp (4 pièces)</button>
+            <button class="btn btn-gold"  onclick="ouvrirBoutique()">🛒 Boutique</button>
+            <button class="btn btn-blue"  onclick="acheterXp()">📈 XP (4🪙)</button>
+            <button class="btn btn-red"   onclick="roll()">🎲 Roll (2🪙)</button>
         </div>
     </div>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-
-        <!-- Adversaires -->
+        <div class="panel">
+            <div class="panel-title">✨ Synergies actives</div>
+            <div class="syn-wrap" id="mes-synergies"><span style="color:rgba(255,255,255,0.3);font-size:0.8em;font-weight:700">Aucune synergie</span></div>
+        </div>
         <div class="panel">
             <div class="panel-title">👥 Autres dresseurs</div>
-            <div id="adversaires-list">
-                <div class="attente">En attente des autres joueurs...</div>
-            </div>
+            <div id="adversaires-list"><div class="attente">En attente...</div></div>
         </div>
-
-        <!-- Log -->
-        <div class="panel log-panel">
+        <div class="panel" style="flex:1">
             <div class="panel-title">📋 Journal</div>
             <div class="log-list" id="log-list"></div>
         </div>
+    </div>
+</div>
 
+<div class="modal-bg" id="modal-boutique">
+    <div class="modal">
+        <div class="modal-title">🛒 Boutique — Choisissez un Pokémon</div>
+        <div class="boutique-cartes" id="boutique-cartes"><div class="attente">Chargement...</div></div>
+        <div class="modal-actions">
+            <button class="btn btn-red" onclick="fermerBoutique()">Annuler</button>
+            <button class="btn btn-gold" id="btn-acheter" onclick="acheterPokemon()" disabled>Capturer</button>
+        </div>
     </div>
 </div>
 
 <script>
-const CODE   = "{{ code }}";
-const PSEUDO = new URLSearchParams(window.location.search).get('pseudo') || 'Dresseur';
-let ws, etat, pvMax = 100;
+const CODE    = "{{ code }}";
+const PSEUDO  = new URLSearchParams(window.location.search).get('pseudo') || 'Dresseur';
+const IMG_BASE = "https://media.githubusercontent.com/media/Timberklinx/pkchess/master/pkchess-app/cartes/";
 
-document.getElementById('mon-nom').textContent = '🎮 ' + PSEUDO;
+let ws, etat, pvMax = 100;
+let boutique_selection = null;
+let boutique_offre = [];
+let cible_slot = null;
+let premier_pokemon = true;
+
+document.getElementById('player-name').textContent = '🎮 ' + PSEUDO;
 
 function connecterWS() {
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     ws = new WebSocket(`${proto}://${location.host}/ws/${CODE}/${PSEUDO}`);
-
-    ws.onopen = () => {
-        document.getElementById('dot').classList.add('on');
-        document.getElementById('statut-txt').textContent = 'Connecté';
-    };
-    ws.onclose = () => {
-        document.getElementById('dot').classList.remove('on');
-        document.getElementById('statut-txt').textContent = 'Reconnexion...';
-        setTimeout(connecterWS, 2000);
-    };
+    ws.onopen = () => { document.getElementById('dot').classList.add('on'); document.getElementById('statut-txt').textContent = 'Connecté'; };
+    ws.onclose = () => { document.getElementById('dot').classList.remove('on'); document.getElementById('statut-txt').textContent = 'Reconnexion...'; setTimeout(connecterWS, 2000); };
     ws.onmessage = (e) => {
         const msg = JSON.parse(e.data);
         if (msg.etat) { etat = msg.etat; majInterface(); }
         if (msg.msg) log(msg.msg, msg.type === 'etat_mis_a_jour' ? 'gold' : '');
         if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) log(`${msg.pseudo} a rejoint`, 'green');
         if (msg.type === 'joueur_deconnecte') log(`${msg.pseudo} déconnecté`, 'red');
+        if (msg.type === 'boutique_offre' && msg.pour === PSEUDO) { boutique_offre = msg.offre; afficherBoutique(); }
     };
 }
 
-function animStat(id, newVal) {
+function animVal(id, newVal) {
     const el = document.getElementById(id);
-    if (el && el.textContent != newVal) {
-        el.textContent = newVal;
-        el.classList.remove('changed');
-        void el.offsetWidth;
-        el.classList.add('changed');
-    }
+    if (el && el.textContent != newVal) { el.textContent = newVal; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 }
 
 function majInterface() {
     if (!etat?.joueurs) return;
     const moi = etat.joueurs[PSEUDO];
     if (moi) {
-        animStat('mes-pv', moi.pv);
-        animStat('mes-pieces', moi.pieces);
-        animStat('mon-niveau', moi.niveau);
-        animStat('mon-exp', moi.exp || 0);
+        animVal('mes-pv', moi.pv);
+        animVal('mes-pieces', moi.pieces);
+        animVal('mon-niveau', moi.niveau);
+        animVal('mon-exp', moi.exp || 0);
         document.getElementById('tour-num').textContent = etat.tour || 0;
-
-        // PV bar
         const pct = Math.max(0, Math.min(100, (moi.pv / pvMax) * 100));
         document.getElementById('pv-bar').style.width = pct + '%';
-        document.getElementById('pv-label').textContent = `${moi.pv}/${pvMax}`;
 
-        // Synergies
         const synEl = document.getElementById('mes-synergies');
         const syns = moi.synergies || {};
         if (Object.keys(syns).length === 0) {
-            synEl.innerHTML = '<span style="color:rgba(255,255,255,0.3);font-size:0.85em;font-weight:700">Aucune synergie active</span>';
+            synEl.innerHTML = '<span style="color:rgba(255,255,255,0.3);font-size:0.8em;font-weight:700">Aucune synergie</span>';
         } else {
-            synEl.innerHTML = Object.entries(syns).map(([t, n]) =>
-                `<span class="syn-badge ${n >= 3 ? 'actif' : ''}">${t} ${n}</span>`
-            ).join('');
+            synEl.innerHTML = Object.entries(syns).map(([t,n]) => `<span class="syn-badge ${n>=3?'actif':''}">${t} ${n}</span>`).join('');
         }
     }
 
-    // Adversaires
     const advEl = document.getElementById('adversaires-list');
     const advs = Object.entries(etat.joueurs).filter(([p]) => p !== PSEUDO);
-    if (advs.length === 0) {
-        advEl.innerHTML = '<div class="attente">En attente des autres joueurs...</div>';
-    } else {
-        advEl.innerHTML = advs.map(([pseudo, j]) => {
-            const initials = pseudo.substring(0,2).toUpperCase();
-            return `<div class="adversaire">
-                <div class="adv-avatar">${initials}</div>
+    if (advs.length === 0) { advEl.innerHTML = '<div class="attente">En attente...</div>'; }
+    else {
+        advEl.innerHTML = advs.map(([pseudo, j]) => `
+            <div class="adversaire">
+                <div class="adv-avatar">${pseudo.substring(0,2).toUpperCase()}</div>
                 <div class="adv-info">
                     <div class="adv-nom">${pseudo}</div>
                     <div class="adv-stats">
-                        <span class="adv-stat hp">❤️ ${j.pv}</span>
-                        <span class="adv-stat gp">🪙 ${j.pieces}</span>
-                        <span class="adv-stat lv">⭐ Niv.${j.niveau}</span>
+                        <span class="adv-hp">❤️${j.pv}</span>
+                        <span class="adv-gp">🪙${j.pieces}</span>
+                        <span class="adv-lv">⭐${j.niveau}</span>
                     </div>
                 </div>
-            </div>`;
-        }).join('');
+            </div>`).join('');
+    }
+
+    renderPlateau();
+}
+
+function renderPlateau() {
+    const niveau = etat?.joueurs?.[PSEUDO]?.niveau || 1;
+    const casesDisponibles = niveau >= 5 ? 5 : 3;
+    renderRangee('rangee-off',   'off',   casesDisponibles, 'offensive');
+    renderRangee('rangee-def',   'def',   casesDisponibles, 'defensive');
+    renderRangee('rangee-boite', 'boite', 5,                'boite');
+}
+
+function getPokemonSlot(position, slot) {
+    return etat?.joueurs?.[PSEUDO]?.pokemon?.find(p => p.position === position && p.slot === slot) || null;
+}
+
+function renderRangee(containerId, position, casesDisponibles, cssClass) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+        const bloquee = i >= casesDisponibles;
+        const offPokemon = getPokemonSlot('off', i);
+        const defBloquee = position === 'def' && !offPokemon && !bloquee;
+        const pokemon = getPokemonSlot(position, i);
+
+        const el = document.createElement('div');
+        el.className = `case ${cssClass}`;
+        if (bloquee || defBloquee) el.classList.add('bloquee');
+        if (pokemon) el.classList.add('occupee');
+
+        if (pokemon) {
+            const id = String(pokemon.id).padStart(4, '0');
+            el.innerHTML = `<img src="${IMG_BASE}${id}.png" alt="${pokemon.nom}" onerror="this.style.opacity='0.3'"><button class="suppr" onclick="retirerPokemon('${position}',${i},event)">✕</button>`;
+        } else if (!bloquee && !defBloquee) {
+            el.innerHTML = `<span class="plus">+</span>`;
+            el.onclick = () => ouvrirBoutiqueSlot(position, i);
+        } else {
+            el.innerHTML = `<span style="font-size:0.55em;color:rgba(255,255,255,0.2)">🔒</span>`;
+        }
+        container.appendChild(el);
     }
 }
 
-function log(msg, cls = '') {
+function ouvrirBoutique() { ouvrirBoutiqueSlot('off', 0); }
+
+function ouvrirBoutiqueSlot(position, slot) {
+    cible_slot = { position, slot };
+    document.getElementById('modal-boutique').classList.add('open');
+    document.getElementById('boutique-cartes').innerHTML = '<div class="attente">Chargement...</div>';
+    boutique_selection = null;
+    document.getElementById('btn-acheter').disabled = true;
+    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'demander_boutique' }));
+}
+
+function fermerBoutique() {
+    document.getElementById('modal-boutique').classList.remove('open');
+    boutique_selection = null;
+}
+
+function afficherBoutique() {
+    const container = document.getElementById('boutique-cartes');
+    const pieces = etat?.joueurs?.[PSEUDO]?.pieces || 0;
+    if (!boutique_offre.length) { container.innerHTML = '<div class="attente">Aucune offre disponible</div>'; return; }
+    container.innerHTML = boutique_offre.map((poke, idx) => {
+        const id = String(poke.id).padStart(4, '0');
+        const estGratuit = premier_pokemon && idx === 0;
+        const cout = estGratuit ? 0 : (poke.niveau || 1);
+        const peutAcheter = pieces >= cout;
+        return `<div class="boutique-carte ${peutAcheter ? '' : 'bloquee'}" onclick="${peutAcheter ? `selectionnerPoke(${idx})` : ''}">
+            <img src="${IMG_BASE}${id}.png" alt="${poke.nom}">
+            <div class="cout">${estGratuit ? '🎁 Gratuit' : cout + ' 🪙'}</div>
+            <div class="nom">${poke.nom}</div>
+        </div>`;
+    }).join('');
+}
+
+function selectionnerPoke(idx) {
+    boutique_selection = idx;
+    document.querySelectorAll('.boutique-carte').forEach((el, i) => el.classList.toggle('selected', i === idx));
+    document.getElementById('btn-acheter').disabled = false;
+}
+
+function acheterPokemon() {
+    if (boutique_selection === null || !cible_slot) return;
+    const poke = boutique_offre[boutique_selection];
+    const estGratuit = premier_pokemon;
+    const cout = estGratuit ? 0 : (poke.niveau || 1);
+    if (ws?.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'capturer_pokemon', pokemon_id: poke.id, position: cible_slot.position, slot: cible_slot.slot, cout }));
+    }
+    premier_pokemon = false;
+    fermerBoutique();
+}
+
+function retirerPokemon(position, slot, event) {
+    event.stopPropagation();
+    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ type: 'retirer_pokemon', position, slot }));
+}
+
+function finTour()  { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'fin_tour'})); }
+function acheterXp(){ if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'acheter_xp'})); }
+function roll()     { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'roll'})); }
+
+function log(msg, cls='') {
     const list = document.getElementById('log-list');
     const item = document.createElement('div');
-    item.className = 'log-item' + (cls ? ' ' + cls : '');
-    const h = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    item.className = 'log-item' + (cls ? ' '+cls : '');
+    const h = new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
     item.innerHTML = `<span class="time">${h}</span><span>${msg}</span>`;
     list.prepend(item);
     while (list.children.length > 60) list.removeChild(list.lastChild);
-}
-
-function finTour() {
-    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'fin_tour'}));
-}
-function acheterExp() {
-    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'depenser_pieces', montant:4, raison:'exp'}));
 }
 
 connecterWS();
