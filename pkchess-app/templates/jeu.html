@@ -102,11 +102,11 @@
         /* ── MODAL BOUTIQUE ── */
         .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;align-items:center;justify-content:center;}
         .modal-bg.open{display:flex;}
-        .modal{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:20px;padding:28px;border:2px solid var(--gold);width:95vw;max-width:900px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.7);}
+        .modal{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:20px;padding:28px;border:2px solid var(--gold);width:98vw;max-width:98vw;height:92vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.7);}
         .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
         .modal-title{font-family:'Press Start 2P',monospace;font-size:0.65em;color:var(--gold);}
         .modal-info{font-size:0.85em;color:rgba(255,255,255,0.6);font-weight:700;}
-        .boutique-cartes{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+        .boutique-cartes{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;flex:1;overflow-y:auto;align-content:flex-start;padding:8px 0;}
         .boutique-carte{width:140px;text-align:center;cursor:pointer;transition:transform 0.2s;border-radius:12px;padding:8px;border:2px solid transparent;}
         .boutique-carte:hover:not(.bloquee){transform:translateY(-6px);}
         .boutique-carte.selected{border-color:var(--gold);background:rgba(255,215,0,0.1);}
@@ -117,6 +117,8 @@
         .boutique-carte .types{font-size:0.72em;color:rgba(255,255,255,0.5);margin-top:2px;}
         .modal-actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;}
         .modal-actions-left{display:flex;gap:10px;}
+        .btn-lock{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;transition:all 0.2s;}
+        .btn-lock.locked{background:rgba(255,215,0,0.15);border-color:var(--gold);color:var(--gold);}
         .modal-actions-right{display:flex;gap:10px;}
 
         /* Toast erreur */
@@ -194,6 +196,7 @@
         <div class="modal-actions">
             <div class="modal-actions-left">
                 <button class="btn btn-blue" onclick="roll()">🎲 Roll (2🪙)</button>
+                <button class="btn btn-lock" id="btn-lock" onclick="toggleLock()">🔓 Garder</button>
             </div>
             <div class="modal-actions-right">
                 <button class="btn btn-red"  id="btn-passer"  onclick="fermerBoutique()">Passer</button>
@@ -203,6 +206,10 @@
     </div>
 </div>
 
+<!-- Zoom carte -->
+<div class="zoom-bg" id="zoom-bg" onclick="fermerZoom()">
+    <img id="zoom-img" src="" alt="">
+</div>
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -214,6 +221,7 @@ const IMG_BASE = "https://media.githubusercontent.com/media/Timberklinx/pkchess/
 let ws, etat, pvMax = 100;
 let boutique_offre = [];
 let boutique_selection = null;
+let boutique_locked = false;
 let tour1_gratuit = false;
 let a_achete_tour1 = false;
 
@@ -244,7 +252,10 @@ function connecterWS() {
             if (msg.auto) document.getElementById('modal-boutique').classList.add('open');
         }
         if (msg.type === 'fin_tour') {
-            // Ouvrir boutique automatiquement
+            // Déverrouiller après usage (lock = 1 tour seulement)
+            boutique_locked = false;
+            const btn = document.getElementById('btn-lock');
+            if (btn) { btn.textContent = '🔓 Garder'; btn.classList.remove('locked'); }
             ouvrirBoutique(true);
         }
     };
@@ -323,7 +334,7 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             el.classList.add('occupee', 'draggable');
             const id = String(poke.id).padStart(4, '0');
             el.innerHTML = `
-                <img src="${IMG_BASE}${id}.png" alt="${poke.nom}" onerror="this.style.opacity='0.3'">
+                <img src="${IMG_BASE}${id}.png" alt="${poke.nom}" onerror="this.style.opacity='0.3'" ondblclick="ouvrirZoom(this.src)" title="Double-clic pour agrandir">
                 <div class="poke-nom">${poke.nom}</div>
                 <button class="suppr" onclick="retirerPokemon('${pos}',${i},event)">✕</button>`;
             el.draggable = true;
@@ -366,6 +377,24 @@ function ouvrirBoutique(auto = false) {
         ws.send(JSON.stringify({ type: 'demander_boutique', auto }));
 }
 
+function toggleLock() {
+    boutique_locked = !boutique_locked;
+    const btn = document.getElementById('btn-lock');
+    if (boutique_locked) {
+        btn.textContent = '🔒 Gardée';
+        btn.classList.add('locked');
+        toast('Boutique verrouillée — elle ne changera pas au prochain tour', false);
+    } else {
+        btn.textContent = '🔓 Garder';
+        btn.classList.remove('locked');
+        toast('Boutique déverrouillée', false);
+    }
+}
+function ouvrirZoom(src) {
+    document.getElementById('zoom-img').src = src;
+    document.getElementById('zoom-bg').classList.add('open');
+}
+function fermerZoom() { document.getElementById('zoom-bg').classList.remove('open'); }
 function fermerBoutique() {
     document.getElementById('modal-boutique').classList.remove('open');
     boutique_selection = null;
@@ -375,10 +404,10 @@ function afficherBoutique() {
     const container = document.getElementById('boutique-cartes');
     const pieces    = etat?.joueurs?.[PSEUDO]?.pieces || 0;
     const tour      = etat?.tour || 0;
-    const gratuit   = tour === 1 && !a_achete_tour1;
+    const gratuit   = (tour === 0 || tour === 1) && !a_achete_tour1;
 
     document.getElementById('boutique-info').textContent = gratuit
-        ? '🎁 Tour 1 — Capture un Pokémon gratuitement !'
+        ? '🎁 Capture un Pokémon gratuitement !'
         : `🪙 ${pieces} pièces disponibles`;
 
     if (!boutique_offre.length) { container.innerHTML = '<div class="attente">Aucune offre</div>'; return; }
@@ -386,10 +415,10 @@ function afficherBoutique() {
     container.innerHTML = boutique_offre.map((poke, idx) => {
         const id    = String(poke.id).padStart(4, '0');
         const cout  = gratuit ? 0 : poke.niveau;
-        const peux  = pieces >= cout;
+        const peux  = gratuit || pieces >= cout;
         const types = Array.isArray(poke.types) ? poke.types.join(', ') : poke.types || '';
         return `<div class="boutique-carte ${peux ? '' : 'bloquee'}" onclick="${peux ? `selectionnerPoke(${idx})` : ''}">
-            <img src="${IMG_BASE}${id}.png" alt="${poke.nom}">
+            <img src="${IMG_BASE}${id}.png" alt="${poke.nom}" ondblclick="event.stopPropagation();ouvrirZoom(this.src)" title="Double-clic pour agrandir">
             <div class="cout">${gratuit ? '🎁 Gratuit' : cout + ' 🪙'}</div>
             <div class="nom">${poke.nom}</div>
             <div class="types">${types}</div>
@@ -429,7 +458,7 @@ function retirerPokemon(pos, slot, event) {
     if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'retirer_pokemon', position:pos, slot}));
 }
 
-function finTour()   { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'fin_tour'})); }
+function finTour()   { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'fin_tour', boutique_locked})); }
 function acheterXp() { if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({type:'acheter_xp'})); }
 
 // ── Log ───────────────────────────────────────────────────────────────────────

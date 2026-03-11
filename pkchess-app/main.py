@@ -49,12 +49,15 @@ SYNERGIES = {
 # ── Pioche ────────────────────────────────────────────────────────────────────
 def generer_offre_boutique(niveau_joueur: int, n: int = 5) -> list:
     """Génère n Pokémon disponibles selon le niveau du joueur.
-    Niveau 10+ : tous les Pokémon de base (niv 1-10) disponibles.
+    Exclut les évolutions (sauf si niveau_joueur >= 10 qui débloque tous les Pokémon de BASE).
     """
     pool = []
     max_niv = 10 if niveau_joueur >= 10 else niveau_joueur
     for niv in range(1, max_niv + 1):
-        pool.extend(POKEMONS_PAR_NIVEAU.get(niv, []))
+        for p in POKEMONS_PAR_NIVEAU.get(niv, []):
+            # Exclure les évolutions sauf si niveau joueur >= 10
+            if not p.get("est_evolution", False) or niveau_joueur >= 10:
+                pool.append(p)
 
     if not pool:
         return []
@@ -222,7 +225,7 @@ async def etat_partie(code: str):
 async def websocket_endpoint(ws: WebSocket, code: str, pseudo: str):
     await gestionnaire.connecter(code, pseudo, ws)
     partie = parties.get(code, {})
-    # Générer offre boutique initiale
+    # Générer offre boutique initiale et envoyer au joueur
     if pseudo in partie.get("joueurs", {}):
         joueur = partie["joueurs"][pseudo]
         if not joueur.get("boutique_offre"):
@@ -233,6 +236,17 @@ async def websocket_endpoint(ws: WebSocket, code: str, pseudo: str):
         "pseudo": pseudo,
         "etat":   partie,
     })
+    # Envoyer la boutique automatiquement dès la connexion (tour 0)
+    if pseudo in partie.get("joueurs", {}):
+        joueur = partie["joueurs"][pseudo]
+        await gestionnaire.envoyer_a(code, pseudo, {
+            "type":          "boutique_offre",
+            "pour":          pseudo,
+            "offre":         joueur["boutique_offre"],
+            "tour":          partie["tour"],
+            "tour1_gratuit": True,
+            "auto":          True,
+        })
     try:
         while True:
             data = await ws.receive_json()
@@ -271,8 +285,13 @@ async def traiter_action(code: str, pseudo: str, action: dict):
             messages.extend(msgs_level)
             msgs_syn = appliquer_bonus_pv_synergies(j)
             messages.extend(msgs_syn)
-            # Nouvelle offre boutique pour ce tour
-            j["boutique_offre"] = generer_offre_boutique(j["niveau"])
+            # Nouvelle offre boutique pour ce tour (sauf si locked)
+            locked = action.get("boutique_locked", False) if pseudo_j == pseudo else False
+            if not locked or j.get("boutique_lock_used"):
+                j["boutique_offre"] = generer_offre_boutique(j["niveau"])
+                j["boutique_lock_used"] = False
+            else:
+                j["boutique_lock_used"] = True  # consomme le lock
             j["a_achete_tour1"] = False  # reset achat gratuit tour suivant si tour > 1
 
         await gestionnaire.diffuser(code, {
