@@ -321,10 +321,10 @@ function getPoke(pos, slot) {
     return etat?.joueurs?.[PSEUDO]?.pokemon?.find(p => p.position === pos && p.slot === slot) || null;
 }
 
-function renderRangee(containerId, pos, dispo, cssClass) {
+function renderRangee(containerId, pos, dispo, total, cssClass) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < total; i++) {
         const bloquee   = pos !== 'banc' && i >= dispo;
         const offDevant = pos === 'def' && !getPoke('off', i) && !bloquee;
         const poke      = getPoke(pos, i);
