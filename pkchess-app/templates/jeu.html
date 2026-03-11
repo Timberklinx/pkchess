@@ -319,6 +319,18 @@ function connecterWS() {
             if (msg.etat) { etat = msg.etat; majInterface(); }
             afficherResultatsCombat(msg.resultats, msg.tour);
             addLog('⚔️ Combat tour ' + msg.tour + ' résolu !', 'red');
+            // Détecter les évolutions dans les logs et les notifier
+            if (msg.resultats) {
+                for (var r = 0; r < msg.resultats.length; r++) {
+                    var logs = msg.resultats[r].logs || [];
+                    for (var l = 0; l < logs.length; l++) {
+                        if (logs[l].indexOf('🌟') !== -1) {
+                            addLog(logs[l], 'gold');
+                            showToast(logs[l], false);
+                        }
+                    }
+                }
+            }
         }
         if (msg.type === 'boutique_offre' && msg.pour === PSEUDO) {
             boutique_offre = msg.offre || [];

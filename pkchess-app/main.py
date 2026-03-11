@@ -368,16 +368,16 @@ def faire_evoluer(partie, joueur, poke):
     if poke.get("xp_combats", 0) < evol_ko:
         return False, ""
 
-    # Récupérer les données de l'évolution
     evol_data = _get_poke(evol_id)
     if not evol_data:
         return False, ""
 
+    ancien_nom    = poke["nom"]
     ancien_pv_max = poke.get("pv_max", 100)
     nouveau_pv_max = evol_data.get("pv_max", 100)
-    diff_pv = nouveau_pv_max - ancien_pv_max
+    diff_pv = max(0, nouveau_pv_max - ancien_pv_max)  # bonus PV toujours positif
 
-    # Mettre à jour le Pokémon en place (on conserve position/slot)
+    # Mettre à jour le Pokémon en place (position/slot conservés)
     poke["id"]           = evol_data["id"]
     poke["nom"]          = evol_data["nom"]
     poke["types"]        = evol_data.get("types", poke["types"])
@@ -397,10 +397,10 @@ def faire_evoluer(partie, joueur, poke):
     poke["evolution_id"]  = evol_data.get("evolution_id")
     poke["evolution_nom"] = evol_data.get("evolution_nom")
     poke["evolution_ko"]  = evol_data.get("evolution_ko")
-    # On conserve xp_combats (les KO continuent de compter pour la prochaine évol)
+    poke["xp_combats"]   = 0  # Remise à zéro pour la prochaine évolution
 
     appliquer_bonus_pv_synergies(joueur)
-    return True, f"🌟 {evol_nom} évolue depuis {poke['nom']} !"
+    return True, f"🌟 {ancien_nom} évolue en {evol_nom} ! (+{diff_pv} PV → {poke['pv']}/{nouveau_pv_max})"
 
 def verifier_evolutions(partie, joueur):
     """Vérifie toutes les évolutions possibles après un combat. Retourne les messages."""
