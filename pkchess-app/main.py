@@ -271,11 +271,11 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     degats_directs_j1 = 0
     degats_directs_j2 = 0
     for poke in sans_adv1:
-        dmg = poke.get("degats", 20)
+        dmg = points_force(poke)
         degats_directs_j2 += dmg
         logs.append(f"  💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p2}")
     for poke in sans_adv2:
-        dmg = poke.get("degats", 20)
+        dmg = points_force(poke)
         degats_directs_j1 += dmg
         logs.append(f"  💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p1}")
 
