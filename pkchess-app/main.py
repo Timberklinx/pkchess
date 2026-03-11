@@ -616,8 +616,11 @@ async def traiter_action(code, pseudo, action):
             await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Case non disponible à ce niveau !", "pour": pseudo})
             return
         # Limite terrain = niveau dresseur
-        nb_terrain = sum(1 for p in joueur["pokemon"] if p["position"] in ("off", "def") and not getPoke_joueur(joueur, p["position"], p["slot"]) == getPoke_joueur(joueur, tp, ts))
-        nb_terrain = sum(1 for p in joueur["pokemon"] if p["position"] in ("off", "def"))
+        # On exclut le pokémon qu'on déplace ET les KO (ils ne comptent plus)
+        nb_terrain = sum(1 for p in joueur["pokemon"]
+                         if p["position"] in ("off", "def")
+                         and not p.get("ko", False)
+                         and not (p["position"] == fp and p["slot"] == fs))
         poke_existant = next((p for p in joueur["pokemon"] if p["position"] == tp and p["slot"] == ts), None)
         if tp in ("off", "def") and not poke_existant and nb_terrain >= niveau_joueur:
             await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Terrain plein pour ce niveau !", "pour": pseudo})

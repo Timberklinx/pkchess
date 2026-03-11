@@ -408,12 +408,12 @@ function renderRangee(containerId, pos, dispo, cssClass) {
         var niveau_j = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
         // Cases 0 et 4 (extrêmes) bloquées avant niveau 5, cases 1-2-3 toujours accessibles
         var bloquee = pos !== 'banc' && (i === 0 || i === 4) && niveau_j < 5;
-        // Compter les pokemon déjà sur le terrain (off + def)
+        // Compter les pokemon déjà sur le terrain (off + def), hors KO
         var nbTerrain = 0;
         if (etat && etat.joueurs && etat.joueurs[PSEUDO]) {
             var poks = etat.joueurs[PSEUDO].pokemon || [];
             for (var k = 0; k < poks.length; k++) {
-                if (poks[k].position === 'off' || poks[k].position === 'def') nbTerrain++;
+                if ((poks[k].position === 'off' || poks[k].position === 'def') && !poks[k].ko) nbTerrain++;
             }
         }
         // Terrain plein si nb pokemon sur terrain >= niveau dresseur
@@ -433,8 +433,9 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             el.classList.add('occupee');
             if (poke.ko) el.classList.add('ko-poke');
             var id4 = String(poke.id).padStart(4, '0');
+            var vraiSlot = poke.slot;
             el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
-                + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'' + pos + '\',' + i + ')">'
+                + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'' + pos + '\',' + vraiSlot + ')">'
                 + (poke.ko ? '<div class="ko-badge">KO</div>' : '')
                 + '<div class="poke-nom">' + poke.nom + '</div>';
             el.draggable = true;
@@ -448,7 +449,7 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                 el.addEventListener('dragend', function() {
                     el.style.opacity = '1';
                 });
-            })(pos, i);
+            })(pos, vraiSlot);
         } else {
             if (terrainPlein && pos !== 'banc') {
                 el.classList.add('bloquee');
