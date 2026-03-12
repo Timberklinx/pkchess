@@ -18,7 +18,7 @@ def _get_poke(pid):
 # IDs qui sont des formes intermédiaires (cibles d'évolution) → exclues du pool
 _IDS_INTERMEDIAIRES = {p["evolution_id"] for p in POKEMONS_DB if p.get("evolution_id")}
 # Formes intermédiaires dont le lien d'entrée est absent dans la DB (bug données)
-_IDS_INTERMEDIAIRES |= {"0266", "0361"}  # Armulys, Stalgamin
+_IDS_INTERMEDIAIRES |= {"0266"}  # Armulys
 
 # ── Constantes ────────────────────────────────────────────────────────────────
 BONUS_SERIE       = [0, 0, 1, 1, 2, 3]
