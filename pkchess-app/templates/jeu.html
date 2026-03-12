@@ -6,187 +6,174 @@
     <title>PKChess</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* ── Variables ── */
         :root {
-            --gold:#FFD700;--gold-dark:#C8A800;--blue-deep:#0D1B3E;--blue-mid:#1A2F5E;
-            --blue-light:#243D7A;--blue-card:#162447;--red:#E63946;--green:#52B788;--white:#F8F9FA;
+            --gold: #FFD700; --gold-dark: #C8A800;
+            --blue-deep: #0D1B3E; --blue-mid: #1A2F5E;
+            --blue-light: #243D7A; --blue-card: #162447;
+            --red: #E63946; --green: #52B788; --white: #F8F9FA;
         }
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:var(--blue-deep);color:var(--white);font-family:'Nunito',sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--blue-deep); color: var(--white); font-family: 'Nunito', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* Header */
-        .header{background:linear-gradient(90deg,var(--blue-mid),var(--blue-light));padding:10px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:100;}
-        .header-logo{font-family:'Press Start 2P',monospace;font-size:0.9em;color:var(--gold);}
-        .header-code{font-family:'Press Start 2P',monospace;font-size:0.75em;background:rgba(0,0,0,0.3);padding:8px 16px;border-radius:20px;color:var(--gold);border:1px solid rgba(255,215,0,0.3);letter-spacing:4px;}
-        .header-status{display:flex;align-items:center;gap:8px;font-size:0.85em;font-weight:700;}
-        .dot{width:10px;height:10px;border-radius:50%;background:var(--red);}
-        .dot.on{background:var(--green);box-shadow:0 0 8px var(--green);}
+        /* ── Header ── */
+        .header { background: linear-gradient(90deg, var(--blue-mid), var(--blue-light)); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+        .header-logo { font-family: 'Press Start 2P', monospace; font-size: 0.9em; color: var(--gold); }
+        .header-code { font-family: 'Press Start 2P', monospace; font-size: 0.75em; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 20px; color: var(--gold); border: 1px solid rgba(255,215,0,0.3); letter-spacing: 4px; }
+        .header-status { display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 700; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+        .dot.on { background: var(--green); box-shadow: 0 0 8px var(--green); }
 
-        /* Layout */
-        .game-wrap{display:flex;gap:14px;padding:14px;flex:1;}
-        .main-col{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0;}
+        /* ── Layout ── */
+        .game-wrap { display: flex; gap: 14px; padding: 14px; flex: 1; }
+        .main-col { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 
-        /* Stats */
-        .stats-bar{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:14px;padding:12px 18px;display:flex;align-items:center;gap:12px;border:1px solid rgba(255,215,0,0.2);flex-wrap:wrap;}
-        .player-name{font-family:'Press Start 2P',monospace;font-size:0.55em;color:var(--gold);}
-        .stat-pill{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,0.25);border-radius:20px;padding:5px 12px;font-weight:800;font-size:0.85em;}
-        .stat-val{font-family:'Press Start 2P',monospace;font-size:0.8em;}
-        .stat-pill.hp .stat-val{color:#FF6B6B;}
-        .stat-pill.gp .stat-val{color:var(--gold);}
-        .stat-pill.lv .stat-val{color:var(--green);}
-        .stat-pill.xp .stat-val{color:#74C0FC;}
-        .pv-bar-bg{flex:1;min-width:60px;background:rgba(0,0,0,0.3);border-radius:10px;height:8px;overflow:hidden;}
-        .pv-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,#FF6B6B,#E63946);transition:width 0.6s;}
+        /* ── Stats ── */
+        .stats-bar { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 14px; padding: 12px 18px; display: flex; align-items: center; gap: 12px; border: 1px solid rgba(255,215,0,0.2); flex-wrap: wrap; }
+        .player-name { font-family: 'Press Start 2P', monospace; font-size: 0.55em; color: var(--gold); }
+        .stat-pill { display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.25); border-radius: 20px; padding: 5px 12px; font-weight: 800; font-size: 0.85em; }
+        .stat-val { font-family: 'Press Start 2P', monospace; font-size: 0.8em; }
+        .stat-pill.hp .stat-val { color: #FF6B6B; }
+        .stat-pill.gp .stat-val { color: var(--gold); }
+        .stat-pill.lv .stat-val { color: var(--green); }
+        .stat-pill.xp .stat-val { color: #74C0FC; }
+        .pv-bar-bg { flex: 1; min-width: 60px; background: rgba(0,0,0,0.3); border-radius: 10px; height: 8px; overflow: hidden; }
+        .pv-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, #FF6B6B, #E63946); transition: width 0.6s; }
 
-        /* Plateau */
-        .plateau-wrap{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:18px;padding:16px;border:2px solid var(--gold);}
-        .rangee-label{font-size:0.62em;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.6);}
-        .dot-rouge{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;}
-        .dot-bleu{width:8px;height:8px;border-radius:50%;background:#4A90D9;display:inline-block;}
-        .dot-noir{width:8px;height:8px;border-radius:50%;background:#555;display:inline-block;}
-        .dot-vert{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;}
-        .case.centre{border-color:rgba(82,183,136,0.4);}
-        .case.occupee.centre{border-style:solid;border-color:var(--green);}
-        .rangee{display:flex;gap:10px;margin-bottom:12px;justify-content:center;}
-        .sep{height:1px;background:rgba(255,255,255,0.07);margin:4px 0 12px;}
+        /* ── Plateau ── */
+        .plateau-wrap { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 18px; padding: 16px; border: 2px solid var(--gold); }
+        .rangee-label { font-size: 0.62em; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.6); }
+        .dot-rouge { width: 8px; height: 8px; border-radius: 50%; background: var(--red); display: inline-block; }
+        .dot-bleu  { width: 8px; height: 8px; border-radius: 50%; background: #4A90D9; display: inline-block; }
+        .dot-vert  { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; }
+        .dot-noir  { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; }
+        .rangee { display: flex; gap: 10px; margin-bottom: 12px; justify-content: center; }
+        .sep { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0 12px; }
 
-        /* Cases plateau */
-        .case{width:100px;height:140px;border-radius:10px;border:2px dashed rgba(255,255,255,0.12);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.2s;position:relative;overflow:hidden;flex-shrink:0;}
-        .case.offensive{border-color:rgba(230,57,70,0.3);}
-        .case.defensive{border-color:rgba(74,144,217,0.3);}
-        .case.boite{border-color:rgba(255,255,255,0.1);}
-        .case.bloquee{opacity:0.25;cursor:not-allowed;}
-        .case.droppable{border-color:var(--gold) !important;border-style:solid !important;background:rgba(255,215,0,0.08) !important;}
-        .case.occupee.offensive{border-style:solid;border-color:var(--red);}
-        .case.occupee.defensive{border-style:solid;border-color:#4A90D9;}
-        .case.occupee.boite{border-style:solid;border-color:#444;}
-        .case img{width:100%;height:100%;object-fit:cover;border-radius:8px;cursor:pointer;}
-        .case .plus{font-size:1.4em;color:rgba(255,255,255,0.15);}
-        .case .lock-icon{font-size:0.6em;color:rgba(255,255,255,0.15);}
-        .poke-nom{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.7);font-size:0.6em;font-weight:800;text-align:center;padding:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        /* ── Cases plateau ── */
+        .case { width: 100px; height: 140px; border-radius: 10px; border: 2px dashed rgba(255,255,255,0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s; position: relative; overflow: hidden; flex-shrink: 0; }
+        .case.offensive   { border-color: rgba(230,57,70,0.3); }
+        .case.defensive   { border-color: rgba(74,144,217,0.3); }
+        .case.boite       { border-color: rgba(255,255,255,0.1); }
+        .case.centre      { border-color: rgba(82,183,136,0.4); }
+        .case.bloquee     { opacity: 0.25; cursor: not-allowed; }
+        .case.droppable   { border-color: var(--gold) !important; border-style: solid !important; background: rgba(255,215,0,0.08) !important; }
+        .case.occupee.offensive { border-style: solid; border-color: var(--red); }
+        .case.occupee.defensive { border-style: solid; border-color: #4A90D9; }
+        .case.occupee.boite     { border-style: solid; border-color: #444; }
+        .case.occupee.centre    { border-style: solid; border-color: var(--green); }
+        .case img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; cursor: pointer; }
+        .case .plus      { font-size: 1.4em; color: rgba(255,255,255,0.15); }
+        .case .lock-icon { font-size: 0.6em; color: rgba(255,255,255,0.15); }
+        .poke-nom { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); font-size: 0.6em; font-weight: 800; text-align: center; padding: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ko-badge    { position: absolute; top: 4px; right: 4px; background: var(--red); color: white; font-size: 0.55em; font-weight: 900; padding: 2px 5px; border-radius: 6px; font-family: 'Press Start 2P', monospace; }
+        .evol-badge  { position: absolute; top: 4px; left: 4px; background: linear-gradient(135deg, #FFD700, #FF8C00); color: #000; font-size: 0.5em; font-weight: 900; padding: 2px 5px; border-radius: 6px; font-family: 'Press Start 2P', monospace; animation: pulse-evol 1s infinite alternate; }
+        @keyframes pulse-evol { from { opacity: 0.7 } to { opacity: 1; box-shadow: 0 0 8px #FFD700; } }
+        .case.ko-poke { filter: grayscale(0.85); opacity: 0.6; }
+        .pv-mini-bg  { position: absolute; bottom: 22px; left: 4px; right: 4px; height: 4px; background: rgba(0,0,0,0.5); border-radius: 2px; }
+        .pv-mini-bar { height: 100%; border-radius: 2px; background: var(--green); transition: width 0.4s; }
+        .pv-mini-bar.medium { background: var(--gold); }
+        .pv-mini-bar.low    { background: var(--red); }
+        .xp-mini-bg  { position: absolute; bottom: 17px; left: 4px; right: 4px; height: 3px; background: rgba(0,0,0,0.4); border-radius: 2px; }
+        .xp-mini-bar { height: 100%; border-radius: 2px; background: #74C0FC; transition: width 0.4s; }
 
-        /* Boutons */
-        .actions-bar{display:flex;gap:10px;flex-wrap:wrap;}
-        .btn{padding:10px 18px;border:none;border-radius:12px;font-weight:900;font-family:'Nunito',sans-serif;cursor:pointer;font-size:0.88em;transition:transform 0.15s,opacity 0.2s;}
-        .btn:hover{transform:translateY(-2px);}
-        .btn:active{transform:translateY(0);}
-        .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:var(--blue-deep);}
-        .btn-green{background:linear-gradient(135deg,#52B788,#2D8A60);color:white;}
-        .btn-blue{background:linear-gradient(135deg,#3A7BFF,#1A55D0);color:white;}
-        .btn-red{background:linear-gradient(135deg,#E63946,#C1121F);color:white;}
-        .btn-gray{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;}
-        .btn-lock{background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);color:white;}
-        .btn-lock.locked{background:rgba(255,215,0,0.15);border-color:var(--gold);color:var(--gold);}
+        /* ── Boutons ── */
+        .actions-bar { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 18px; border: none; border-radius: 12px; font-weight: 900; font-family: 'Nunito', sans-serif; cursor: pointer; font-size: 0.88em; transition: transform 0.15s, opacity 0.2s; }
+        .btn:hover  { transform: translateY(-2px); }
+        .btn:active { transform: translateY(0); }
+        .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--blue-deep); }
+        .btn-green { background: linear-gradient(135deg, #52B788, #2D8A60); color: white; }
+        .btn-blue  { background: linear-gradient(135deg, #3A7BFF, #1A55D0); color: white; }
+        .btn-red   { background: linear-gradient(135deg, #E63946, #C1121F); color: white; }
+        .btn-gray  { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); color: white; }
+        .btn-lock  { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); color: white; }
+        .btn-lock.locked { background: rgba(255,215,0,0.15); border-color: var(--gold); color: var(--gold); }
 
-        /* Sidebar */
-        .sidebar{width:270px;flex-shrink:0;display:flex;flex-direction:column;gap:12px;}
-        .panel{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,0.07);}
-        .panel-title{font-size:0.62em;font-weight:800;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
-        .syn-wrap{display:flex;gap:6px;flex-wrap:wrap;}
-        .syn-badge{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:4px 12px;font-size:0.78em;font-weight:800;}
-        .syn-badge.actif{background:rgba(255,215,0,0.15);border-color:var(--gold);color:var(--gold);}
-        .adversaire{background:rgba(0,0,0,0.2);border-radius:10px;padding:10px 12px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;gap:10px;}
-        .adv-avatar{width:32px;height:32px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:0.85em;font-weight:800;flex-shrink:0;}
-        .adv-info{flex:1;min-width:0;}
-        .adv-nom{font-weight:800;font-size:0.85em;}
-        .adv-stats{display:flex;gap:8px;margin-top:3px;font-size:0.75em;font-weight:700;}
-        .adv-hp{color:#FF6B6B;}.adv-gp{color:var(--gold);}.adv-lv{color:var(--green);}
-        .log-list{max-height:160px;overflow-y:auto;scrollbar-width:thin;}
-        .log-item{font-size:0.78em;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);display:flex;gap:6px;font-weight:600;}
-        .log-item.gold{color:var(--gold);}
-        .log-item.green{color:var(--green);}
-        .log-item.red{color:#FF6B6B;}
-        .log-time{color:rgba(255,255,255,0.3);flex-shrink:0;}
-        .attente{text-align:center;color:rgba(255,255,255,0.3);padding:16px;font-style:italic;font-size:0.85em;}
+        /* ── Sidebar ── */
+        .sidebar { width: 270px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
+        .panel { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.07); }
+        .panel-title { font-size: 0.62em; font-weight: 800; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .syn-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
+        .syn-badge { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 4px 12px; font-size: 0.78em; font-weight: 800; }
+        .syn-badge.actif { background: rgba(255,215,0,0.15); border-color: var(--gold); color: var(--gold); }
+        .adversaire { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; }
+        .adv-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-size: 0.85em; font-weight: 800; flex-shrink: 0; }
+        .adv-info { flex: 1; min-width: 0; }
+        .adv-nom   { font-weight: 800; font-size: 0.85em; }
+        .adv-stats { display: flex; gap: 8px; margin-top: 3px; font-size: 0.75em; font-weight: 700; }
+        .adv-hp { color: #FF6B6B; } .adv-gp { color: var(--gold); } .adv-lv { color: var(--green); }
+        .log-list { max-height: 160px; overflow-y: auto; scrollbar-width: thin; }
+        .log-item { font-size: 0.78em; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.6); display: flex; gap: 6px; font-weight: 600; }
+        .log-item.gold  { color: var(--gold); }
+        .log-item.green { color: var(--green); }
+        .log-item.red   { color: #FF6B6B; }
+        .log-time { color: rgba(255,255,255,0.3); flex-shrink: 0; }
+        .attente { text-align: center; color: rgba(255,255,255,0.3); padding: 16px; font-style: italic; font-size: 0.85em; }
 
-        /* Modal boutique */
-        .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center;}
-        .modal-bg.open{display:flex;}
-        .modal{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:20px;padding:28px;border:2px solid var(--gold);width:98vw;max-width:98vw;height:92vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.7);}
-        .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
-        .modal-title{font-family:'Press Start 2P',monospace;font-size:0.65em;color:var(--gold);}
-        .modal-info{font-size:0.85em;color:rgba(255,255,255,0.6);font-weight:700;}
-        .boutique-cartes{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;flex:1;overflow-y:auto;align-content:flex-start;padding:8px 0;}
-        .boutique-carte{width:280px;text-align:center;cursor:pointer;transition:transform 0.2s;border-radius:12px;padding:8px;border:2px solid transparent;}
-        .boutique-carte:hover{transform:translateY(-6px);}
-        .boutique-carte.selected{border-color:var(--gold);background:rgba(255,215,0,0.1);}
-        .boutique-carte.bloquee{opacity:0.35;cursor:not-allowed;pointer-events:none;}
-        .boutique-carte img{width:264px;height:370px;object-fit:cover;border-radius:8px;display:block;margin:0 auto;}
-        .boutique-carte .cout{font-size:0.85em;font-weight:800;color:var(--gold);margin-top:8px;}
-        .boutique-carte .nom{font-size:0.8em;color:rgba(255,255,255,0.8);margin-top:3px;font-weight:700;}
-        .boutique-carte .types{font-size:0.72em;color:rgba(255,255,255,0.5);margin-top:2px;}
-        .modal-actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:16px;}
+        /* ── Modal boutique ── */
+        .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; align-items: center; justify-content: center; }
+        .modal-bg.open { display: flex; }
+        .modal { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 20px; padding: 28px; border: 2px solid var(--gold); width: 98vw; max-width: 98vw; height: 92vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.7); }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .modal-title { font-family: 'Press Start 2P', monospace; font-size: 0.65em; color: var(--gold); }
+        .modal-info  { font-size: 0.85em; color: rgba(255,255,255,0.6); font-weight: 700; }
+        .boutique-cartes { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; flex: 1; overflow-y: auto; align-content: flex-start; padding: 8px 0; }
+        .boutique-carte { width: 280px; text-align: center; cursor: pointer; transition: transform 0.2s; border-radius: 12px; padding: 8px; border: 2px solid transparent; }
+        .boutique-carte:hover { transform: translateY(-6px); }
+        .boutique-carte.selected { border-color: var(--gold); background: rgba(255,215,0,0.1); }
+        .boutique-carte.bloquee  { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+        .boutique-carte img  { width: 264px; height: 370px; object-fit: cover; border-radius: 8px; display: block; margin: 0 auto; }
+        .boutique-carte .cout { font-size: 0.85em; font-weight: 800; color: var(--gold); margin-top: 8px; }
+        .boutique-carte .nom  { font-size: 0.8em; color: rgba(255,255,255,0.8); margin-top: 3px; font-weight: 700; }
+        .boutique-carte .types { font-size: 0.72em; color: rgba(255,255,255,0.5); margin-top: 2px; }
+        .modal-actions { display: flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-top: 16px; }
 
-        /* Modal zoom */
-        .zoom-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;align-items:center;justify-content:center;}
-        .zoom-bg.open{display:flex;}
-        .zoom-inner{display:flex;flex-direction:column;align-items:center;gap:16px;height:95vh;}
-        .zoom-inner img{flex:1;min-height:0;width:auto;max-width:88vw;object-fit:contain;border-radius:12px;box-shadow:0 0 40px rgba(255,215,0,0.3);}
-        .zoom-btns{display:flex;gap:16px;flex-shrink:0;}
+        /* ── Modal zoom ── */
+        .zoom-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 300; align-items: center; justify-content: center; }
+        .zoom-bg.open { display: flex; }
+        .zoom-inner { display: flex; flex-direction: column; align-items: center; gap: 16px; height: 95vh; }
+        .zoom-inner img { flex: 1; min-height: 0; width: auto; max-width: 88vw; object-fit: contain; border-radius: 12px; box-shadow: 0 0 40px rgba(255,215,0,0.3); }
+        .zoom-btns { display: flex; gap: 16px; flex-shrink: 0; }
 
-        /* KO sur plateau */
-        .case.ko-poke{filter:grayscale(0.85);opacity:0.6;}
-        .ko-badge{position:absolute;top:4px;right:4px;background:var(--red);color:white;font-size:0.55em;font-weight:900;padding:2px 5px;border-radius:6px;font-family:'Press Start 2P',monospace;}
+        /* ── Arène combat ── */
+        .combat-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 350; flex-direction: column; align-items: center; justify-content: center; }
+        .combat-bg.open { display: flex; }
+        .combat-arena  { width: min(98vw, 800px); display: flex; flex-direction: column; gap: 6px; padding: 12px; }
+        .arena-header  { display: flex; justify-content: space-between; align-items: center; padding: 4px 0 8px; }
+        .arena-header span { font-size: 1.2em; font-weight: 900; color: var(--gold); }
+        .arena-side    { display: flex; flex-direction: column; gap: 4px; }
+        .arena-label   { font-size: 0.75em; font-weight: 800; color: rgba(255,255,255,0.45); text-align: center; padding: 2px 0; }
+        .arena-rangee  { display: flex; justify-content: center; gap: 6px; }
+        #arena-adv-off, #arena-adv-def { flex-direction: row-reverse; }
+        .arena-mid  { min-height: 52px; display: flex; align-items: center; justify-content: center; padding: 2px 0; }
+        .arena-log  { font-size: 0.8em; font-weight: 700; color: #fff; text-align: center; line-height: 1.5; max-width: 700px; }
+        .arena-card { width: 74px; height: 102px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.15); background: var(--blue-card); position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s, opacity 0.4s; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+        .arena-card img { width: 100%; height: 74px; object-fit: cover; border-radius: 6px 6px 0 0; }
+        .arena-card .card-nom { font-size: 0.58em; font-weight: 800; text-align: center; padding: 1px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        .arena-card .card-pv-bg  { position: absolute; bottom: 18px; left: 4px; right: 4px; height: 4px; background: rgba(0,0,0,0.4); border-radius: 2px; }
+        .arena-card .card-pv-bar { height: 100%; border-radius: 2px; background: #4caf50; transition: width 0.5s; }
+        .arena-card .card-pv-bar.medium { background: #ff9800; }
+        .arena-card .card-pv-bar.low    { background: #f44336; }
+        .arena-card .ko-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(244,67,54,0.9); color: #fff; font-weight: 900; font-size: 0.85em; padding: 2px 6px; border-radius: 4px; display: none; }
+        .arena-card.ko .ko-overlay { display: block; }
+        .arena-card.ko img { opacity: 0.3; filter: grayscale(1); }
+        .arena-card.vide   { border-style: dashed; opacity: 0.2; }
+        .arena-card.active { box-shadow: 0 0 18px 4px var(--gold); border-color: var(--gold); z-index: 2; }
+        .arena-card.attaque-haut { animation: atk-haut 0.35s ease-in-out; }
+        .arena-card.attaque-bas  { animation: atk-bas  0.35s ease-in-out; }
+        .arena-card.hit { animation: hit-shake 0.3s ease; }
+        @keyframes atk-haut  { 0%{transform:translateY(0)} 50%{transform:translateY(-42px)} 100%{transform:translateY(0)} }
+        @keyframes atk-bas   { 0%{transform:translateY(0)} 50%{transform:translateY( 42px)} 100%{transform:translateY(0)} }
+        @keyframes hit-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
 
-        /* Barre PV mini sur les cases */
-        .pv-mini-bg{position:absolute;bottom:22px;left:4px;right:4px;height:4px;background:rgba(0,0,0,0.5);border-radius:2px;}
-        .pv-mini-bar{height:100%;border-radius:2px;background:var(--green);transition:width 0.4s;}
-        .pv-mini-bar.medium{background:var(--gold);}
-        .pv-mini-bar.low{background:var(--red);}
-        /* Barre XP pokemon */
-        .xp-mini-bg{position:absolute;bottom:17px;left:4px;right:4px;height:3px;background:rgba(0,0,0,0.4);border-radius:2px;}
-        .xp-mini-bar{height:100%;border-radius:2px;background:#74C0FC;transition:width 0.4s;}
-        /* Badge évolution disponible */
-        .evol-badge{position:absolute;top:4px;left:4px;background:linear-gradient(135deg,#FFD700,#FF8C00);color:#000;font-size:0.5em;font-weight:900;padding:2px 5px;border-radius:6px;font-family:'Press Start 2P',monospace;animation:pulse-evol 1s infinite alternate;}
-        @keyframes pulse-evol{from{opacity:0.7}to{opacity:1;box-shadow:0 0 8px #FFD700;}}
-
-        /* Modal combat */
-        .combat-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:350;align-items:center;justify-content:center;}
-        .combat-bg.open{display:flex;}
-        .combat-modal{background:linear-gradient(135deg,var(--blue-mid),var(--blue-card));border-radius:20px;padding:28px;border:2px solid var(--red);width:96vw;max-width:720px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(230,57,70,0.3);}
-        .combat-titre{font-family:'Press Start 2P',monospace;font-size:0.7em;color:var(--red);margin-bottom:20px;text-align:center;}
-        .combat-duel{background:rgba(0,0,0,0.3);border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(230,57,70,0.2);}
-        .combat-vs{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px;font-weight:900;}
-        .combat-pts{font-family:'Press Start 2P',monospace;font-size:0.6em;padding:4px 10px;border-radius:20px;background:rgba(0,0,0,0.4);}
-        .combat-pts.win{color:var(--green);} .combat-pts.lose{color:var(--red);} .combat-pts.draw{color:var(--gold);}
-        .combat-log{font-size:0.8em;color:rgba(255,255,255,0.75);line-height:1.8;font-weight:600;max-height:220px;overflow-y:auto;}
-        .combat-log div{padding:1px 0;}
-
-        /* Toast */
-        /* ── Arène de combat ── */
-        .combat-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:350;flex-direction:column;align-items:center;justify-content:center;}
-        .combat-bg.open{display:flex;}
-        .combat-arena{width:min(98vw,800px);display:flex;flex-direction:column;gap:6px;padding:12px;}
-        .arena-header{display:flex;justify-content:space-between;align-items:center;padding:4px 0 8px;}
-        .arena-header span{font-size:1.2em;font-weight:900;color:var(--gold);}
-        .arena-side{display:flex;flex-direction:column;gap:4px;}
-        .arena-label{font-size:0.75em;font-weight:800;color:rgba(255,255,255,0.45);text-align:center;padding:2px 0;}
-        .arena-rangee{display:flex;justify-content:center;gap:6px;}
-        .arena-mid{min-height:52px;display:flex;align-items:center;justify-content:center;padding:2px 0;}
-        .arena-log{font-size:0.8em;font-weight:700;color:#fff;text-align:center;line-height:1.5;max-width:700px;}
-        .arena-card{width:74px;height:102px;border-radius:8px;border:2px solid rgba(255,255,255,0.15);background:var(--blue-card);position:relative;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s,opacity 0.4s;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
-        .arena-card img{width:100%;height:74px;object-fit:cover;border-radius:6px 6px 0 0;}
-        .arena-card .card-nom{font-size:0.58em;font-weight:800;text-align:center;padding:1px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;}
-        .arena-card .card-pv-bg{position:absolute;bottom:18px;left:4px;right:4px;height:4px;background:rgba(0,0,0,0.4);border-radius:2px;}
-        .arena-card .card-pv-bar{height:100%;border-radius:2px;background:#4caf50;transition:width 0.5s;}
-        .arena-card .card-pv-bar.medium{background:#ff9800;}
-        .arena-card .card-pv-bar.low{background:#f44336;}
-        .arena-card .ko-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(244,67,54,0.9);color:#fff;font-weight:900;font-size:0.85em;padding:2px 6px;border-radius:4px;display:none;}
-        .arena-card.ko .ko-overlay{display:block;}
-        .arena-card.ko img{opacity:0.3;filter:grayscale(1);}
-        .arena-card.vide{border-style:dashed;opacity:0.2;}
-        .arena-card.active{box-shadow:0 0 18px 4px var(--gold);border-color:var(--gold);z-index:2;}
-        .arena-card.attaque-haut{animation:atk-haut 0.35s ease-in-out;}
-        .arena-card.attaque-bas{animation:atk-bas 0.35s ease-in-out;}
-        .arena-card.hit{animation:hit-shake 0.3s ease;}
-        @keyframes atk-haut{0%{transform:translateY(0)}50%{transform:translateY(-42px)}100%{transform:translateY(0)}}
-        @keyframes atk-bas{0%{transform:translateY(0)}50%{transform:translateY(42px)}100%{transform:translateY(0)}}
-        @keyframes hit-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-        #arena-adv-off,#arena-adv-def{flex-direction:row-reverse;}
-                .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;font-weight:800;z-index:400;display:none;font-size:0.9em;}
+        /* ── Toast ── */
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 12px; font-weight: 800; z-index: 400; display: none; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
+<!-- Header -->
 <div class="header">
     <div class="header-logo">⚔️ PKChess</div>
     <div class="header-code" id="header-code">----</div>
@@ -196,9 +183,11 @@
     </div>
 </div>
 
+<!-- Jeu principal -->
 <div class="game-wrap">
     <div class="main-col">
 
+        <!-- Stats joueur -->
         <div class="stats-bar">
             <div class="player-name" id="player-name">🎮 Dresseur</div>
             <div class="stat-pill hp">❤️ <span class="stat-val" id="mes-pv">100</span></div>
@@ -209,6 +198,7 @@
             <div style="font-size:0.82em;font-weight:800;color:rgba(255,255,255,0.5)">Tour <span id="tour-num">0</span></div>
         </div>
 
+        <!-- Plateau -->
         <div class="plateau-wrap">
             <div class="rangee-label"><span class="dot-rouge"></span> Arène Offensive</div>
             <div class="rangee" id="rangee-off"></div>
@@ -223,14 +213,16 @@
             <div class="rangee" id="rangee-boite"></div>
         </div>
 
+        <!-- Actions -->
         <div class="actions-bar">
-            <button class="btn btn-red" id="btn-fin-tour" onclick="lancerCombat()" style="display:none">⚔️ Fin de tour &amp; Combat</button>
+            <button class="btn btn-red"  id="btn-fin-tour" onclick="lancerCombat()" style="display:none">⚔️ Fin de tour &amp; Combat</button>
             <button class="btn btn-gold" onclick="ouvrirBoutique()">🛒 Boutique</button>
             <button class="btn btn-blue" onclick="acheterXp()">📈 XP (4🪙)</button>
         </div>
 
     </div>
 
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="panel">
             <div class="panel-title">✨ Synergies actives</div>
@@ -272,48 +264,62 @@
     </div>
 </div>
 
-<!-- Modal combat -->
-<div class="combat-bg" id="combat-bg" onclick="fermerCombat()">
-    <div class="combat-modal" onclick="event.stopPropagation()">
-        <div class="combat-titre">⚔️ Résultats — Tour <span id="combat-tour">0</span></div>
-        <div id="combat-resultats"></div>
-        <div style="text-align:center;margin-top:18px;">
-            <button class="btn btn-gray" onclick="fermerCombat()">✕ Fermer</button>
-        </div>
-    </div>
-</div>
-
-<!-- Modal zoom -->
+<!-- Modal zoom carte -->
 <div class="zoom-bg" id="zoom-bg" onclick="fermerZoom()">
     <div class="zoom-inner" onclick="event.stopPropagation()">
         <img id="zoom-img" src="" alt="">
         <div class="zoom-btns">
-            <button class="btn btn-red"    id="btn-vendre"   onclick="vendrePokemon()"   style="display:none">💸 Vendre</button>
-            <button class="btn btn-green"  id="btn-racheter" onclick="racheterPokemon()" style="display:none">💊 Racheter</button>
-            <button class="btn btn-gray"   onclick="fermerZoom()">✕ Fermer</button>
+            <button class="btn btn-red"   id="btn-vendre"   onclick="vendrePokemon()"   style="display:none">💸 Vendre</button>
+            <button class="btn btn-green" id="btn-racheter" onclick="racheterPokemon()" style="display:none">💊 Racheter</button>
+            <button class="btn btn-gray"  onclick="fermerZoom()">✕ Fermer</button>
         </div>
     </div>
 </div>
 
-<!-- Toast -->
+<!-- Arène combat animée -->
+<div class="combat-bg" id="combat-bg">
+    <div class="combat-arena">
+        <div class="arena-header">
+            <span id="arena-title">⚔️ Combat !</span>
+            <button class="btn btn-gray" id="btn-fermer-combat" onclick="fermerCombat()" style="display:none">✕ Fermer</button>
+        </div>
+        <div class="arena-side">
+            <div class="arena-label" id="arena-adv-label">Adversaire</div>
+            <div class="arena-rangee" id="arena-adv-def"></div>
+            <div class="arena-rangee" id="arena-adv-off"></div>
+        </div>
+        <div class="arena-mid">
+            <div class="arena-log" id="arena-log">En attente du combat...</div>
+        </div>
+        <div class="arena-side">
+            <div class="arena-rangee" id="arena-moi-off"></div>
+            <div class="arena-rangee" id="arena-moi-def"></div>
+            <div class="arena-label" id="arena-moi-label">Moi</div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast notifications -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Config ───────────────────────────────────────────────────────────────────
-const CODE   = "{{ code }}";
-const PSEUDO = new URLSearchParams(window.location.search).get('pseudo') || 'Dresseur';
-const IMG    = "https://media.githubusercontent.com/media/Timberklinx/pkchess/master/pkchess-app/cartes/";
+// ── Config ────────────────────────────────────────────────────────────────────
+var CODE   = "{{ code }}";
+var PSEUDO = new URLSearchParams(window.location.search).get('pseudo') || 'Dresseur';
+var IMG    = "https://media.githubusercontent.com/media/Timberklinx/pkchess/master/pkchess-app/cartes/";
 
 document.getElementById('header-code').textContent = CODE;
 document.getElementById('player-name').textContent  = '🎮 ' + PSEUDO;
 
 // ── État local ────────────────────────────────────────────────────────────────
-let ws, etat;
-let boutique_offre     = [];
-let boutique_selection = null;
-let boutique_locked    = false;
-let zoom_pos = null, zoom_slot = null;
-let drag_pos = null, drag_slot = null;
+var ws, etat;
+var boutique_offre     = [];
+var boutique_selection = null;
+var boutique_locked    = false;
+var zoom_pos = null, zoom_slot = null;
+var drag_pos = null, drag_slot = null;
+var arenaEtat = null;
+var pvsMoi = {}, pvsAdv = {};
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 function connecterWS() {
@@ -339,10 +345,14 @@ function connecterWS() {
             majInterface();
         }
         if (msg.msg) {
-            var cls = (msg.type === 'fin_tour') ? 'gold' : '';
-            addLog(msg.msg, cls);
+            addLog(msg.msg, msg.type === 'fin_tour' ? 'gold' : '');
         }
-        if (msg.type === 'fin_tour') { finTour(); }
+        if (msg.type === 'fin_tour') {
+            // Reset visuel du verrou boutique
+            boutique_locked = false;
+            var btnL = document.getElementById('btn-lock');
+            if (btnL) { btnL.textContent = '🔓 Garder'; btnL.classList.remove('locked'); }
+        }
         if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) {
             addLog(msg.pseudo + ' a rejoint', 'green');
         }
@@ -353,21 +363,16 @@ function connecterWS() {
             showToast(msg.msg, true);
         }
         if (msg.type === 'resultat_combat') {
-            if (msg.etat) { etat = msg.etat; majInterface(); }
             arenaEtat = JSON.parse(JSON.stringify(msg.etat || etat));
             ouvrirArene(msg.resultats, msg.tour);
             addLog('⚔️ Combat tour ' + msg.tour + ' résolu !', 'red');
-            // Détecter les évolutions dans les logs et les notifier
+            // Notifier les évolutions détectées dans les logs
             if (msg.resultats) {
-                for (var r = 0; r < msg.resultats.length; r++) {
-                    var logs = msg.resultats[r].logs || [];
-                    for (var l = 0; l < logs.length; l++) {
-                        if (logs[l].indexOf('🌟') !== -1) {
-                            addLog(logs[l], 'gold');
-                            showToast(logs[l], false);
-                        }
-                    }
-                }
+                msg.resultats.forEach(function(r) {
+                    (r.logs || []).forEach(function(l) {
+                        if (l.indexOf('🌟') !== -1) { addLog(l, 'gold'); showToast(l, false); }
+                    });
+                });
             }
         }
         if (msg.type === 'boutique_offre' && msg.pour === PSEUDO) {
@@ -393,47 +398,39 @@ function majInterface() {
     document.getElementById('tour-num').textContent   = etat.tour || 0;
     document.getElementById('pv-bar').style.width     = Math.max(0, Math.min(100, moi.pv)) + '%';
 
-    // Bouton fin de tour + combat visible uniquement pour l'hôte
-    var btnFinTour = document.getElementById('btn-fin-tour');
-    if (btnFinTour) btnFinTour.style.display = (etat.hote === PSEUDO) ? 'inline-block' : 'none';
+    // Bouton combat uniquement pour l'hôte
+    var btnFT = document.getElementById('btn-fin-tour');
+    if (btnFT) btnFT.style.display = (etat.hote === PSEUDO) ? 'inline-block' : 'none';
 
     // Synergies
-    var syns   = moi.synergies || {};
-    var synEl  = document.getElementById('mes-synergies');
-    var keys   = Object.keys(syns);
+    var syns  = moi.synergies || {};
+    var keys  = Object.keys(syns);
+    var synEl = document.getElementById('mes-synergies');
     if (keys.length === 0) {
         synEl.innerHTML = '<span style="color:rgba(255,255,255,0.3);font-size:0.8em;font-weight:700">Aucune synergie</span>';
     } else {
-        var html = '';
-        for (var i = 0; i < keys.length; i++) {
-            var t = keys[i], n = syns[t];
-            html += '<span class="syn-badge actif">' + t + ' ' + n + '</span>';
-        }
-        synEl.innerHTML = html;
+        synEl.innerHTML = keys.map(function(t) {
+            return '<span class="syn-badge actif">' + t + ' ' + syns[t] + '</span>';
+        }).join('');
     }
 
     // Adversaires
     var advEl = document.getElementById('adversaires-list');
-    var advs  = [];
-    for (var p in etat.joueurs) {
-        if (p !== PSEUDO) advs.push([p, etat.joueurs[p]]);
-    }
+    var advs  = Object.keys(etat.joueurs).filter(function(p) { return p !== PSEUDO; });
     if (advs.length === 0) {
         advEl.innerHTML = '<div class="attente">En attente...</div>';
     } else {
-        var html = '';
-        for (var i = 0; i < advs.length; i++) {
-            var nom = advs[i][0], j = advs[i][1];
-            html += '<div class="adversaire">'
-                  + '<div class="adv-avatar">' + nom.substring(0,2).toUpperCase() + '</div>'
-                  + '<div class="adv-info">'
-                  + '<div class="adv-nom">' + nom + '</div>'
-                  + '<div class="adv-stats"><span class="adv-hp">❤️' + j.pv + '</span>'
-                  + '<span class="adv-gp">🪙' + j.pieces + '</span>'
-                  + '<span class="adv-lv">⭐' + j.niveau + '</span></div>'
-                  + '</div></div>';
-        }
-        advEl.innerHTML = html;
+        advEl.innerHTML = advs.map(function(p) {
+            var j = etat.joueurs[p];
+            return '<div class="adversaire">'
+                 + '<div class="adv-avatar">' + p.substring(0,2).toUpperCase() + '</div>'
+                 + '<div class="adv-info">'
+                 + '<div class="adv-nom">' + p + '</div>'
+                 + '<div class="adv-stats"><span class="adv-hp">❤️' + j.pv + '</span>'
+                 + '<span class="adv-gp">🪙' + j.pieces + '</span>'
+                 + '<span class="adv-lv">⭐' + j.niveau + '</span></div>'
+                 + '</div></div>';
+        }).join('');
     }
 
     renderPlateau();
@@ -442,54 +439,50 @@ function majInterface() {
 // ── Plateau ───────────────────────────────────────────────────────────────────
 function getPoke(pos, slot) {
     if (!etat || !etat.joueurs || !etat.joueurs[PSEUDO]) return null;
-    var pokemons = etat.joueurs[PSEUDO].pokemon || [];
-    for (var i = 0; i < pokemons.length; i++) {
-        if (pokemons[i].position === pos && pokemons[i].slot === slot) return pokemons[i];
-    }
-    return null;
+    return (etat.joueurs[PSEUDO].pokemon || []).find(function(p) {
+        return p.position === pos && p.slot === slot;
+    }) || null;
 }
 
 function renderPlateau() {
     var niveau = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
-    var dispo  = niveau >= 5 ? 5 : 3;
-    renderRangee('rangee-off',    'off',    dispo, 'offensive');
-    renderRangee('rangee-def',    'def',    dispo, 'defensive');
+    renderRangee('rangee-off',    'off',  niveau >= 5 ? 5 : 3, 'offensive');
+    renderRangee('rangee-def',    'def',  niveau >= 5 ? 5 : 3, 'defensive');
     renderCentre('rangee-centre');
-    renderRangee('rangee-boite',  'banc',   5,     'boite');
+    renderRangee('rangee-boite',  'banc', 5,                   'boite');
 }
 
 function renderCentre(containerId) {
     var container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
-    if (!etat || !etat.joueurs || !etat.joueurs[PSEUDO]) return;
-    var pokemons = etat.joueurs[PSEUDO].pokemon || [];
-    // La case centre = position "centre", slot 0
-    var pokeCentre = pokemons.find(function(p) { return p.position === 'centre'; });
+    var pokeCentre = etat && etat.joueurs && etat.joueurs[PSEUDO]
+        ? (etat.joueurs[PSEUDO].pokemon || []).find(function(p) { return p.position === 'centre'; })
+        : null;
     var el = document.createElement('div');
-    el.className = 'case centre' + (pokeCentre ? ' occupee' : '');
-    el.dataset.pos  = 'centre';
-    el.dataset.slot = 0;
+    el.className       = 'case centre' + (pokeCentre ? ' occupee' : '');
+    el.dataset.pos     = 'centre';
+    el.dataset.slot    = 0;
+
     if (pokeCentre) {
-        var id4 = String(pokeCentre.id).padStart(4, '0');
-        var toursRestants = pokeCentre.soin_tours_restants || 0;
-        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',0)">'
-            + '<div class="poke-nom">⏳' + toursRestants + ' tour' + (toursRestants > 1 ? 's' : '') + '</div>';
+        var id4  = String(pokeCentre.id).padStart(4, '0');
+        var tours = pokeCentre.soin_tours_restants || 0;
+        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom
+            + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',0)">'
+            + '<div class="poke-nom">⏳' + tours + ' tour' + (tours > 1 ? 's' : '') + '</div>';
         el.draggable = true;
-        (function() {
-            el.addEventListener('dragstart', function(e) {
-                drag_pos = 'centre'; drag_slot = 0;
-                e.dataTransfer.effectAllowed = 'move';
-                el.style.opacity = '0.4';
-            });
-            el.addEventListener('dragend', function() { el.style.opacity = '1'; });
-        })();
+        el.addEventListener('dragstart', function(e) {
+            drag_pos = 'centre'; drag_slot = 0;
+            e.dataTransfer.effectAllowed = 'move';
+            el.style.opacity = '0.4';
+        });
+        el.addEventListener('dragend', function() { el.style.opacity = '1'; });
     } else {
         el.innerHTML = '<span class="plus" style="color:rgba(82,183,136,0.4)">+</span>';
     }
-    // Drop sur la case centre
-    el.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('droppable'); });
-    el.addEventListener('dragleave', function() { this.classList.remove('droppable'); });
+
+    el.addEventListener('dragover',  function(e) { e.preventDefault(); this.classList.add('droppable'); });
+    el.addEventListener('dragleave', function()  { this.classList.remove('droppable'); });
     el.addEventListener('drop', function(e) {
         e.preventDefault(); this.classList.remove('droppable');
         if (drag_pos !== null && drag_pos !== 'centre') {
@@ -501,24 +494,21 @@ function renderCentre(containerId) {
 }
 
 function renderRangee(containerId, pos, dispo, cssClass) {
-    var container = document.getElementById(containerId);
+    var container   = document.getElementById(containerId);
     container.innerHTML = '';
+    var niveau_j    = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
+    var nbTerrain   = 0;
+    if (etat && etat.joueurs && etat.joueurs[PSEUDO]) {
+        (etat.joueurs[PSEUDO].pokemon || []).forEach(function(p) {
+            if (p.position === 'off' || p.position === 'def') nbTerrain++;
+        });
+    }
+
     for (var i = 0; i < 5; i++) {
-        var niveau_j = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
-        // Cases 0 et 4 (extrêmes) bloquées avant niveau 5, cases 1-2-3 toujours accessibles
-        var bloquee = pos !== 'banc' && (i === 0 || i === 4) && niveau_j < 5;
-        // Compter les pokemon déjà sur le terrain (off + def)
-        var nbTerrain = 0;
-        if (etat && etat.joueurs && etat.joueurs[PSEUDO]) {
-            var poks = etat.joueurs[PSEUDO].pokemon || [];
-            for (var k = 0; k < poks.length; k++) {
-                if (poks[k].position === 'off' || poks[k].position === 'def') nbTerrain++;
-            }
-        }
-        // Terrain plein si nb pokemon sur terrain >= niveau dresseur
-        var terrainPlein = !getPoke(pos, i) && pos !== 'banc' && !bloquee && nbTerrain >= niveau_j;
-        var offDevant = pos === 'def' && !bloquee && !getPoke('off', i);
-        var poke      = getPoke(pos, i);
+        var bloquee     = pos !== 'banc' && (i === 0 || i === 4) && niveau_j < 5;
+        var poke        = getPoke(pos, i);
+        var terrainPlein = !poke && pos !== 'banc' && !bloquee && nbTerrain >= niveau_j;
+        var offDevant   = pos === 'def' && !bloquee && !getPoke('off', i);
 
         var el = document.createElement('div');
         el.className    = 'case ' + cssClass;
@@ -531,55 +521,43 @@ function renderRangee(containerId, pos, dispo, cssClass) {
         } else if (poke) {
             el.classList.add('occupee');
             if (poke.ko) el.classList.add('ko-poke');
-            var id4 = String(poke.id).padStart(4, '0');
-            var pvPct = poke.pv_max > 0 ? Math.max(0, Math.min(100, Math.round(poke.pv / poke.pv_max * 100))) : 0;
-            var pvCls = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
-            var xpPct = (poke.evolution_ko && poke.evolution_ko > 0) ? Math.min(100, Math.round((poke.xp_combats || 0) / poke.evolution_ko * 100)) : 100;
-            var peutEvoluer = poke.evolution_id && (poke.xp_combats || 0) >= poke.evolution_ko;
-            el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
-                + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'' + pos + '\',' + i + ')">'
-                + (poke.ko ? '<div class="ko-badge">KO</div>' : '')
-                + (peutEvoluer ? '<div class="evol-badge">✨</div>' : '')
+            var id4    = String(poke.id).padStart(4, '0');
+            var pvPct  = poke.pv_max > 0 ? Math.max(0, Math.min(100, Math.round(poke.pv / poke.pv_max * 100))) : 0;
+            var pvCls  = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
+            var xpPct  = poke.evolution_ko > 0 ? Math.min(100, Math.round((poke.xp_combats || 0) / poke.evolution_ko * 100)) : 100;
+            var evolOk = poke.evolution_id && (poke.xp_combats || 0) >= poke.evolution_ko;
+            var imgSrc = IMG + id4 + '.png';
+            el.innerHTML = '<img src="' + imgSrc + '" alt="' + poke.nom
+                + '" onclick="ouvrirZoom(\'' + imgSrc + '\',\'' + pos + '\',' + i + ')">'
+                + (poke.ko   ? '<div class="ko-badge">KO</div>' : '')
+                + (evolOk    ? '<div class="evol-badge">✨</div>' : '')
                 + '<div class="pv-mini-bg"><div class="pv-mini-bar' + pvCls + '" style="width:' + pvPct + '%"></div></div>'
                 + (poke.evolution_id ? '<div class="xp-mini-bg"><div class="xp-mini-bar" style="width:' + xpPct + '%"></div></div>' : '')
                 + '<div class="poke-nom">' + poke.nom + ' ' + poke.pv + '/' + poke.pv_max + '</div>';
             el.draggable = !poke.ko;
             (function(p, s) {
                 el.addEventListener('dragstart', function(e) {
-                    drag_pos  = p;
-                    drag_slot = s;
+                    drag_pos = p; drag_slot = s;
                     e.dataTransfer.effectAllowed = 'move';
                     el.style.opacity = '0.4';
                 });
-                el.addEventListener('dragend', function() {
-                    el.style.opacity = '1';
-                });
+                el.addEventListener('dragend', function() { el.style.opacity = '1'; });
             })(pos, i);
+        } else if (terrainPlein) {
+            el.classList.add('bloquee');
+            el.innerHTML = '<span class="lock-icon">🚫</span>';
         } else {
-            if (terrainPlein && pos !== 'banc') {
-                el.classList.add('bloquee');
-                el.innerHTML = '<span class="lock-icon">🚫</span>';
-            } else {
-                el.innerHTML = '<span class="plus">+</span>';
-            }
+            el.innerHTML = '<span class="plus">+</span>';
         }
 
-        // Drop
-        el.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            this.classList.add('droppable');
-        });
-        el.addEventListener('dragleave', function() {
-            this.classList.remove('droppable');
-        });
+        el.addEventListener('dragover',  function(e) { e.preventDefault(); this.classList.add('droppable'); });
+        el.addEventListener('dragleave', function()  { this.classList.remove('droppable'); });
         el.addEventListener('drop', function(e) {
-            e.preventDefault();
-            this.classList.remove('droppable');
-            var toPos  = this.dataset.pos;
-            var toSlot = parseInt(this.dataset.slot);
+            e.preventDefault(); this.classList.remove('droppable');
             if (drag_pos !== null && !this.classList.contains('bloquee')) {
-                if (drag_pos !== toPos || drag_slot !== toSlot) {
-                    deplacerPokemon(drag_pos, drag_slot, toPos, toSlot);
+                var tp = this.dataset.pos, ts = parseInt(this.dataset.slot);
+                if (drag_pos !== tp || drag_slot !== ts) {
+                    deplacerPokemon(drag_pos, drag_slot, tp, ts);
                 }
             }
             drag_pos = drag_slot = null;
@@ -592,7 +570,7 @@ function renderRangee(containerId, pos, dispo, cssClass) {
 // ── Boutique ──────────────────────────────────────────────────────────────────
 function ouvrirBoutique() {
     boutique_selection = null;
-    document.getElementById('btn-capturer').disabled = true;
+    document.getElementById('btn-capturer').disabled    = true;
     document.getElementById('btn-capturer').textContent = '⚡ Capturer';
     document.getElementById('modal-boutique').classList.add('open');
     if (ws && ws.readyState === WebSocket.OPEN) {
@@ -606,54 +584,46 @@ function fermerBoutique() {
 }
 
 function afficherBoutique(tour, tour1_gratuit) {
-    var container = document.getElementById('boutique-cartes');
-    var moi       = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
-    var pieces    = moi ? moi.pieces : 0;
-    var t         = (tour !== undefined) ? tour : (etat ? etat.tour : 0);
-    var t_actuel  = etat ? etat.tour : 0;
-    var gratuit   = (t_actuel === 0) && tour1_gratuit && !(moi && moi.a_achete_tour1);
+    var moi     = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
+    var pieces  = moi ? moi.pieces : 0;
+    var gratuit = (etat && etat.tour === 0) && tour1_gratuit && !(moi && moi.a_achete_tour1);
 
     document.getElementById('boutique-info').textContent = gratuit
         ? '🎁 Capture un Pokémon gratuitement !'
         : '🪙 ' + pieces + ' pièces disponibles';
 
+    var container = document.getElementById('boutique-cartes');
     if (!boutique_offre || boutique_offre.length === 0) {
         container.innerHTML = '<div class="attente">Aucune offre disponible</div>';
         return;
     }
 
-    var html = '';
-    for (var i = 0; i < boutique_offre.length; i++) {
-        var poke  = boutique_offre[i];
-        var id4   = String(poke.id).padStart(4, '0');
-        var cout  = poke.niveau;
-        var peux  = gratuit || pieces >= cout;
-        var types = Array.isArray(poke.types) ? poke.types.join(', ') : (poke.types || '');
+    container.innerHTML = boutique_offre.map(function(poke, i) {
+        var id4     = String(poke.id).padStart(4, '0');
+        var cout    = poke.niveau;
+        var peux    = gratuit || pieces >= cout;
+        var types   = Array.isArray(poke.types) ? poke.types.join(', ') : (poke.types || '');
         var coutTxt = gratuit ? '🎁 Gratuit' : (cout + ' 🪙');
-
-        html += '<div class="boutique-carte' + (peux ? '' : ' bloquee') + '" '
-              + (peux ? 'onclick="selectionnerPoke(' + i + ')"' : '') + '>'
-              + '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
-              + '" ondblclick="event.stopPropagation();ouvrirZoom(\'' + IMG + id4 + '.png\',null,null)">'
-              + '<div class="cout">' + coutTxt + '</div>'
-              + '<div class="nom">' + poke.nom + '</div>'
-              + '<div class="types">' + types + '</div>'
-              + '</div>';
-    }
-    container.innerHTML = html;
+        return '<div class="boutique-carte' + (peux ? '' : ' bloquee') + '" '
+             + (peux ? 'onclick="selectionnerPoke(' + i + ')"' : '') + '>'
+             + '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
+             + '" ondblclick="event.stopPropagation();ouvrirZoom(\'' + IMG + id4 + '.png\',null,null)">'
+             + '<div class="cout">' + coutTxt + '</div>'
+             + '<div class="nom">'  + poke.nom  + '</div>'
+             + '<div class="types">' + types + '</div>'
+             + '</div>';
+    }).join('');
 }
 
 function selectionnerPoke(idx) {
     boutique_selection = idx;
-    var cartes = document.querySelectorAll('.boutique-carte');
-    for (var i = 0; i < cartes.length; i++) {
-        cartes[i].classList.toggle('selected', i === idx);
-    }
-    var btnC = document.getElementById('btn-capturer');
-    btnC.disabled = false;
-    var moi    = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
-    var t      = etat ? etat.tour : 0;
-    var gratuit = (t === 0) && !(moi && moi.a_achete_tour1);
+    document.querySelectorAll('.boutique-carte').forEach(function(c, i) {
+        c.classList.toggle('selected', i === idx);
+    });
+    var moi     = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
+    var gratuit = (etat && etat.tour === 0) && !(moi && moi.a_achete_tour1);
+    var btnC    = document.getElementById('btn-capturer');
+    btnC.disabled    = false;
     btnC.textContent = gratuit ? '🎁 Capturer gratuitement' : '⚡ Capturer';
 }
 
@@ -661,11 +631,9 @@ function capturerPokemon() {
     if (boutique_selection === null) return;
     var poke    = boutique_offre[boutique_selection];
     var moi     = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
-    var t       = etat ? etat.tour : 0;
-    var gratuit = (t === 0) && !(moi && moi.a_achete_tour1);
-    var cout    = gratuit ? 0 : poke.niveau;
+    var gratuit = (etat && etat.tour === 0) && !(moi && moi.a_achete_tour1);
     if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({type: 'capturer_pokemon', pokemon_id: poke.id, cout: cout}));
+        ws.send(JSON.stringify({type: 'capturer_pokemon', pokemon_id: poke.id, cout: gratuit ? 0 : poke.niveau}));
     }
     fermerBoutique();
 }
@@ -679,20 +647,21 @@ function roll() {
 function toggleLock() {
     boutique_locked = !boutique_locked;
     var btn = document.getElementById('btn-lock');
-    if (boutique_locked) {
-        btn.textContent = '🔒 Gardée';
-        btn.classList.add('locked');
-        showToast('Boutique verrouillée pour le prochain tour', false);
-    } else {
-        btn.textContent = '🔓 Garder';
-        btn.classList.remove('locked');
-    }
+    btn.textContent = boutique_locked ? '🔒 Gardée' : '🔓 Garder';
+    btn.classList.toggle('locked', boutique_locked);
+    if (boutique_locked) showToast('Boutique verrouillée pour le prochain tour', false);
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'lock_boutique', locked: boutique_locked}));
     }
 }
 
-// ── Zoom / Vente ──────────────────────────────────────────────────────────────
+function acheterXp() {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({type: 'acheter_xp'}));
+    }
+}
+
+// ── Zoom / Actions carte ──────────────────────────────────────────────────────
 function ouvrirZoom(src, pos, slot) {
     document.getElementById('zoom-img').src = src;
     document.getElementById('zoom-bg').classList.add('open');
@@ -705,10 +674,8 @@ function ouvrirZoom(src, pos, slot) {
     if (pos !== null && slot !== null) {
         var poke = getPoke(pos, slot);
         if (poke) {
-            // Toujours proposer de vendre
             btnV.style.display = 'inline-block';
             btnV.textContent   = '💸 Vendre (' + poke.niveau + ' 🪙)';
-            // Proposer de racheter uniquement si KO
             if (poke.ko) {
                 btnR.style.display = 'inline-block';
                 btnR.textContent   = '💊 Racheter (' + poke.niveau + ' 🪙)';
@@ -723,7 +690,7 @@ function fermerZoom() {
 }
 
 function vendrePokemon() {
-    if (zoom_pos === null || zoom_slot === null) return;
+    if (zoom_pos === null) return;
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'vendre_pokemon', position: zoom_pos, slot: zoom_slot}));
     }
@@ -731,64 +698,56 @@ function vendrePokemon() {
 }
 
 function racheterPokemon() {
-    if (zoom_pos === null || zoom_slot === null) return;
+    if (zoom_pos === null) return;
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'racheter_pokemon', position: zoom_pos, slot: zoom_slot}));
     }
     fermerZoom();
 }
 
-// ── Actions plateau ───────────────────────────────────────────────────────────
+// ── Déplacement plateau ───────────────────────────────────────────────────────
 function deplacerPokemon(fp, fs, tp, ts) {
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'deplacer_pokemon', from_pos: fp, from_slot: fs, to_pos: tp, to_slot: ts}));
     }
 }
 
-// ── Combat ────────────────────────────────────────────────────────────────────
+// ── Combat / Arène ────────────────────────────────────────────────────────────
 function lancerCombat() {
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'lancer_combat'}));
     }
 }
 
-var arenaEtat = null;
-var pvsMoi = {}, pvsAdv = {};
-
 function ouvrirArene(resultats, tour) {
     var bg = document.getElementById('combat-bg');
     bg.classList.add('open');
-    document.getElementById('arena-title').textContent = '⚔️ Tour ' + tour + ' — Combat !';
-    document.getElementById('btn-fermer-combat').style.display = 'none';
-    document.getElementById('arena-log').textContent = 'Préparation du combat...';
+    document.getElementById('arena-title').textContent          = '⚔️ Tour ' + tour + ' — Combat !';
+    document.getElementById('btn-fermer-combat').style.display  = 'none';
+    document.getElementById('arena-log').textContent            = 'Préparation du combat...';
 
     var snap = arenaEtat || etat;
     if (!snap || !resultats || !resultats.length) { fermerCombat(); return; }
 
     // Trouver le duel qui me concerne
-    var monRes = null;
-    for (var r = 0; r < resultats.length; r++) {
-        if (resultats[r].joueurs && resultats[r].joueurs.indexOf(PSEUDO) >= 0) { monRes = resultats[r]; break; }
-    }
-    if (!monRes) monRes = resultats[0];
-
-    var pseudoMoi = PSEUDO;
+    var monRes = resultats.find(function(r) { return r.joueurs && r.joueurs.indexOf(PSEUDO) >= 0; }) || resultats[0];
     var pseudoAdv = monRes.joueurs[0] === PSEUDO ? monRes.joueurs[1] : monRes.joueurs[0];
-    document.getElementById('arena-moi-label').textContent = '🧢 ' + pseudoMoi;
-    document.getElementById('arena-adv-label').textContent = '⚔️ ' + pseudoAdv;
 
-    var jMoi = snap.joueurs[pseudoMoi] || {};
-    var jAdv = snap.joueurs[pseudoAdv] || {};
+    document.getElementById('arena-moi-label').textContent = '🧢 ' + PSEUDO;
+    document.getElementById('arena-adv-label').textContent = pseudoAdv ? '⚔️ ' + pseudoAdv : '👻 Fantôme';
 
-    // Init PV locaux pour animer les barres
+    var jMoi = snap.joueurs[PSEUDO]     || {};
+    var jAdv = pseudoAdv ? snap.joueurs[pseudoAdv] || {} : {};
+
+    // Snapshot PV initiaux pour animer les barres
     pvsMoi = {}; pvsAdv = {};
     (jMoi.pokemon || []).forEach(function(p) {
         if (p.position === 'off' || p.position === 'def')
-            pvsMoi[p.slot] = {nom: p.nom, pv: p.pv, pv_max: p.pv_max, pos: p.position};
+            pvsMoi[p.slot] = {nom: p.nom, pv: p.pv, pv_max: p.pv_max};
     });
     (jAdv.pokemon || []).forEach(function(p) {
         if (p.position === 'off' || p.position === 'def')
-            pvsAdv[p.slot] = {nom: p.nom, pv: p.pv, pv_max: p.pv_max, pos: p.position};
+            pvsAdv[p.slot] = {nom: p.nom, pv: p.pv, pv_max: p.pv_max};
     });
 
     construireCartes('arena-moi-off', jMoi, 'off', false);
@@ -798,7 +757,7 @@ function ouvrirArene(resultats, tour) {
 
     rejouerLogs(monRes.logs || [], pseudoAdv, function() {
         document.getElementById('btn-fermer-combat').style.display = 'inline-block';
-        document.getElementById('arena-title').textContent = '✅ Combat terminé — Tour ' + tour;
+        document.getElementById('arena-title').textContent         = '✅ Combat terminé — Tour ' + tour;
     });
 }
 
@@ -809,19 +768,17 @@ function construireCartes(containerId, joueur, pos, miroir) {
     var pokemon = joueur ? joueur.pokemon || [] : [];
     for (var i = 0; i < 5; i++) {
         var slot = miroir ? (4 - i) : i;
-        var poke = null;
-        for (var k = 0; k < pokemon.length; k++) {
-            if (pokemon[k].position === pos && pokemon[k].slot === slot) { poke = pokemon[k]; break; }
-        }
+        var poke = pokemon.find(function(p) { return p.position === pos && p.slot === slot; }) || null;
         var card = document.createElement('div');
-        card.id = containerId + '-s' + slot;
+        card.id        = containerId + '-s' + slot;
         card.className = 'arena-card' + (poke ? (poke.ko ? ' ko' : '') : ' vide');
         if (poke) {
-            var id4 = String(poke.id).padStart(4, '0');
-            var pvPct = poke.pv_max > 0 ? Math.round(poke.pv / poke.pv_max * 100) : 0;
-            var pvCls = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
+            var id4    = String(poke.id).padStart(4, '0');
+            var pvPct  = poke.pv_max > 0 ? Math.round(poke.pv / poke.pv_max * 100) : 0;
+            var pvCls  = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
             card.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom + '">'
-                + '<div class="card-pv-bg"><div class="card-pv-bar' + pvCls + '" id="pvbar-' + containerId + '-s' + slot + '" style="width:' + pvPct + '%"></div></div>'
+                + '<div class="card-pv-bg"><div class="card-pv-bar' + pvCls + '"'
+                + ' id="pvbar-' + containerId + '-s' + slot + '" style="width:' + pvPct + '%"></div></div>'
                 + '<div class="ko-overlay">KO</div>'
                 + '<div class="card-nom">' + poke.nom + '</div>';
         }
@@ -833,18 +790,17 @@ function animPvBar(containerId, slot, pvPct) {
     var bar = document.getElementById('pvbar-' + containerId + '-s' + slot);
     if (!bar) return;
     bar.style.width = Math.max(0, pvPct) + '%';
-    bar.className = 'card-pv-bar' + (pvPct > 50 ? '' : pvPct > 25 ? ' medium' : ' low');
+    bar.className   = 'card-pv-bar' + (pvPct > 50 ? '' : pvPct > 25 ? ' medium' : ' low');
 }
 
 function trouverCarte(nom) {
-    var prefixes = ['arena-moi-off','arena-moi-def','arena-adv-off','arena-adv-def'];
+    var prefixes = ['arena-moi-off', 'arena-moi-def', 'arena-adv-off', 'arena-adv-def'];
     for (var p = 0; p < prefixes.length; p++) {
         for (var s = 0; s < 5; s++) {
             var c = document.getElementById(prefixes[p] + '-s' + s);
-            if (c && !c.classList.contains('vide')) {
-                var nomEl = c.querySelector('.card-nom');
-                if (nomEl && nomEl.textContent.trim() === nom) return {card: c, prefix: prefixes[p], slot: s};
-            }
+            if (!c || c.classList.contains('vide')) continue;
+            var nomEl = c.querySelector('.card-nom');
+            if (nomEl && nomEl.textContent.trim() === nom) return {card: c, prefix: prefixes[p], slot: s};
         }
     }
     return null;
@@ -852,38 +808,34 @@ function trouverCarte(nom) {
 
 function rejouerLogs(logs, pseudoAdv, onDone) {
     var logEl = document.getElementById('arena-log');
-    var idx = 0;
+    var idx   = 0;
 
     function next() {
         if (idx >= logs.length) { if (onDone) onDone(); return; }
-        var log = logs[idx++];
-        logEl.textContent = log.replace(/^\s+/, '');
-
+        var log   = logs[idx++];
         var delay = 350;
+        logEl.textContent = log.replace(/^\s+/, '');
 
         // Attaque : "➤ NomA attaque ... → X dégâts → NomB YPV"
         var mAtk = log.match(/➤ (.+?) attaque.* → (\d+) dégâts → (.+?) (\d+)PV/);
         if (mAtk) {
-            var nomAtt = mAtk[1].trim();
-            var dmg = parseInt(mAtk[2]);
-            var nomCib = mAtk[3].trim();
-            var pvCib = parseInt(mAtk[4]);
+            var nomAtt = mAtk[1].trim(), dmg = parseInt(mAtk[2]);
+            var nomCib = mAtk[3].trim(), pvCib = parseInt(mAtk[4]);
             var resAtt = trouverCarte(nomAtt);
             var resCib = trouverCarte(nomCib);
             if (resAtt && resCib) {
                 var estMoi = resAtt.prefix.indexOf('moi') >= 0;
-                resAtt.card.classList.add('active');
-                resAtt.card.classList.add(estMoi ? 'attaque-haut' : 'attaque-bas');
-                setTimeout(function(rc, rp, pv) {
-                    resAtt.card.classList.remove('active','attaque-haut','attaque-bas');
+                resAtt.card.classList.add('active', estMoi ? 'attaque-haut' : 'attaque-bas');
+                setTimeout(function(rc, pvApres) {
+                    resAtt.card.classList.remove('active', 'attaque-haut', 'attaque-bas');
                     rc.card.classList.add('hit');
                     setTimeout(function() { rc.card.classList.remove('hit'); }, 320);
-                    // PV bar
-                    var tracker = (rc.prefix.indexOf('moi') >= 0 ? pvsMoi : pvsAdv)[rc.slot];
-                    var pct = tracker ? Math.round(pv / tracker.pv_max * 100) : 0;
+                    var est = rc.prefix.indexOf('moi') >= 0;
+                    var tracker = est ? pvsMoi[rc.slot] : pvsAdv[rc.slot];
+                    var pct = tracker ? Math.round(pvApres / tracker.pv_max * 100) : 0;
                     animPvBar(rc.prefix, rc.slot, pct);
-                    if (tracker) tracker.pv = pv;
-                }, 360, resCib, resAtt.prefix, pvCib);
+                    if (tracker) tracker.pv = pvApres;
+                }, 360, resCib, pvCib);
             }
             delay = 900;
         }
@@ -893,12 +845,15 @@ function rejouerLogs(logs, pseudoAdv, onDone) {
         if (mKO) {
             var res = trouverCarte(mKO[1].trim());
             if (res) {
-                setTimeout(function(c) { c.classList.add('ko'); animPvBar(c.id.replace('arena-','').replace(/-s\d+/,''), parseInt(c.id.split('-s')[1]), 0); }, 200, res.card);
+                setTimeout(function(c, pref, sl) {
+                    c.classList.add('ko');
+                    animPvBar(pref, sl, 0);
+                }, 200, res.card, res.prefix, res.slot);
             }
             delay = 600;
         }
 
-        // Résultat final → gold
+        // Résultat final
         if (log.indexOf('🏆') >= 0 || log.indexOf('🤝') >= 0) {
             logEl.style.color = 'var(--gold)';
             delay = 800;
@@ -915,17 +870,6 @@ function fermerCombat() {
     document.getElementById('combat-bg').classList.remove('open');
     arenaEtat = null;
 }
-function finTour() {
-    boutique_locked = false;
-    var btn = document.getElementById('btn-lock');
-    if (btn) { btn.textContent = '🔓 Garder'; btn.classList.remove('locked'); }
-}
-
-function acheterXp() {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({type: 'acheter_xp'}));
-    }
-}
 
 // ── Log & Toast ───────────────────────────────────────────────────────────────
 function addLog(msg, cls) {
@@ -940,36 +884,16 @@ function addLog(msg, cls) {
 
 function showToast(msg, erreur) {
     var el = document.getElementById('toast');
-    el.textContent   = msg;
-    el.style.background = erreur ? '#E63946' : '#52B788';
-    el.style.color      = 'white';
-    el.style.display    = 'block';
+    el.textContent       = msg;
+    el.style.background  = erreur ? '#E63946' : '#52B788';
+    el.style.color       = 'white';
+    el.style.display     = 'block';
     setTimeout(function() { el.style.display = 'none'; }, 3000);
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 connecterWS();
-renderPlateau(); // Afficher les cases vides même avant connexion
+renderPlateau();
 </script>
 </body>
-</html><!-- Modal arène combat -->
-<div class="combat-bg" id="combat-bg">
-  <div class="combat-arena">
-    <div class="arena-header">
-      <span id="arena-title">⚔️ Combat !</span>
-      <button class="btn btn-gray" id="btn-fermer-combat" onclick="fermerCombat()" style="display:none">✕ Fermer</button>
-    </div>
-    <div class="arena-side">
-      <div class="arena-label" id="arena-adv-label">Adversaire</div>
-      <div class="arena-rangee" id="arena-adv-def" style="flex-direction:row-reverse"></div>
-      <div class="arena-rangee" id="arena-adv-off" style="flex-direction:row-reverse"></div>
-    </div>
-    <div class="arena-mid"><div class="arena-log" id="arena-log">En attente du combat...</div></div>
-    <div class="arena-side">
-      <div class="arena-rangee" id="arena-moi-off"></div>
-      <div class="arena-rangee" id="arena-moi-def"></div>
-      <div class="arena-label" id="arena-moi-label">Moi</div>
-    </div>
-  </div>
-</div>
-
+</html>
