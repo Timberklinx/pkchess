@@ -141,34 +141,6 @@
         .combat-bg { display: none; position: fixed; inset: 0; background: rgba(5,10,30,0.98); z-index: 350; flex-direction: row; overflow: hidden; }
         .combat-bg.open { display: flex; }
         .combat-arena  { flex: 1; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 40px; box-sizing: border-box; min-width: 0; }
-        .arena-header  { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-        .arena-header span { font-size: 1.5em; font-weight: 900; color: var(--gold); }
-        .arena-side    { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
-        .arena-label   { font-size: 0.85em; font-weight: 800; color: rgba(255,255,255,0.5); text-align: center; padding: 4px 0; letter-spacing: 2px; text-transform: uppercase; }
-        .arena-rangee  { display: flex; justify-content: center; gap: 16px; }
-        #arena-adv-off, #arena-adv-def { flex-direction: row-reverse; }
-        .arena-mid  { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 0; }
-        .arena-log  { font-size: 1.05em; font-weight: 700; color: #fff; text-align: center; line-height: 1.7; max-width: 600px; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 12px 24px; }
-        .arena-card { width: 130px; height: 182px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.15); background: var(--blue-card); position: relative; overflow: hidden; transition: box-shadow 0.25s, opacity 0.4s; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-        .arena-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px 8px 0 0; }
-        .arena-card .card-nom { font-size: 0.65em; font-weight: 800; text-align: center; padding: 2px 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-        .arena-card .card-pv-bg  { position: absolute; bottom: 22px; left: 5px; right: 5px; height: 5px; background: rgba(0,0,0,0.4); border-radius: 3px; }
-        .arena-card .card-pv-bar { height: 100%; border-radius: 3px; background: #4caf50; transition: width 0.6s ease; }
-        .arena-card .card-pv-bar.medium { background: #ff9800; }
-        .arena-card .card-pv-bar.low    { background: #f44336; }
-        .arena-card .ko-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(244,67,54,0.9); color: #fff; font-weight: 900; font-size: 1em; padding: 4px 10px; border-radius: 6px; display: none; }
-        .arena-card.ko .ko-overlay { display: block; }
-        .arena-card.ko img { opacity: 0.3; filter: grayscale(1); }
-        .arena-card.vide   { border-style: dashed; opacity: 0.2; }
-        .arena-card.active { box-shadow: 0 0 32px 8px var(--gold); border-color: var(--gold); z-index: 2; }
-        .arena-card.attaque-haut { animation: atk-haut 0.5s cubic-bezier(0.4,0,0.2,1); }
-        .arena-card.attaque-bas  { animation: atk-bas  0.5s cubic-bezier(0.4,0,0.2,1); }
-        .arena-card.hit { animation: hit-shake 0.4s ease; }
-        .arena-card.hit img { animation: hit-flash 0.4s ease; }
-        @keyframes atk-haut  { 0%{transform:translateY(0) scale(1)} 40%{transform:translateY(-120px) scale(1.08)} 100%{transform:translateY(0) scale(1)} }
-        @keyframes atk-bas   { 0%{transform:translateY(0) scale(1)} 40%{transform:translateY( 120px) scale(1.08)} 100%{transform:translateY(0) scale(1)} }
-        @keyframes hit-shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-12px)} 40%{transform:translateX(10px)} 60%{transform:translateX(-8px)} 80%{transform:translateX(6px)} }
-        @keyframes hit-flash { 0%,100%{filter:none} 30%{filter:brightness(3) saturate(0)} }
         .arena-journal { width: 320px; flex-shrink: 0; height: 100vh; background: rgba(0,0,0,0.5); border-left: 2px solid rgba(255,215,0,0.2); display: flex; flex-direction: column; padding: 16px 12px; box-sizing: border-box; }
         .arena-journal-title { font-family: 'Press Start 2P', monospace; font-size: 0.55em; color: var(--gold); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,215,0,0.2); flex-shrink: 0; }
         .arena-journal-list { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,215,0,0.3) transparent; display: flex; flex-direction: column; gap: 3px; }
@@ -181,6 +153,32 @@
         .jlog.xp      { color: #74C0FC; }
         .jlog.dmg     { color: rgba(255,255,255,0.5); font-size: 0.72em; }
         .jlog.resultat{ color: var(--gold); font-weight: 900; font-size: 0.85em; background: rgba(255,215,0,0.12); text-align: center; padding: 8px; border-radius: 8px; margin-top: 6px; }
+        .arena-header  { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .arena-header span { font-size: 1.5em; font-weight: 900; color: var(--gold); }
+        .arena-side    { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+        .arena-label   { font-size: 0.85em; font-weight: 800; color: rgba(255,255,255,0.5); text-align: center; padding: 4px 0; letter-spacing: 2px; text-transform: uppercase; }
+        .arena-rangee  { display: flex; justify-content: center; gap: 16px; }
+        #arena-adv-off, #arena-adv-def { flex-direction: row-reverse; }
+        .arena-mid  { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 0; }
+        .arena-log  { font-size: 1.05em; font-weight: 700; color: #fff; text-align: center; line-height: 1.7; max-width: 800px; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 12px 24px; }
+        .arena-card { width: 130px; height: 182px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.15); background: var(--blue-card); position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s, opacity 0.4s; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+        .arena-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px 8px 0 0; }
+        .arena-card .card-nom { font-size: 0.65em; font-weight: 800; text-align: center; padding: 2px 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        .arena-card .card-pv-bg  { position: absolute; bottom: 22px; left: 5px; right: 5px; height: 5px; background: rgba(0,0,0,0.4); border-radius: 3px; }
+        .arena-card .card-pv-bar { height: 100%; border-radius: 3px; background: #4caf50; transition: width 0.5s; }
+        .arena-card .card-pv-bar.medium { background: #ff9800; }
+        .arena-card .card-pv-bar.low    { background: #f44336; }
+        .arena-card .ko-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(244,67,54,0.9); color: #fff; font-weight: 900; font-size: 1em; padding: 4px 10px; border-radius: 6px; display: none; }
+        .arena-card.ko .ko-overlay { display: block; }
+        .arena-card.ko img { opacity: 0.3; filter: grayscale(1); }
+        .arena-card.vide   { border-style: dashed; opacity: 0.2; }
+        .arena-card.active { box-shadow: 0 0 28px 6px var(--gold); border-color: var(--gold); z-index: 2; }
+        .arena-card.attaque-haut { animation: atk-haut 0.35s ease-in-out; }
+        .arena-card.attaque-bas  { animation: atk-bas  0.35s ease-in-out; }
+        .arena-card.hit { animation: hit-shake 0.3s ease; }
+        @keyframes atk-haut  { 0%{transform:translateY(0)} 50%{transform:translateY(-80px)} 100%{transform:translateY(0)} }
+        @keyframes atk-bas   { 0%{transform:translateY(0)} 50%{transform:translateY( 80px)} 100%{transform:translateY(0)} }
+        @keyframes hit-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
 
         /* ── Toast ── */
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 12px; font-weight: 800; z-index: 400; display: none; font-size: 0.9em; }
@@ -829,42 +827,39 @@ function trouverCarte(nom) {
     return null;
 }
 
-function jlogAdd(text, cls) {
-    var list = document.getElementById('arena-journal-list');
-    if (!list) return;
-    var el = document.createElement('div');
-    el.className = 'jlog ' + (cls || '');
-    el.textContent = text.replace(/^\s+/, '');
-    list.appendChild(el);
-    list.scrollTop = list.scrollHeight;
-}
-
 function rejouerLogs(logs, pseudoAdv, onDone) {
     var logEl = document.getElementById('arena-log');
     var jList = document.getElementById('arena-journal-list');
     var idx   = 0;
-    if (jList) jList.innerHTML = '';
 
+    if (jList) jList.innerHTML = '';
+    function jlogAdd(text, cls) {
+        if (!jList) return;
+        var el = document.createElement('div');
+        el.className = 'jlog ' + (cls || '');
+        el.textContent = text.replace(/^\s+/, '');
+        jList.appendChild(el);
+        jList.scrollTop = jList.scrollHeight;
+    }
     function next() {
         if (idx >= logs.length) { if (onDone) onDone(); return; }
         var log   = logs[idx++];
         var delay = 350;
         var clean = log.replace(/^\s+/, '');
         logEl.textContent = clean;
-
-        if (clean.indexOf('⚔️') === 0)                                  jlogAdd(clean, 'duel');
-        else if (clean.indexOf('💀') >= 0)                              jlogAdd(clean, 'ko');
-        else if (clean.indexOf('⭐') >= 0)                              jlogAdd(clean, 'xp');
+        if (clean.indexOf('⚔️') === 0)                                         jlogAdd(clean, 'duel');
+        else if (clean.indexOf('💀') >= 0)                                     jlogAdd(clean, 'ko');
+        else if (clean.indexOf('⭐') >= 0)                                     jlogAdd(clean, 'xp');
         else if (clean.indexOf('🏆') >= 0 || clean.indexOf('🤝') >= 0 || clean.indexOf('💥') >= 0) jlogAdd(clean, 'resultat');
-        else if (clean.indexOf('➤') >= 0)                              jlogAdd(clean, 'dmg');
-        else if (clean.indexOf('🔸') >= 0)                              jlogAdd(clean, 'atk');
-        else                                                            jlogAdd(clean, '');
+        else if (clean.indexOf('➤') >= 0)                                      jlogAdd(clean, 'dmg');
+        else if (clean.indexOf('🔸') >= 0)                                     jlogAdd(clean, 'atk');
+        else                                                                    jlogAdd(clean, '');
 
-        // Attaque / riposte : "➤ NomA attaque/riposte ... → X dégâts → NomB YPV"
+        // Attaque : "➤ NomA attaque ... → X dégâts → NomB YPV"
         var mAtk = log.match(/➤ (.+?) (?:attaque|riposte).* → (\d+) dégâts → (.+?) (\d+)PV/);
         if (mAtk) {
-            var nomAtt = mAtk[1].trim(), pvCib = parseInt(mAtk[4]);
-            var nomCib = mAtk[3].trim();
+            var nomAtt = mAtk[1].trim(), dmg = parseInt(mAtk[2]);
+            var nomCib = mAtk[3].trim(), pvCib = parseInt(mAtk[4]);
             var resAtt = trouverCarte(nomAtt);
             var resCib = trouverCarte(nomCib);
             if (resAtt && resCib) {
@@ -892,14 +887,15 @@ function rejouerLogs(logs, pseudoAdv, onDone) {
                 setTimeout(function(c, pref, sl) {
                     c.classList.add('ko');
                     animPvBar(pref, sl, 0);
-                }, 250, res.card, res.prefix, res.slot);
+                }, 200, res.card, res.prefix, res.slot);
             }
-            delay = 700;
+            delay = 600;
         }
 
+        // Résultat final
         if (log.indexOf('🏆') >= 0 || log.indexOf('🤝') >= 0) {
             logEl.style.color = 'var(--gold)';
-            delay = 900;
+            delay = 800;
         } else {
             logEl.style.color = '#fff';
         }
