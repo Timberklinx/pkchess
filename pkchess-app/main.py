@@ -46,6 +46,14 @@ def _calculer_formes_exclusives():
 
 _IDS_INTERMEDIAIRES |= _calculer_formes_exclusives()
 
+# Formes Méga et Gigamax : jamais disponibles en boutique
+import unicodedata as _ud
+def _norm(s): return _ud.normalize("NFD", s).encode("ascii","ignore").decode().lower()
+_IDS_INTERMEDIAIRES |= {
+    p["id"] for p in POKEMONS_DB
+    if any(x in _norm(p["nom"]) for x in ("gigamax", "mega")) and p.get("stade", 0) == 0
+}
+
 # ── Constantes ────────────────────────────────────────────────────────────────
 BONUS_SERIE       = [0, 0, 1, 1, 2, 3]
 XP_PAR_NIVEAU     = [0, 1, 1, 2, 4, 8, 16, 24, 32, 40]
@@ -648,7 +656,17 @@ async def websocket_endpoint(ws: WebSocket, code: str, pseudo: str):
     try:
         while True:
             data = await ws.receive_json()
-            await traiter_action(code, pseudo, data)
+            try:
+                await traiter_action(code, pseudo, data)
+            except Exception as e:
+                import traceback
+                err = traceback.format_exc()
+                print(f"[ERREUR] action={data.get('type','?')} pseudo={pseudo}\n{err}")
+                await gestionnaire.envoyer_a(code, pseudo, {
+                    "type": "erreur",
+                    "msg": f"Erreur serveur : {e}",
+                    "pour": pseudo,
+                })
     except WebSocketDisconnect:
         gestionnaire.deconnecter(code, pseudo)
         await gestionnaire.diffuser(code, {"type": "joueur_deconnecte", "pseudo": pseudo})
