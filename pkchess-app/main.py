@@ -53,7 +53,9 @@ def init_pool(partie):
     partie["pool"] = pool  # liste simple, JSON-sérialisable
 
 def piocher_depuis_pool(partie, niveau_joueur, n=5):
-    """Pioche n Pokémon de base dispo dans le pool selon le niveau joueur."""
+    """Pioche n Pokémon de base dispo dans le pool selon le niveau joueur.
+    La sélection est aléatoire parmi tous les éligibles (niveau 1 à niveau_joueur).
+    """
     max_niv = 10 if niveau_joueur >= 10 else niveau_joueur
     pool = partie.get("pool", [])
     eligibles = []
@@ -61,6 +63,7 @@ def piocher_depuis_pool(partie, niveau_joueur, n=5):
         p = _get_poke(pid)
         if p and p.get("stade", 0) == 0 and p["niveau"] <= max_niv:
             eligibles.append(pid)
+    random.shuffle(eligibles)
     choix = eligibles[:n]
     # Retirer du pool
     for pid in choix:
@@ -837,6 +840,26 @@ async def traiter_action(code, pseudo, action):
                 "tour1_gratuit": partie["tour"] <= 1,
                 "auto": True,
             })
+
+    # ── Racheter Pokémon KO (soigner) ────────────────────────────────────────
+    elif t == "racheter_pokemon":
+        position = action.get("position")
+        slot     = action.get("slot")
+        poke = next((p for p in joueur["pokemon"] if p["position"] == position and p["slot"] == slot), None)
+        if not poke or not poke.get("ko"):
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Pokémon introuvable ou non KO !", "pour": pseudo})
+            return
+        cout = poke.get("niveau", 1)  # coût = niveau, comme la vente
+        if joueur["pieces"] < cout:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": f"Pas assez de pièces ! ({cout} 🪙 requis)", "pour": pseudo})
+            return
+        joueur["pieces"] -= cout
+        poke["ko"]  = False
+        poke["pv"]  = poke.get("pv_max", 100)
+        await gestionnaire.diffuser(code, {
+            "type": "etat_mis_a_jour", "etat": partie,
+            "msg": f"💊 {pseudo} rachète {poke['nom']} (-{cout} 🪙)",
+        })
 
     # ── Retirer Pokémon → banc ────────────────────────────────────────────────
     elif t == "retirer_pokemon":

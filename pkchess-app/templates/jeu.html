@@ -710,9 +710,8 @@ function ouvrirZoom(src, pos, slot) {
             btnV.textContent   = '💸 Vendre (' + poke.niveau + ' 🪙)';
             // Proposer de racheter uniquement si KO
             if (poke.ko) {
-                var coutRachat = poke.niveau * 2;
                 btnR.style.display = 'inline-block';
-                btnR.textContent   = '💊 Racheter (' + coutRachat + ' 🪙)';
+                btnR.textContent   = '💊 Racheter (' + poke.niveau + ' 🪙)';
             }
         }
     }
