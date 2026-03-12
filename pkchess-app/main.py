@@ -15,6 +15,9 @@ with open(DB_PATH, encoding="utf-8") as f:
 def _get_poke(pid):
     return next((p for p in POKEMONS_DB if p["id"] == pid), None)
 
+# IDs qui sont des formes intermédiaires (cibles d'évolution) → exclues du pool
+_IDS_INTERMEDIAIRES = {p["evolution_id"] for p in POKEMONS_DB if p.get("evolution_id")}
+
 # ── Constantes ────────────────────────────────────────────────────────────────
 BONUS_SERIE       = [0, 0, 1, 1, 2, 3]
 XP_PAR_NIVEAU     = [0, 1, 1, 2, 4, 8, 16, 24, 32, 40]
@@ -52,7 +55,10 @@ def piocher_depuis_pool(partie, niveau_joueur, n=5):
     max_niv = min(niveau_joueur, 10)
     pool = partie.get("pool", [])
     eligibles = [pid for pid in pool
-                 if (lambda p: p and p.get("stade", 0) == 0 and p["niveau"] <= max_niv)(_get_poke(pid))]
+                 if (lambda p: p
+                     and p.get("stade", 0) == 0
+                     and p["id"] not in _IDS_INTERMEDIAIRES
+                     and p["niveau"] <= max_niv)(_get_poke(pid))]
     random.shuffle(eligibles)
     choix = eligibles[:n]
     for pid in choix:
@@ -769,11 +775,15 @@ async def traiter_action(code, pseudo, action):
                 "type": "erreur", "msg": "Seul l'hôte peut lancer le combat !", "pour": pseudo})
             return
         partie["phase"] = "combat"
+        # Snapshot AVANT le combat pour l'arène animée (PV et positions d'origine)
+        import copy
+        etat_avant_combat = copy.deepcopy(partie)
         resultats = lancer_combat(partie)
         partie["phase"] = "preparation"
 
         await gestionnaire.diffuser(code, {
             "type": "resultat_combat",
+            "etat_avant": etat_avant_combat,
             "etat": partie,
             "resultats": resultats,
             "tour": partie["tour"],
