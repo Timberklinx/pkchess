@@ -152,7 +152,37 @@
         .combat-log div{padding:1px 0;}
 
         /* Toast */
-        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;font-weight:800;z-index:400;display:none;font-size:0.9em;}
+        /* ── Arène de combat ── */
+        .combat-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:350;flex-direction:column;align-items:center;justify-content:center;}
+        .combat-bg.open{display:flex;}
+        .combat-arena{width:min(98vw,800px);display:flex;flex-direction:column;gap:6px;padding:12px;}
+        .arena-header{display:flex;justify-content:space-between;align-items:center;padding:4px 0 8px;}
+        .arena-header span{font-size:1.2em;font-weight:900;color:var(--gold);}
+        .arena-side{display:flex;flex-direction:column;gap:4px;}
+        .arena-label{font-size:0.75em;font-weight:800;color:rgba(255,255,255,0.45);text-align:center;padding:2px 0;}
+        .arena-rangee{display:flex;justify-content:center;gap:6px;}
+        .arena-mid{min-height:52px;display:flex;align-items:center;justify-content:center;padding:2px 0;}
+        .arena-log{font-size:0.8em;font-weight:700;color:#fff;text-align:center;line-height:1.5;max-width:700px;}
+        .arena-card{width:74px;height:102px;border-radius:8px;border:2px solid rgba(255,255,255,0.15);background:var(--blue-card);position:relative;overflow:hidden;transition:transform 0.25s,box-shadow 0.25s,opacity 0.4s;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+        .arena-card img{width:100%;height:74px;object-fit:cover;border-radius:6px 6px 0 0;}
+        .arena-card .card-nom{font-size:0.58em;font-weight:800;text-align:center;padding:1px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;}
+        .arena-card .card-pv-bg{position:absolute;bottom:18px;left:4px;right:4px;height:4px;background:rgba(0,0,0,0.4);border-radius:2px;}
+        .arena-card .card-pv-bar{height:100%;border-radius:2px;background:#4caf50;transition:width 0.5s;}
+        .arena-card .card-pv-bar.medium{background:#ff9800;}
+        .arena-card .card-pv-bar.low{background:#f44336;}
+        .arena-card .ko-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(244,67,54,0.9);color:#fff;font-weight:900;font-size:0.85em;padding:2px 6px;border-radius:4px;display:none;}
+        .arena-card.ko .ko-overlay{display:block;}
+        .arena-card.ko img{opacity:0.3;filter:grayscale(1);}
+        .arena-card.vide{border-style:dashed;opacity:0.2;}
+        .arena-card.active{box-shadow:0 0 18px 4px var(--gold);border-color:var(--gold);z-index:2;}
+        .arena-card.attaque-haut{animation:atk-haut 0.35s ease-in-out;}
+        .arena-card.attaque-bas{animation:atk-bas 0.35s ease-in-out;}
+        .arena-card.hit{animation:hit-shake 0.3s ease;}
+        @keyframes atk-haut{0%{transform:translateY(0)}50%{transform:translateY(-42px)}100%{transform:translateY(0)}}
+        @keyframes atk-bas{0%{transform:translateY(0)}50%{transform:translateY(42px)}100%{transform:translateY(0)}}
+        @keyframes hit-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+        #arena-adv-off,#arena-adv-def{flex-direction:row-reverse;}
+                .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:12px;font-weight:800;z-index:400;display:none;font-size:0.9em;}
     </style>
 </head>
 <body>
@@ -194,10 +224,9 @@
         </div>
 
         <div class="actions-bar">
-            <button class="btn btn-green" id="btn-fin-tour" onclick="finTour()">✅ Fin de tour</button>
-            <button class="btn btn-gold"  onclick="ouvrirBoutique()">🛒 Boutique</button>
-            <button class="btn btn-blue"  onclick="acheterXp()">📈 XP (4🪙)</button>
-            <button class="btn btn-red"   id="btn-combat" onclick="lancerCombat()" style="display:none">⚔️ Combat !</button>
+            <button class="btn btn-red" id="btn-fin-tour" onclick="lancerCombat()" style="display:none">⚔️ Fin de tour &amp; Combat</button>
+            <button class="btn btn-gold" onclick="ouvrirBoutique()">🛒 Boutique</button>
+            <button class="btn btn-blue" onclick="acheterXp()">📈 XP (4🪙)</button>
         </div>
 
     </div>
@@ -313,6 +342,7 @@ function connecterWS() {
             var cls = (msg.type === 'fin_tour') ? 'gold' : '';
             addLog(msg.msg, cls);
         }
+        if (msg.type === 'fin_tour') { finTour(); }
         if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) {
             addLog(msg.pseudo + ' a rejoint', 'green');
         }
@@ -324,7 +354,8 @@ function connecterWS() {
         }
         if (msg.type === 'resultat_combat') {
             if (msg.etat) { etat = msg.etat; majInterface(); }
-            afficherResultatsCombat(msg.resultats, msg.tour);
+            arenaEtat = JSON.parse(JSON.stringify(msg.etat || etat));
+            ouvrirArene(msg.resultats, msg.tour);
             addLog('⚔️ Combat tour ' + msg.tour + ' résolu !', 'red');
             // Détecter les évolutions dans les logs et les notifier
             if (msg.resultats) {
@@ -362,9 +393,9 @@ function majInterface() {
     document.getElementById('tour-num').textContent   = etat.tour || 0;
     document.getElementById('pv-bar').style.width     = Math.max(0, Math.min(100, moi.pv)) + '%';
 
-    // Bouton combat visible uniquement pour l'hôte
-    var btnCombat = document.getElementById('btn-combat');
-    if (btnCombat) btnCombat.style.display = (etat.hote === PSEUDO) ? 'inline-block' : 'none';
+    // Bouton fin de tour + combat visible uniquement pour l'hôte
+    var btnFinTour = document.getElementById('btn-fin-tour');
+    if (btnFinTour) btnFinTour.style.display = (etat.hote === PSEUDO) ? 'inline-block' : 'none';
 
     // Synergies
     var syns   = moi.synergies || {};
@@ -717,49 +748,175 @@ function deplacerPokemon(fp, fs, tp, ts) {
 
 // ── Combat ────────────────────────────────────────────────────────────────────
 function lancerCombat() {
-    if (ws && ws.readyState === WebSocket.OPEN)
-        ws.send(JSON.stringify({type: 'lancer_combat'}));
-}
-
-function afficherResultatsCombat(resultats, tour) {
-    document.getElementById('combat-tour').textContent = tour || 0;
-    var container = document.getElementById('combat-resultats');
-    var html = '';
-    for (var r = 0; r < resultats.length; r++) {
-        var res = resultats[r];
-        var estGhost = res.type_duel === 'ghost';
-        html += '<div class="combat-duel">';
-        if (estGhost) {
-            html += '<div class="combat-vs">👻 ' + res.joueurs[0] + ' — Pas d\'adversaire</div>';
-        } else {
-            var j1 = res.joueurs[0], j2 = res.joueurs[1];
-            var pts1 = res.pts[0], pts2 = res.pts[1];
-            var c1 = pts1 > pts2 ? 'win' : (pts1 < pts2 ? 'lose' : 'draw');
-            var c2 = pts2 > pts1 ? 'win' : (pts2 < pts1 ? 'lose' : 'draw');
-            var pv1 = res.pv_apres ? res.pv_apres[j1] : '?';
-            var pv2 = res.pv_apres ? res.pv_apres[j2] : '?';
-            html += '<div class="combat-vs">'
-                  + '<span class="combat-pts ' + c1 + '">' + j1 + ' (' + pts1 + ' KO) ❤️' + pv1 + '</span>'
-                  + '<span style="color:rgba(255,255,255,0.3);font-size:0.8em">VS</span>'
-                  + '<span class="combat-pts ' + c2 + '">' + j2 + ' (' + pts2 + ' KO) ❤️' + pv2 + '</span>'
-                  + '</div>';
-        }
-        html += '<div class="combat-log">';
-        for (var l = 0; l < res.logs.length; l++)
-            html += '<div>' + res.logs[l] + '</div>';
-        html += '</div></div>';
-    }
-    container.innerHTML = html || '<div class="attente">Aucun combat.</div>';
-    document.getElementById('combat-bg').classList.add('open');
-}
-
-function fermerCombat() { document.getElementById('combat-bg').classList.remove('open'); }
-
-function finTour() {
     if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({type: 'fin_tour', boutique_locked: boutique_locked}));
+        ws.send(JSON.stringify({type: 'lancer_combat'}));
     }
-    // Reset lock visuellement après fin de tour
+}
+
+var arenaEtat = null;
+var pvsMoi = {}, pvsAdv = {};
+
+function ouvrirArene(resultats, tour) {
+    var bg = document.getElementById('combat-bg');
+    bg.classList.add('open');
+    document.getElementById('arena-title').textContent = '⚔️ Tour ' + tour + ' — Combat !';
+    document.getElementById('btn-fermer-combat').style.display = 'none';
+    document.getElementById('arena-log').textContent = 'Préparation du combat...';
+
+    var snap = arenaEtat || etat;
+    if (!snap || !resultats || !resultats.length) { fermerCombat(); return; }
+
+    // Trouver le duel qui me concerne
+    var monRes = null;
+    for (var r = 0; r < resultats.length; r++) {
+        if (resultats[r].joueurs && resultats[r].joueurs.indexOf(PSEUDO) >= 0) { monRes = resultats[r]; break; }
+    }
+    if (!monRes) monRes = resultats[0];
+
+    var pseudoMoi = PSEUDO;
+    var pseudoAdv = monRes.joueurs[0] === PSEUDO ? monRes.joueurs[1] : monRes.joueurs[0];
+    document.getElementById('arena-moi-label').textContent = '🧢 ' + pseudoMoi;
+    document.getElementById('arena-adv-label').textContent = '⚔️ ' + pseudoAdv;
+
+    var jMoi = snap.joueurs[pseudoMoi] || {};
+    var jAdv = snap.joueurs[pseudoAdv] || {};
+
+    // Init PV locaux pour animer les barres
+    pvsMoi = {}; pvsAdv = {};
+    (jMoi.pokemon || []).forEach(function(p) {
+        if (p.position === 'off' || p.position === 'def')
+            pvsMoi[p.slot] = {nom: p.nom, pv: p.pv, pv_max: p.pv_max, pos: p.position};
+    });
+    (jAdv.pokemon || []).forEach(function(p) {
+        if (p.position === 'off' || p.position === 'def')
+            pvsAdv[p.slot] = {nom: p.nom, pv: p.pv, pv_max: p.pv_max, pos: p.position};
+    });
+
+    construireCartes('arena-moi-off', jMoi, 'off', false);
+    construireCartes('arena-moi-def', jMoi, 'def', false);
+    construireCartes('arena-adv-off', jAdv, 'off', true);
+    construireCartes('arena-adv-def', jAdv, 'def', true);
+
+    rejouerLogs(monRes.logs || [], pseudoAdv, function() {
+        document.getElementById('btn-fermer-combat').style.display = 'inline-block';
+        document.getElementById('arena-title').textContent = '✅ Combat terminé — Tour ' + tour;
+    });
+}
+
+function construireCartes(containerId, joueur, pos, miroir) {
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    var pokemon = joueur ? joueur.pokemon || [] : [];
+    for (var i = 0; i < 5; i++) {
+        var slot = miroir ? (4 - i) : i;
+        var poke = null;
+        for (var k = 0; k < pokemon.length; k++) {
+            if (pokemon[k].position === pos && pokemon[k].slot === slot) { poke = pokemon[k]; break; }
+        }
+        var card = document.createElement('div');
+        card.id = containerId + '-s' + slot;
+        card.className = 'arena-card' + (poke ? (poke.ko ? ' ko' : '') : ' vide');
+        if (poke) {
+            var id4 = String(poke.id).padStart(4, '0');
+            var pvPct = poke.pv_max > 0 ? Math.round(poke.pv / poke.pv_max * 100) : 0;
+            var pvCls = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
+            card.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom + '">'
+                + '<div class="card-pv-bg"><div class="card-pv-bar' + pvCls + '" id="pvbar-' + containerId + '-s' + slot + '" style="width:' + pvPct + '%"></div></div>'
+                + '<div class="ko-overlay">KO</div>'
+                + '<div class="card-nom">' + poke.nom + '</div>';
+        }
+        container.appendChild(card);
+    }
+}
+
+function animPvBar(containerId, slot, pvPct) {
+    var bar = document.getElementById('pvbar-' + containerId + '-s' + slot);
+    if (!bar) return;
+    bar.style.width = Math.max(0, pvPct) + '%';
+    bar.className = 'card-pv-bar' + (pvPct > 50 ? '' : pvPct > 25 ? ' medium' : ' low');
+}
+
+function trouverCarte(nom) {
+    var prefixes = ['arena-moi-off','arena-moi-def','arena-adv-off','arena-adv-def'];
+    for (var p = 0; p < prefixes.length; p++) {
+        for (var s = 0; s < 5; s++) {
+            var c = document.getElementById(prefixes[p] + '-s' + s);
+            if (c && !c.classList.contains('vide')) {
+                var nomEl = c.querySelector('.card-nom');
+                if (nomEl && nomEl.textContent.trim() === nom) return {card: c, prefix: prefixes[p], slot: s};
+            }
+        }
+    }
+    return null;
+}
+
+function rejouerLogs(logs, pseudoAdv, onDone) {
+    var logEl = document.getElementById('arena-log');
+    var idx = 0;
+
+    function next() {
+        if (idx >= logs.length) { if (onDone) onDone(); return; }
+        var log = logs[idx++];
+        logEl.textContent = log.replace(/^\s+/, '');
+
+        var delay = 350;
+
+        // Attaque : "➤ NomA attaque ... → X dégâts → NomB YPV"
+        var mAtk = log.match(/➤ (.+?) attaque.* → (\d+) dégâts → (.+?) (\d+)PV/);
+        if (mAtk) {
+            var nomAtt = mAtk[1].trim();
+            var dmg = parseInt(mAtk[2]);
+            var nomCib = mAtk[3].trim();
+            var pvCib = parseInt(mAtk[4]);
+            var resAtt = trouverCarte(nomAtt);
+            var resCib = trouverCarte(nomCib);
+            if (resAtt && resCib) {
+                var estMoi = resAtt.prefix.indexOf('moi') >= 0;
+                resAtt.card.classList.add('active');
+                resAtt.card.classList.add(estMoi ? 'attaque-haut' : 'attaque-bas');
+                setTimeout(function(rc, rp, pv) {
+                    resAtt.card.classList.remove('active','attaque-haut','attaque-bas');
+                    rc.card.classList.add('hit');
+                    setTimeout(function() { rc.card.classList.remove('hit'); }, 320);
+                    // PV bar
+                    var tracker = (rc.prefix.indexOf('moi') >= 0 ? pvsMoi : pvsAdv)[rc.slot];
+                    var pct = tracker ? Math.round(pv / tracker.pv_max * 100) : 0;
+                    animPvBar(rc.prefix, rc.slot, pct);
+                    if (tracker) tracker.pv = pv;
+                }, 360, resCib, resAtt.prefix, pvCib);
+            }
+            delay = 900;
+        }
+
+        // KO
+        var mKO = log.match(/💀 (.+?) est KO/);
+        if (mKO) {
+            var res = trouverCarte(mKO[1].trim());
+            if (res) {
+                setTimeout(function(c) { c.classList.add('ko'); animPvBar(c.id.replace('arena-','').replace(/-s\d+/,''), parseInt(c.id.split('-s')[1]), 0); }, 200, res.card);
+            }
+            delay = 600;
+        }
+
+        // Résultat final → gold
+        if (log.indexOf('🏆') >= 0 || log.indexOf('🤝') >= 0) {
+            logEl.style.color = 'var(--gold)';
+            delay = 800;
+        } else {
+            logEl.style.color = '#fff';
+        }
+
+        setTimeout(next, delay);
+    }
+    setTimeout(next, 500);
+}
+
+function fermerCombat() {
+    document.getElementById('combat-bg').classList.remove('open');
+    arenaEtat = null;
+}
+function finTour() {
     boutique_locked = false;
     var btn = document.getElementById('btn-lock');
     if (btn) { btn.textContent = '🔓 Garder'; btn.classList.remove('locked'); }
@@ -796,4 +953,24 @@ connecterWS();
 renderPlateau(); // Afficher les cases vides même avant connexion
 </script>
 </body>
-</html>
+</html><!-- Modal arène combat -->
+<div class="combat-bg" id="combat-bg">
+  <div class="combat-arena">
+    <div class="arena-header">
+      <span id="arena-title">⚔️ Combat !</span>
+      <button class="btn btn-gray" id="btn-fermer-combat" onclick="fermerCombat()" style="display:none">✕ Fermer</button>
+    </div>
+    <div class="arena-side">
+      <div class="arena-label" id="arena-adv-label">Adversaire</div>
+      <div class="arena-rangee" id="arena-adv-def" style="flex-direction:row-reverse"></div>
+      <div class="arena-rangee" id="arena-adv-off" style="flex-direction:row-reverse"></div>
+    </div>
+    <div class="arena-mid"><div class="arena-log" id="arena-log">En attente du combat...</div></div>
+    <div class="arena-side">
+      <div class="arena-rangee" id="arena-moi-off"></div>
+      <div class="arena-rangee" id="arena-moi-def"></div>
+      <div class="arena-label" id="arena-moi-label">Moi</div>
+    </div>
+  </div>
+</div>
+

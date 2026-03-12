@@ -210,12 +210,11 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     slots1 = {p["slot"]: p for p in equipe1}
     slots2 = {p["slot"]: p for p in equipe2}
 
-    tous_slots = sorted(set(list(slots1.keys()) + list(slots2.keys())))
+    # Appariement en miroir : slot s de j1 affronte slot (4-s) de j2
     apparies1, apparies2 = set(), set()
-
-    for slot in tous_slots:
-        a = slots1.get(slot)
-        b = slots2.get(slot)
+    for s in range(5):
+        a = slots1.get(s)
+        b = slots2.get(4 - s)
         if a and b and id(a) not in apparies1 and id(b) not in apparies2:
             paires.append((a, b))
             apparies1.add(id(a))
