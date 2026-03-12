@@ -20,6 +20,34 @@ _IDS_INTERMEDIAIRES = {p["evolution_id"] for p in POKEMONS_DB if p.get("evolutio
 # Formes intermédiaires dont le lien d'entrée est absent dans la DB (bug données)
 _IDS_INTERMEDIAIRES |= {"0266"}  # Armulys
 
+# Formes de transformation exclusive (obtenues via synergie en jeu, jamais en boutique)
+# = variante lettre dont la forme de base n'a pas d'évolution mais elles en ont une
+def _calculer_formes_exclusives():
+    import re as _re
+    from collections import defaultdict as _dd
+    groupes = _dd(list)
+    for p in POKEMONS_DB:
+        base = _re.match(r"^(\d+)", p["id"])
+        if base:
+            groupes[base.group(1)].append(p)
+    exclus = set()
+    for base_num, membres in groupes.items():
+        stade0 = [p for p in membres if p.get("stade", 0) == 0]
+        if len(stade0) <= 1:
+            continue
+        base_id    = base_num.zfill(4)
+        forme_base = next((p for p in stade0 if p["id"] == base_id), None)
+        variantes  = [p for p in stade0 if p["id"] != base_id]
+        if not forme_base or not variantes:
+            continue
+        evols = [p.get("evolution_id") for p in variantes if p.get("evolution_id")]
+        if not forme_base.get("evolution_id") and evols:
+            for p in variantes:
+                exclus.add(p["id"])
+    return exclus
+
+_IDS_INTERMEDIAIRES |= _calculer_formes_exclusives()
+
 # ── Constantes ────────────────────────────────────────────────────────────────
 BONUS_SERIE       = [0, 0, 1, 1, 2, 3]
 XP_PAR_NIVEAU     = [0, 1, 1, 2, 4, 8, 16, 24, 32, 40]
@@ -158,11 +186,6 @@ def points_force(poke):
     elif niv <= 9: return 3
     else:          return 4
 
-def _norm_type(t):
-    """Normalise un type : sans accents, minuscules, strip."""
-    import unicodedata
-    return unicodedata.normalize("NFD", str(t)).encode("ascii", "ignore").decode("ascii").lower().strip()
-
 def calculer_degats(attaquant, defenseur, type_attaque=None):
     """
     Calcule les dégâts. Le type utilisé est :
@@ -175,18 +198,18 @@ def calculer_degats(attaquant, defenseur, type_attaque=None):
         types_att = [type_attaque]
     else:
         types_att = attaquant.get("types", [])
-    faiblesses   = [_norm_type(x) for x in defenseur.get("faiblesses",  [])]
-    resistances  = [_norm_type(x) for x in defenseur.get("resistances", [])]
-    immunites    = [_norm_type(x) for x in defenseur.get("immunites",   [])]
+    faiblesses   = defenseur.get("faiblesses", [])
+    resistances  = defenseur.get("resistances", [])
+    immunites    = defenseur.get("immunites", [])
 
     multiplicateur = 1.0
     for t in types_att:
-        t_norm = _norm_type(t)
-        if t_norm in immunites:
+        t_low = t.lower()
+        if t_low in [x.lower() for x in immunites]:
             return 0, "immunité"
-        if t_norm in faiblesses:
+        if t_low in [x.lower() for x in faiblesses]:
             multiplicateur = max(multiplicateur, 2.0)
-        elif t_norm in resistances:
+        elif t_low in [x.lower() for x in resistances]:
             multiplicateur = min(multiplicateur, 0.5)
 
     degats_final = int(degats_base * multiplicateur)
@@ -202,47 +225,24 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     logs = [f"⚔️ {p1} vs {p2}"]
     pts1, pts2 = 0, 0
 
-    # Appariement par colonne :
-    # L'offensif (slot S) de j1 affronte l'offensif (slot S miroir) de j2.
-    # Si l'offensif adverse est absent, il affronte le défensif adverse de la même colonne.
-    # Colonne miroir : j1 slot 0↔j2 slot 4, j1 slot 1↔j2 slot 3, j1 slot 2↔j2 slot 2, etc.
-    offs1 = {p["slot"]: p for p in equipe1 if p["position"] == "off"}
-    offs2 = {p["slot"]: p for p in equipe2 if p["position"] == "off"}
-    defs1 = {p["slot"]: p for p in equipe1 if p["position"] == "def"}
-    defs2 = {p["slot"]: p for p in equipe2 if p["position"] == "def"}
-
+    # Appariement miroir : slot s de j1 affronte slot (4-s) de j2
+    slots1 = {p["slot"]: p for p in equipe1}
+    slots2 = {p["slot"]: p for p in equipe2}
     paires, apparies1, apparies2 = [], set(), set()
-
     for s in range(5):
-        col_adv = 4 - s  # colonne miroir chez l'adversaire
-        a = offs1.get(s)
-        if not a:
-            continue
-        # Cherche l'offensif adverse en face, sinon le défensif adverse
-        b = offs2.get(col_adv) or defs2.get(col_adv)
-        if b and id(a) not in apparies1 and id(b) not in apparies2:
+        a = slots1.get(s)
+        b = slots2.get(4 - s)
+        if a and b and id(a) not in apparies1 and id(b) not in apparies2:
             paires.append((a, b))
             apparies1.add(id(a))
             apparies2.add(id(b))
-
-    # Même logique depuis j2 pour les offensifs de j2 sans adversaire trouvé ci-dessus
-    for s in range(5):
-        col_adv = 4 - s
-        a = offs2.get(s)
-        if not a or id(a) in apparies2:
-            continue
-        b = offs1.get(col_adv) or defs1.get(col_adv)
-        if b and id(b) not in apparies1:
-            paires.append((b, a))
-            apparies1.add(id(b))
-            apparies2.add(id(a))
 
     sans_adv1 = [p for p in equipe1 if id(p) not in apparies1]
     sans_adv2 = [p for p in equipe2 if id(p) not in apparies2]
 
     for (a, b) in paires:
-        logs.append(f"  🔸 {a['nom']} [{a['position']}] (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV)"
-                    f" vs {b['nom']} [{b['position']}] (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
+        logs.append(f"  🔸 {a['nom']} (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV)"
+                    f" vs {b['nom']} (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
         premier, second = (a, b) if a.get("vitesse", 50) >= b.get("vitesse", 50) else (b, a)
 
         type_att1 = premier.get("att_off_type")
@@ -261,13 +261,12 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 poke["ko"] = True
                 poke["pv"] = 0
                 logs.append(f"    💀 {poke['nom']} est KO !")
-                # XP à toute la colonne vainqueur (off + def du même slot côté adverse)
-                equipe_vainqueur = equipe2 if poke in equipe1 else equipe1
-                col_vainqueur    = 4 - poke["slot"]
-                colonne_vainqueur = [x for x in equipe_vainqueur if x["slot"] == col_vainqueur]
+                equipe_adv  = equipe2 if poke in equipe1 else equipe1
+                slot_miroir = 4 - poke["slot"]
+                vainqueur   = next((x for x in equipe_adv if x["slot"] == slot_miroir), None)
                 if poke in equipe1: pts2 += 1
                 else:               pts1 += 1
-                for vainqueur in colonne_vainqueur:
+                if vainqueur:
                     vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
                     xp = vainqueur["xp_combats"]
                     evol_ko = vainqueur.get("evolution_ko")
@@ -400,8 +399,6 @@ def faire_evoluer(partie, joueur, poke):
         "att_off_desc": evol_data.get("att_off_desc", ""),
         "att_def_nom":  evol_data.get("att_def_nom", ""),
         "att_def_desc": evol_data.get("att_def_desc", ""),
-        "att_off_type": evol_data.get("att_off_type"),
-        "att_def_type": evol_data.get("att_def_type"),
         "evolution_id":  evol_data.get("evolution_id"),
         "evolution_nom": evol_data.get("evolution_nom"),
         "evolution_ko":  evol_data.get("evolution_ko"),
@@ -687,8 +684,6 @@ async def traiter_action(code, pseudo, action):
             "att_off_desc": poke_data.get("att_off_desc", ""),
             "att_def_nom":  poke_data.get("att_def_nom", ""),
             "att_def_desc": poke_data.get("att_def_desc", ""),
-            "att_off_type": poke_data.get("att_off_type"),
-            "att_def_type": poke_data.get("att_def_type"),
             "evolution_id":  poke_data.get("evolution_id"),
             "evolution_nom": poke_data.get("evolution_nom"),
             "evolution_ko":  poke_data.get("evolution_ko"),
