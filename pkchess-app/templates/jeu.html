@@ -577,7 +577,13 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                 var estBloqueeAbsolue = (tp !== 'banc') && (ts === 0 || ts === 4) && niveau_j < 5;
                 var ajoutDepuisBanc = (drag_pos === 'banc') && (tp === 'off' || tp === 'def');
                 var estTerrainPlein = ajoutDepuisBanc && nbTerrain >= niveau_j;
-                if (!estBloqueeAbsolue && !estTerrainPlein && (drag_pos !== tp || drag_slot !== ts)) {
+                // Pas de défensif sans offensif dans la même colonne
+                var mesPokemon = (etat && etat.joueurs && etat.joueurs[PSEUDO]) ? etat.joueurs[PSEUDO].pokemon : [];
+                var offensifColonne = mesPokemon.some(function(p) {
+                    return p.position === 'off' && p.slot === ts && !(drag_pos === 'off' && drag_slot === ts);
+                });
+                var defSansOff = (tp === 'def') && !offensifColonne;
+                if (!estBloqueeAbsolue && !estTerrainPlein && !defSansOff && (drag_pos !== tp || drag_slot !== ts)) {
                     deplacerPokemon(drag_pos, drag_slot, tp, ts);
                 }
             }
@@ -856,7 +862,7 @@ function rejouerLogs(logs, pseudoAdv, onDone) {
         else                                                                    jlogAdd(clean, '');
 
         // Attaque : "➤ NomA attaque ... → X dégâts → NomB YPV"
-        var mAtk = log.match(/➤ (.+?) (?:attaque|riposte).* → (\d+) dégâts → (.+?) (\d+)PV/);
+        var mAtk = log.match(/➤ (.+?) attaque.* → (\d+) dégâts → (.+?) (\d+)PV/);
         if (mAtk) {
             var nomAtt = mAtk[1].trim(), dmg = parseInt(mAtk[2]);
             var nomCib = mAtk[3].trim(), pvCib = parseInt(mAtk[4]);
