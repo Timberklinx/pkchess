@@ -156,9 +156,18 @@ def points_force(poke):
     elif niv <= 9: return 3
     else:          return 4
 
-def calculer_degats(attaquant, defenseur):
+def calculer_degats(attaquant, defenseur, type_attaque=None):
+    """
+    Calcule les dégâts. Le type utilisé est :
+      1. type_attaque (type de l'attaque spécifique, ex: att_off_type)
+      2. sinon les types du Pokémon attaquant
+    """
     degats_base  = attaquant.get("degats", 20)
-    types_att    = attaquant.get("types", [])
+    # Priorité : type de l'attaque > types du Pokémon
+    if type_attaque:
+        types_att = [type_attaque]
+    else:
+        types_att = attaquant.get("types", [])
     faiblesses   = defenseur.get("faiblesses", [])
     resistances  = defenseur.get("resistances", [])
     immunites    = defenseur.get("immunites", [])
@@ -206,12 +215,14 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                     f" vs {b['nom']} (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
         premier, second = (a, b) if a.get("vitesse", 50) >= b.get("vitesse", 50) else (b, a)
 
-        dmg1, eff1 = calculer_degats(premier, second)
+        type_att1 = premier.get("att_off_type")
+        dmg1, eff1 = calculer_degats(premier, second, type_attaque=type_att1)
         second["pv"] = max(0, second.get("pv", 0) - dmg1)
         logs.append(f"    ➤ {premier['nom']} attaque ({eff1}) → {dmg1} dégâts → {second['nom']} {second['pv']}PV")
 
         if second["pv"] > 0:
-            dmg2, eff2 = calculer_degats(second, premier)
+            type_att2 = second.get("att_off_type")
+            dmg2, eff2 = calculer_degats(second, premier, type_attaque=type_att2)
             premier["pv"] = max(0, premier.get("pv", 0) - dmg2)
             logs.append(f"    ➤ {second['nom']} riposte ({eff2}) → {dmg2} dégâts → {premier['nom']} {premier['pv']}PV")
 

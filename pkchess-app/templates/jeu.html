@@ -76,6 +76,7 @@
         .pv-mini-bar.low    { background: var(--red); }
         .xp-mini-bg  { position: absolute; bottom: 17px; left: 4px; right: 4px; height: 3px; background: rgba(0,0,0,0.4); border-radius: 2px; }
         .xp-mini-bar { height: 100%; border-radius: 2px; background: #74C0FC; transition: width 0.4s; }
+        .xp-label    { position: absolute; top: 4px; right: 4px; background: rgba(116,192,252,0.2); border: 1px solid rgba(116,192,252,0.4); color: #74C0FC; font-size: 0.48em; font-weight: 900; padding: 1px 4px; border-radius: 5px; font-family: 'Press Start 2P', monospace; line-height: 1.4; }
 
         /* ── Boutons ── */
         .actions-bar { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -137,35 +138,35 @@
         .zoom-btns { display: flex; gap: 16px; flex-shrink: 0; }
 
         /* ── Arène combat ── */
-        .combat-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 350; flex-direction: column; align-items: center; justify-content: center; }
+        .combat-bg { display: none; position: fixed; inset: 0; background: rgba(5,10,30,0.98); z-index: 350; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         .combat-bg.open { display: flex; }
-        .combat-arena  { width: min(98vw, 800px); display: flex; flex-direction: column; gap: 6px; padding: 12px; }
-        .arena-header  { display: flex; justify-content: space-between; align-items: center; padding: 4px 0 8px; }
-        .arena-header span { font-size: 1.2em; font-weight: 900; color: var(--gold); }
-        .arena-side    { display: flex; flex-direction: column; gap: 4px; }
-        .arena-label   { font-size: 0.75em; font-weight: 800; color: rgba(255,255,255,0.45); text-align: center; padding: 2px 0; }
-        .arena-rangee  { display: flex; justify-content: center; gap: 6px; }
+        .combat-arena  { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 40px; box-sizing: border-box; }
+        .arena-header  { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .arena-header span { font-size: 1.5em; font-weight: 900; color: var(--gold); }
+        .arena-side    { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+        .arena-label   { font-size: 0.85em; font-weight: 800; color: rgba(255,255,255,0.5); text-align: center; padding: 4px 0; letter-spacing: 2px; text-transform: uppercase; }
+        .arena-rangee  { display: flex; justify-content: center; gap: 16px; }
         #arena-adv-off, #arena-adv-def { flex-direction: row-reverse; }
-        .arena-mid  { min-height: 52px; display: flex; align-items: center; justify-content: center; padding: 2px 0; }
-        .arena-log  { font-size: 0.8em; font-weight: 700; color: #fff; text-align: center; line-height: 1.5; max-width: 700px; }
-        .arena-card { width: 74px; height: 102px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.15); background: var(--blue-card); position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s, opacity 0.4s; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
-        .arena-card img { width: 100%; height: 74px; object-fit: cover; border-radius: 6px 6px 0 0; }
-        .arena-card .card-nom { font-size: 0.58em; font-weight: 800; text-align: center; padding: 1px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
-        .arena-card .card-pv-bg  { position: absolute; bottom: 18px; left: 4px; right: 4px; height: 4px; background: rgba(0,0,0,0.4); border-radius: 2px; }
-        .arena-card .card-pv-bar { height: 100%; border-radius: 2px; background: #4caf50; transition: width 0.5s; }
+        .arena-mid  { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 0; }
+        .arena-log  { font-size: 1.05em; font-weight: 700; color: #fff; text-align: center; line-height: 1.7; max-width: 800px; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 12px 24px; }
+        .arena-card { width: 130px; height: 182px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.15); background: var(--blue-card); position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s, opacity 0.4s; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+        .arena-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px 8px 0 0; }
+        .arena-card .card-nom { font-size: 0.65em; font-weight: 800; text-align: center; padding: 2px 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        .arena-card .card-pv-bg  { position: absolute; bottom: 22px; left: 5px; right: 5px; height: 5px; background: rgba(0,0,0,0.4); border-radius: 3px; }
+        .arena-card .card-pv-bar { height: 100%; border-radius: 3px; background: #4caf50; transition: width 0.5s; }
         .arena-card .card-pv-bar.medium { background: #ff9800; }
         .arena-card .card-pv-bar.low    { background: #f44336; }
-        .arena-card .ko-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(244,67,54,0.9); color: #fff; font-weight: 900; font-size: 0.85em; padding: 2px 6px; border-radius: 4px; display: none; }
+        .arena-card .ko-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(244,67,54,0.9); color: #fff; font-weight: 900; font-size: 1em; padding: 4px 10px; border-radius: 6px; display: none; }
         .arena-card.ko .ko-overlay { display: block; }
         .arena-card.ko img { opacity: 0.3; filter: grayscale(1); }
         .arena-card.vide   { border-style: dashed; opacity: 0.2; }
-        .arena-card.active { box-shadow: 0 0 18px 4px var(--gold); border-color: var(--gold); z-index: 2; }
+        .arena-card.active { box-shadow: 0 0 28px 6px var(--gold); border-color: var(--gold); z-index: 2; }
         .arena-card.attaque-haut { animation: atk-haut 0.35s ease-in-out; }
         .arena-card.attaque-bas  { animation: atk-bas  0.35s ease-in-out; }
         .arena-card.hit { animation: hit-shake 0.3s ease; }
-        @keyframes atk-haut  { 0%{transform:translateY(0)} 50%{transform:translateY(-42px)} 100%{transform:translateY(0)} }
-        @keyframes atk-bas   { 0%{transform:translateY(0)} 50%{transform:translateY( 42px)} 100%{transform:translateY(0)} }
-        @keyframes hit-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+        @keyframes atk-haut  { 0%{transform:translateY(0)} 50%{transform:translateY(-80px)} 100%{transform:translateY(0)} }
+        @keyframes atk-bas   { 0%{transform:translateY(0)} 50%{transform:translateY( 80px)} 100%{transform:translateY(0)} }
+        @keyframes hit-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
 
         /* ── Toast ── */
         .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 12px; font-weight: 800; z-index: 400; display: none; font-size: 0.9em; }
@@ -363,7 +364,7 @@ function connecterWS() {
             showToast(msg.msg, true);
         }
         if (msg.type === 'resultat_combat') {
-            arenaEtat = JSON.parse(JSON.stringify(msg.etat || etat));
+            arenaEtat = JSON.parse(JSON.stringify(msg.etat_avant || msg.etat || etat));
             ouvrirArene(msg.resultats, msg.tour);
             addLog('⚔️ Combat tour ' + msg.tour + ' résolu !', 'red');
             // Notifier les évolutions détectées dans les logs
@@ -533,6 +534,7 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                 + (evolOk    ? '<div class="evol-badge">✨</div>' : '')
                 + '<div class="pv-mini-bg"><div class="pv-mini-bar' + pvCls + '" style="width:' + pvPct + '%"></div></div>'
                 + (poke.evolution_id ? '<div class="xp-mini-bg"><div class="xp-mini-bar" style="width:' + xpPct + '%"></div></div>' : '')
+                + (poke.evolution_id ? '<div class="xp-label">⚔️' + (poke.xp_combats||0) + '/' + poke.evolution_ko + '</div>' : '')
                 + '<div class="poke-nom">' + poke.nom + ' ' + poke.pv + '/' + poke.pv_max + '</div>';
             el.draggable = !poke.ko;
             (function(p, s) {
