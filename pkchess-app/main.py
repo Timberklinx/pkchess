@@ -158,6 +158,11 @@ def points_force(poke):
     elif niv <= 9: return 3
     else:          return 4
 
+def _norm_type(t):
+    """Normalise un type : sans accents, minuscules, strip."""
+    import unicodedata
+    return unicodedata.normalize("NFD", str(t)).encode("ascii", "ignore").decode("ascii").lower().strip()
+
 def calculer_degats(attaquant, defenseur, type_attaque=None):
     """
     Calcule les dégâts. Le type utilisé est :
@@ -170,18 +175,18 @@ def calculer_degats(attaquant, defenseur, type_attaque=None):
         types_att = [type_attaque]
     else:
         types_att = attaquant.get("types", [])
-    faiblesses   = defenseur.get("faiblesses", [])
-    resistances  = defenseur.get("resistances", [])
-    immunites    = defenseur.get("immunites", [])
+    faiblesses   = [_norm_type(x) for x in defenseur.get("faiblesses",  [])]
+    resistances  = [_norm_type(x) for x in defenseur.get("resistances", [])]
+    immunites    = [_norm_type(x) for x in defenseur.get("immunites",   [])]
 
     multiplicateur = 1.0
     for t in types_att:
-        t_low = t.lower()
-        if t_low in [x.lower() for x in immunites]:
+        t_norm = _norm_type(t)
+        if t_norm in immunites:
             return 0, "immunité"
-        if t_low in [x.lower() for x in faiblesses]:
+        if t_norm in faiblesses:
             multiplicateur = max(multiplicateur, 2.0)
-        elif t_low in [x.lower() for x in resistances]:
+        elif t_norm in resistances:
             multiplicateur = min(multiplicateur, 0.5)
 
     degats_final = int(degats_base * multiplicateur)

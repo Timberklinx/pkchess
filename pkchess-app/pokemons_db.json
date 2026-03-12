@@ -1304,7 +1304,7 @@
     "evolution_id": "0026b",
     "evolution_nom": "Raichu Alola",
     "evolution_ko": 2,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -1397,7 +1397,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -1434,7 +1434,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -1465,8 +1465,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0026d",
@@ -1496,8 +1496,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0027",
@@ -3823,7 +3823,7 @@
     "evolution_id": "0075b",
     "evolution_nom": "Gravalanch Alola",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -3901,7 +3901,7 @@
     "evolution_id": "0076b",
     "evolution_nom": "Grolem Alola",
     "evolution_ko": 4,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -3979,7 +3979,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -4391,7 +4391,7 @@
     "evolution_nom": "Magnezone",
     "evolution_ko": 4,
     "att_off_type": "normal",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0083",
@@ -5271,7 +5271,7 @@
     "evolution_id": "0101",
     "evolution_nom": "Electrode",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -5308,7 +5308,7 @@
     "evolution_nom": "Electrode Hisui",
     "evolution_ko": 3,
     "att_off_type": "plante",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0101",
@@ -5338,7 +5338,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -5375,7 +5375,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "vol",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0102",
@@ -6429,7 +6429,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -7213,15 +7213,15 @@
       "Tous les types"
     ],
     "resistances": [
-      "nucléaire"
+      "nucleaire"
     ],
     "immunites": [],
     "evolution": "Pas d'évolution.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "nucléaire",
-    "att_def_type": "nucléaire"
+    "att_off_type": "nucleaire",
+    "att_def_type": "nucleaire"
   },
   {
     "id": "0133i",
@@ -7452,8 +7452,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0136",
@@ -7914,8 +7914,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0145b",
@@ -8065,7 +8065,7 @@
     "evolution_nom": "Draco",
     "evolution_ko": 3,
     "att_off_type": "dragon",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0148",
@@ -8099,7 +8099,7 @@
     "evolution_nom": "Dracolosse",
     "evolution_ko": 6,
     "att_off_type": "dragon",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0149",
@@ -8526,7 +8526,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "plante"
   },
   {
@@ -9203,7 +9203,7 @@
     "evolution_id": "0171",
     "evolution_nom": "Lanturn",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "spectre"
   },
   {
@@ -9239,7 +9239,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "insecte",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0172",
@@ -9269,7 +9269,7 @@
     "evolution_id": "0025",
     "evolution_nom": "Pikachu",
     "evolution_ko": 1,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "fée"
   },
   {
@@ -9300,7 +9300,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -9550,7 +9550,7 @@
     "evolution_id": "0180",
     "evolution_nom": "Lainergie",
     "evolution_ko": 2,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "plante"
   },
   {
@@ -9686,7 +9686,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "insecte"
   },
   {
@@ -10048,7 +10048,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "plante"
   },
   {
@@ -11871,7 +11871,7 @@
     "evolution_id": "0474",
     "evolution_nom": "Porygon-Z",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -12063,7 +12063,7 @@
     "evolution_nom": "Elektek",
     "evolution_ko": 3,
     "att_off_type": "combat",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0240",
@@ -12187,7 +12187,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -14468,7 +14468,7 @@
     "evolution_id": "0476",
     "evolution_nom": "Tarinorme",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "combat"
   },
   {
@@ -14971,7 +14971,7 @@
     "evolution_id": "0310",
     "evolution_nom": "Elecsprint",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -15002,8 +15002,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0310b",
@@ -15033,7 +15033,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -15064,7 +15064,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -15095,7 +15095,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -16593,7 +16593,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0351b",
@@ -16625,7 +16625,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0351c",
@@ -16658,7 +16658,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0351d",
@@ -16694,7 +16694,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0352",
@@ -17723,7 +17723,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "acier",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0376",
@@ -18400,7 +18400,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "ténèbre"
   },
   {
@@ -19103,8 +19103,8 @@
     "evolution_id": "0404",
     "evolution_nom": "Luxio",
     "evolution_ko": 2,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0404",
@@ -19134,7 +19134,7 @@
     "evolution_id": "0405",
     "evolution_nom": "Luxray",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -19239,7 +19239,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "plante"
   },
   {
@@ -19923,7 +19923,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "glace"
   },
   {
@@ -19959,7 +19959,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "glace"
   },
   {
@@ -21768,8 +21768,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0463",
@@ -22188,7 +22188,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -22295,7 +22295,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -22437,8 +22437,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0479b",
@@ -24457,7 +24457,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "feu",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0524",
@@ -25511,7 +25511,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "plante"
   },
   {
@@ -27373,7 +27373,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "normal"
   },
   {
@@ -27485,7 +27485,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -27854,7 +27854,7 @@
     "evolution_id": "0596",
     "evolution_nom": "Mygavolt",
     "evolution_ko": 4,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "insecte"
   },
   {
@@ -27888,7 +27888,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "insecte"
   },
   {
@@ -28127,8 +28127,8 @@
     "evolution_id": "0603",
     "evolution_nom": "Lamperoie",
     "evolution_ko": 4,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0603",
@@ -28220,7 +28220,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "poison"
   },
   {
@@ -29816,7 +29816,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -29854,7 +29854,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -29928,7 +29928,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -30108,7 +30108,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -31404,7 +31404,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "plante"
   },
   {
@@ -32444,8 +32444,8 @@
     "evolution_id": "0695",
     "evolution_nom": "Iguolta",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0695",
@@ -32479,8 +32479,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0696",
@@ -32596,7 +32596,7 @@
     "evolution_nom": "Dragmara",
     "evolution_ko": 4,
     "att_off_type": "glace",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0699",
@@ -32634,7 +32634,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "glace",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0700",
@@ -32782,7 +32782,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -34365,7 +34365,7 @@
     "evolution_id": "0737",
     "evolution_nom": "Chrysapile",
     "evolution_ko": 2,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "insecte"
   },
   {
@@ -34400,7 +34400,7 @@
     "evolution_nom": "Lucanon",
     "evolution_ko": 3,
     "att_off_type": "sol",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0738",
@@ -34433,7 +34433,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -34653,7 +34653,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -35653,7 +35653,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "plante"
   },
   {
@@ -36188,7 +36188,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "plante"
   },
   {
@@ -36532,7 +36532,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "fée"
   },
   {
@@ -36608,7 +36608,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "pl",
+    "att_off_type": "plante",
     "att_def_type": "fée"
   },
   {
@@ -36932,7 +36932,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -37165,7 +37165,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "glace"
   },
   {
@@ -37289,7 +37289,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -37555,7 +37555,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "ténèbre"
   },
   {
@@ -37586,7 +37586,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "ténèbre"
   },
   {
@@ -37628,8 +37628,8 @@
     "evolution_id": "0809",
     "evolution_nom": "Melmetal",
     "evolution_ko": 4,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0809",
@@ -38825,7 +38825,7 @@
     "evolution_id": "0836",
     "evolution_nom": "Fulgudog",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -39442,7 +39442,7 @@
     "evolution_id": "0849",
     "evolution_nom": "Salarsen Grave",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "ténèbre"
   },
   {
@@ -39481,7 +39481,7 @@
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0849c",
@@ -39518,7 +39518,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "acier"
   },
   {
@@ -40763,7 +40763,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "ténèbre"
   },
   {
@@ -40802,7 +40802,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "ténèbre"
   },
   {
@@ -40966,8 +40966,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0881",
@@ -41001,8 +41001,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0882",
@@ -41757,7 +41757,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "normal"
   },
   {
@@ -42927,7 +42927,7 @@
     "evolution_nom": "Pohmotte",
     "evolution_ko": 2,
     "att_off_type": "sol",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0922",
@@ -42963,7 +42963,7 @@
     "evolution_nom": "Pohmarmotte",
     "evolution_ko": 4,
     "att_off_type": "combat",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0923",
@@ -42998,7 +42998,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "combat"
   },
   {
@@ -43538,7 +43538,7 @@
     "evolution_nom": "Ampibidou",
     "evolution_ko": 4,
     "att_off_type": "sol",
-    "att_def_type": "électrik"
+    "att_def_type": "electrik"
   },
   {
     "id": "0939",
@@ -43568,8 +43568,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0940",
@@ -43605,7 +43605,7 @@
     "evolution_id": "0941",
     "evolution_nom": "Fulgulairo",
     "evolution_ko": 3,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "vol"
   },
   {
@@ -43642,7 +43642,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
@@ -45599,8 +45599,8 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_off_type": "electrik",
+    "att_def_type": "electrik"
   },
   {
     "id": "0990",
@@ -45827,7 +45827,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "acier"
   },
   {
@@ -46033,7 +46033,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "???",
+    "att_off_type": null,
     "att_def_type": null
   },
   {
@@ -46399,7 +46399,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "acier"
   },
   {
@@ -46885,7 +46885,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "acier"
   },
   {
@@ -46997,7 +46997,7 @@
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
-    "att_off_type": "électrik",
+    "att_off_type": "electrik",
     "att_def_type": "psy"
   },
   {
