@@ -197,24 +197,47 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     logs = [f"⚔️ {p1} vs {p2}"]
     pts1, pts2 = 0, 0
 
-    # Appariement miroir : slot s de j1 affronte slot (4-s) de j2
-    slots1 = {p["slot"]: p for p in equipe1}
-    slots2 = {p["slot"]: p for p in equipe2}
+    # Appariement par colonne :
+    # L'offensif (slot S) de j1 affronte l'offensif (slot S miroir) de j2.
+    # Si l'offensif adverse est absent, il affronte le défensif adverse de la même colonne.
+    # Colonne miroir : j1 slot 0↔j2 slot 4, j1 slot 1↔j2 slot 3, j1 slot 2↔j2 slot 2, etc.
+    offs1 = {p["slot"]: p for p in equipe1 if p["position"] == "off"}
+    offs2 = {p["slot"]: p for p in equipe2 if p["position"] == "off"}
+    defs1 = {p["slot"]: p for p in equipe1 if p["position"] == "def"}
+    defs2 = {p["slot"]: p for p in equipe2 if p["position"] == "def"}
+
     paires, apparies1, apparies2 = [], set(), set()
+
     for s in range(5):
-        a = slots1.get(s)
-        b = slots2.get(4 - s)
-        if a and b and id(a) not in apparies1 and id(b) not in apparies2:
+        col_adv = 4 - s  # colonne miroir chez l'adversaire
+        a = offs1.get(s)
+        if not a:
+            continue
+        # Cherche l'offensif adverse en face, sinon le défensif adverse
+        b = offs2.get(col_adv) or defs2.get(col_adv)
+        if b and id(a) not in apparies1 and id(b) not in apparies2:
             paires.append((a, b))
             apparies1.add(id(a))
             apparies2.add(id(b))
+
+    # Même logique depuis j2 pour les offensifs de j2 sans adversaire trouvé ci-dessus
+    for s in range(5):
+        col_adv = 4 - s
+        a = offs2.get(s)
+        if not a or id(a) in apparies2:
+            continue
+        b = offs1.get(col_adv) or defs1.get(col_adv)
+        if b and id(b) not in apparies1:
+            paires.append((b, a))
+            apparies1.add(id(b))
+            apparies2.add(id(a))
 
     sans_adv1 = [p for p in equipe1 if id(p) not in apparies1]
     sans_adv2 = [p for p in equipe2 if id(p) not in apparies2]
 
     for (a, b) in paires:
-        logs.append(f"  🔸 {a['nom']} (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV)"
-                    f" vs {b['nom']} (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
+        logs.append(f"  🔸 {a['nom']} [{a['position']}] (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV)"
+                    f" vs {b['nom']} [{b['position']}] (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
         premier, second = (a, b) if a.get("vitesse", 50) >= b.get("vitesse", 50) else (b, a)
 
         type_att1 = premier.get("att_off_type")
@@ -233,12 +256,13 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 poke["ko"] = True
                 poke["pv"] = 0
                 logs.append(f"    💀 {poke['nom']} est KO !")
-                equipe_adv  = equipe2 if poke in equipe1 else equipe1
-                slot_miroir = 4 - poke["slot"]
-                vainqueur   = next((x for x in equipe_adv if x["slot"] == slot_miroir), None)
+                # XP à toute la colonne vainqueur (off + def du même slot côté adverse)
+                equipe_vainqueur = equipe2 if poke in equipe1 else equipe1
+                col_vainqueur    = 4 - poke["slot"]
+                colonne_vainqueur = [x for x in equipe_vainqueur if x["slot"] == col_vainqueur]
                 if poke in equipe1: pts2 += 1
                 else:               pts1 += 1
-                if vainqueur:
+                for vainqueur in colonne_vainqueur:
                     vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
                     xp = vainqueur["xp_combats"]
                     evol_ko = vainqueur.get("evolution_ko")
