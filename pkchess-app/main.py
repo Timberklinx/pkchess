@@ -175,6 +175,53 @@ def appliquer_bonus_pv_synergies(joueur):
             poke["pv"]     = min(poke.get("pv", 100) + diff, poke["pv_max"])
             poke["bonus_pv_synergie"] = meilleur
 
+# ── Transformations conditionnelles ──────────────────────────────────────────
+# Mapping type déclencheur → id variante Cheniti
+_CHENITI_FORMES = {"acier": "0412b", "sol": "0412c", "plante": "0412d"}
+_CHENITI_FORMES_IDS = set(_CHENITI_FORMES.values())
+
+_DB_MAP = {p["id"]: p for p in POKEMONS_DB}
+
+def appliquer_transformations(joueur):
+    """
+    Cheniti (0412) : se transforme dès qu'un Pokémon de type acier/sol/plante
+    est dans la même colonne. Irréversible une fois transformé.
+    En cas de double type déclencheur, on prend le type 1 du partenaire.
+    """
+    pokemon = joueur.get("pokemon", [])
+    terrain = [p for p in pokemon if p["position"] in ("off", "def")]
+
+    for poke in terrain:
+        if poke.get("id") != "0412":
+            continue
+        # Déjà transformé → irréversible
+        col = poke["slot"]
+        # Chercher un partenaire dans la même colonne (hors lui-même)
+        partenaires = [p for p in terrain if p["slot"] == col and p is not poke]
+        forme = None
+        for partenaire in partenaires:
+            types = partenaire.get("types", [])
+            # Priorité : type 1 (index 0)
+            for t in types:
+                if t in _CHENITI_FORMES:
+                    forme = _CHENITI_FORMES[t]
+                    break
+            if forme:
+                break
+        if not forme:
+            continue
+        # Transformation : remplacer l'id, le nom, l'evolution_id
+        nouvelle_db = _DB_MAP.get(forme)
+        if not nouvelle_db:
+            continue
+        poke["id"]           = forme
+        poke["nom"]          = nouvelle_db["nom"]
+        poke["evolution_id"] = nouvelle_db.get("evolution_id")
+        poke["evolution_nom"]= nouvelle_db.get("evolution_nom")
+        poke["evolution_ko"] = nouvelle_db.get("evolution_ko")
+        poke["att_off_type"] = nouvelle_db.get("att_off_type")
+        poke["att_def_type"] = nouvelle_db.get("att_def_type")
+
 # ── Combat ────────────────────────────────────────────────────────────────────
 def points_force(poke):
     """Points de force de base : dégâts directs et durée de soin au Centre."""
@@ -247,38 +294,44 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     sans_adv1 = [p for p in equipe1 if id(p) not in apparies1]
     sans_adv2 = [p for p in equipe2 if id(p) not in apparies2]
 
+    # Log de présentation des duels
     for (a, b) in paires:
         logs.append(f"  🔸 {a['nom']} [{a['position']}] (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV)"
                     f" vs {b['nom']} [{b['position']}] (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
-        premier, second = (a, b) if a.get("vitesse", 50) >= b.get("vitesse", 50) else (b, a)
 
-        type_att1 = premier.get("att_off_type")
-        dmg1, eff1 = calculer_degats(premier, second, type_attaque=type_att1)
-        second["pv"] = max(0, second.get("pv", 0) - dmg1)
-        logs.append(f"    ➤ {premier['nom']} attaque ({eff1}) → {dmg1} dégâts → {second['nom']} {second['pv']}PV")
+    # File d'attaque globale triée par vitesse décroissante
+    # Chaque entrée = (attaquant, defenseur)
+    file_attaques = []
+    for (a, b) in paires:
+        file_attaques.append((a, b))
+        file_attaques.append((b, a))
+    file_attaques.sort(key=lambda x: x[0].get("vitesse", 50), reverse=True)
 
-        if second["pv"] > 0:
-            type_att2 = second.get("att_off_type")
-            dmg2, eff2 = calculer_degats(second, premier, type_attaque=type_att2)
-            premier["pv"] = max(0, premier.get("pv", 0) - dmg2)
-            logs.append(f"    ➤ {second['nom']} riposte ({eff2}) → {dmg2} dégâts → {premier['nom']} {premier['pv']}PV")
+    for (attaquant, defenseur) in file_attaques:
+        # Ne pas attaquer si déjà KO
+        if attaquant.get("ko") or defenseur.get("ko"):
+            continue
+        type_att = attaquant.get("att_off_type")
+        dmg, eff  = calculer_degats(attaquant, defenseur, type_attaque=type_att)
+        defenseur["pv"] = max(0, defenseur.get("pv", 0) - dmg)
+        logs.append(f"    ➤ {attaquant['nom']} attaque ({eff}) → {dmg} dégâts → {defenseur['nom']} {defenseur['pv']}PV")
 
-        for poke in [a, b]:
-            if poke["pv"] <= 0 and not poke.get("ko"):
-                poke["ko"] = True
-                poke["pv"] = 0
-                logs.append(f"    💀 {poke['nom']} est KO !")
-                equipe_vainqueur  = equipe2 if poke in equipe1 else equipe1
-                col_vainqueur     = 4 - poke["slot"]
-                colonne_vainqueur = [x for x in equipe_vainqueur if x["slot"] == col_vainqueur]
-                if poke in equipe1: pts2 += 1
-                else:               pts1 += 1
-                for vainqueur in colonne_vainqueur:
-                    vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
-                    xp = vainqueur["xp_combats"]
-                    evol_ko = vainqueur.get("evolution_ko")
-                    logs.append(f"    ⭐ {vainqueur['nom']} gagne 1 XP combat !" +
-                                (f" ({xp}/{evol_ko} KO)" if evol_ko else ""))
+        # Vérification KO après chaque attaque
+        if defenseur["pv"] <= 0 and not defenseur.get("ko"):
+            defenseur["ko"] = True
+            defenseur["pv"] = 0
+            logs.append(f"    💀 {defenseur['nom']} est KO !")
+            equipe_vainqueur  = equipe2 if defenseur in equipe1 else equipe1
+            col_vainqueur     = 4 - defenseur["slot"]
+            colonne_vainqueur = [x for x in equipe_vainqueur if x["slot"] == col_vainqueur]
+            if defenseur in equipe1: pts2 += 1
+            else:                    pts1 += 1
+            for vainqueur in colonne_vainqueur:
+                vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
+                xp = vainqueur["xp_combats"]
+                evol_ko = vainqueur.get("evolution_ko")
+                logs.append(f"    ⭐ {vainqueur['nom']} gagne 1 XP combat !" +
+                            (f" ({xp}/{evol_ko} KO)" if evol_ko else ""))
 
     # Dégâts directs
     degats_directs_j1, degats_directs_j2 = 0, 0
@@ -414,6 +467,7 @@ def faire_evoluer(partie, joueur, poke):
         "xp_combats":   0,
     })
     appliquer_bonus_pv_synergies(joueur)
+    appliquer_transformations(joueur)
     return True, f"🌟 {ancien_nom} évolue en {evol_nom} ! (+{diff_pv} PV → {poke['pv']}/{nouveau_pv_max})"
 
 def verifier_evolutions(partie, joueur):
@@ -456,6 +510,7 @@ def appliquer_fin_tour(partie):
         messages.append(f"💰 {pj} +{gain} ({detail})")
         messages.extend(appliquer_xp(j, xp_gagnes=1))
         appliquer_bonus_pv_synergies(j)
+        appliquer_transformations(j)
         # Centre Pokémon
         poke_centre = next((p for p in j.get("pokemon", []) if p["position"] == "centre"), None)
         if poke_centre:
@@ -719,6 +774,7 @@ async def traiter_action(code, pseudo, action):
         joueur["pieces"] += gain
         retourner_au_pool(partie, [poke["id"]])
         appliquer_bonus_pv_synergies(joueur)
+        appliquer_transformations(joueur)
         await gestionnaire.diffuser(code, {
             "type": "etat_mis_a_jour", "etat": partie,
             "msg": f"💸 {pseudo} vend {poke['nom']} (+{gain} 🪙)",
@@ -799,6 +855,7 @@ async def traiter_action(code, pseudo, action):
         poke["position"] = tp
         poke["slot"]     = ts
         appliquer_bonus_pv_synergies(joueur)
+        appliquer_transformations(joueur)
         await gestionnaire.diffuser(code, {
             "type": "etat_mis_a_jour", "etat": partie,
             "msg": f"↕️ {pseudo} déplace {poke['nom']}",
@@ -816,6 +873,7 @@ async def traiter_action(code, pseudo, action):
                 poke["position"] = "banc"
                 poke["slot"]     = slot_libre
             appliquer_bonus_pv_synergies(joueur)
+            appliquer_transformations(joueur)
             await gestionnaire.diffuser(code, {
                 "type": "etat_mis_a_jour", "etat": partie,
                 "msg": f"↩️ {pseudo} retire {poke['nom']} vers le banc",
