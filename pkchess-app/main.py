@@ -17,6 +17,8 @@ def _get_poke(pid):
 
 # IDs qui sont des formes intermédiaires (cibles d'évolution) → exclues du pool
 _IDS_INTERMEDIAIRES = {p["evolution_id"] for p in POKEMONS_DB if p.get("evolution_id")}
+# Formes intermédiaires dont le lien d'entrée est absent dans la DB (bug données)
+_IDS_INTERMEDIAIRES |= {"0266", "0361"}  # Armulys, Stalgamin
 
 # ── Constantes ────────────────────────────────────────────────────────────────
 BONUS_SERIE       = [0, 0, 1, 1, 2, 3]
@@ -369,6 +371,8 @@ def faire_evoluer(partie, joueur, poke):
         "att_off_desc": evol_data.get("att_off_desc", ""),
         "att_def_nom":  evol_data.get("att_def_nom", ""),
         "att_def_desc": evol_data.get("att_def_desc", ""),
+        "att_off_type": evol_data.get("att_off_type"),
+        "att_def_type": evol_data.get("att_def_type"),
         "evolution_id":  evol_data.get("evolution_id"),
         "evolution_nom": evol_data.get("evolution_nom"),
         "evolution_ko":  evol_data.get("evolution_ko"),
@@ -654,6 +658,8 @@ async def traiter_action(code, pseudo, action):
             "att_off_desc": poke_data.get("att_off_desc", ""),
             "att_def_nom":  poke_data.get("att_def_nom", ""),
             "att_def_desc": poke_data.get("att_def_desc", ""),
+            "att_off_type": poke_data.get("att_off_type"),
+            "att_def_type": poke_data.get("att_def_type"),
             "evolution_id":  poke_data.get("evolution_id"),
             "evolution_nom": poke_data.get("evolution_nom"),
             "evolution_ko":  poke_data.get("evolution_ko"),
