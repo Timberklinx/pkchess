@@ -206,12 +206,12 @@ def appliquer_transformations(joueur):
     pokemon = joueur.get("pokemon", [])
     terrain = [p for p in pokemon if p["position"] in ("off", "def")]
 
-    for poke in pokemon:
+    for poke in terrain:
         if poke.get("id") != "0412":
             continue
         # Déjà transformé → irréversible
         col = poke["slot"]
-        # Chercher un partenaire dans la même colonne sur le terrain (hors lui-même)
+        # Chercher un partenaire dans la même colonne (hors lui-même)
         partenaires = [p for p in terrain if p["slot"] == col and p is not poke]
         forme = None
         for partenaire in partenaires:
