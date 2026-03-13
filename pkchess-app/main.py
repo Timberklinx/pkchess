@@ -213,19 +213,26 @@ async def avancer_caroussel(code, partie, gestionnaire):
 
 async def _timer_caroussel(code, partie, gestionnaire, pseudo, duree, dispo):
     """Attend duree secondes puis choisit automatiquement le meilleur Pokémon disponible."""
-    await asyncio.sleep(duree)
-    caroussel = partie.get("caroussel")
-    if not caroussel or not caroussel.get("actif"):
-        return
-    # Vérifier que c'est toujours ce joueur qui doit choisir
-    if caroussel["ordre"][caroussel["index"]] != pseudo:
-        return
-    # Choix auto : Pokémon de plus haute valeur (niveau le plus élevé)
-    dispo_ids = [p["id"] for p in dispo if p["id"] not in caroussel["choisis"].values()]
-    if not dispo_ids:
-        return
-    meilleur = max(dispo_ids, key=lambda pid: (valeur_caroussel(pid), random.random()))
-    await _appliquer_choix_caroussel(code, partie, gestionnaire, pseudo, meilleur, auto=True)
+    try:
+        await asyncio.sleep(duree)
+        if code not in parties:
+            return
+        caroussel = partie.get("caroussel")
+        if not caroussel or not caroussel.get("actif"):
+            return
+        # Vérifier que c'est toujours ce joueur qui doit choisir
+        if caroussel["ordre"][caroussel["index"]] != pseudo:
+            return
+        # Choix auto : Pokémon de plus haute valeur (niveau le plus élevé)
+        dispo_ids = [p["id"] for p in dispo if p["id"] not in caroussel["choisis"].values()]
+        if not dispo_ids:
+            return
+        meilleur = max(dispo_ids, key=lambda pid: (valeur_caroussel(pid), random.random()))
+        await _appliquer_choix_caroussel(code, partie, gestionnaire, pseudo, meilleur, auto=True)
+    except asyncio.CancelledError:
+        pass  # Timer annulé proprement
+    except Exception as e:
+        print(f"[ERREUR timer carrousel] {e}")
 
 async def _appliquer_choix_caroussel(code, partie, gestionnaire, pseudo, pokemon_id, auto=False):
     """Applique le choix d'un joueur et passe au joueur suivant."""
@@ -269,6 +276,10 @@ async def terminer_caroussel(code, partie, gestionnaire):
     """Termine le carrousel : retourne le Pokémon restant au pool."""
     caroussel = partie.get("caroussel", {})
     caroussel["actif"] = False
+    # Annuler le timer en cours s'il existe
+    task = caroussel.pop("_timer_task", None)
+    if task and not task.done():
+        task.cancel()
     # Retourner le(s) Pokémon non choisi(s) au pool
     choisis = set(caroussel.get("choisis", {}).values())
     restants = [p["id"] for p in caroussel.get("pokemon", []) if p["id"] not in choisis]
