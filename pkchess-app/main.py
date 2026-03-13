@@ -765,6 +765,10 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 cible_reelle, equipe_ko, equipe_vict,
                 joueur_ko_ici, joueur_vict, partie, logs)
 
+    # Effets post-combat synergies : Plante, Fée, Insecte
+    bonus_force_j1, bonus_force_j2 = appliquer_effets_post_combat(
+        j1, p1, j2, p2, equipe1, equipe2, partie, logs)
+
     # Dégâts directs
     degats_directs_j1, degats_directs_j2 = 0, 0
     for poke in sans_adv1:
@@ -809,10 +813,6 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
 
     # Retirer les effets temporaires de début de combat (Eau, Dragon, Normal)
     retirer_effets_synergies_debut(equipe1, equipe2)
-
-    # Effets post-combat synergies : Plante, Fée, Insecte
-    bonus_force_j1, bonus_force_j2 = appliquer_effets_post_combat(
-        j1, p1, j2, p2, equipe1, equipe2, partie, logs)
 
     # Effets post-combat : PSN, BRN, Piégé
     for joueur_check in [j1, j2]:
