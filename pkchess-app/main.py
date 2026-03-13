@@ -239,6 +239,9 @@ async def _appliquer_choix_caroussel(code, partie, gestionnaire, pseudo, pokemon
     caroussel = partie.get("caroussel")
     if not caroussel or not caroussel.get("actif"):
         return
+    # Verrou anti double-appel : si ce joueur a déjà choisi, ignorer
+    if pseudo in caroussel.get("choisis", {}):
+        return
     # Annuler le timer en cours
     task = caroussel.pop("_timer_task", None)
     if task and not task.done():
@@ -784,7 +787,7 @@ def calculer_degats(attaquant, defenseur, type_attaque=None):
     for t in types_att:
         t_low = t.lower()
         if t_low in [x.lower() for x in immunites]:
-            return 0, "immunité"
+            multiplicateur *= 0.5  # Immunité = résistance ×0.5 dans PKChess
         if t_low in [x.lower() for x in faiblesses]:
             multiplicateur = max(multiplicateur, 2.0)
         elif t_low in [x.lower() for x in resistances]:

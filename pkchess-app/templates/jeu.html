@@ -439,6 +439,7 @@ var caroussel_zoom_selection = null; // sélection depuis le zoom
 var caroussel_en_attente = null;    // carrousel stocké en attente fermeture combat
 var boutique_en_attente = null;     // boutique stockée en attente fermeture combat
 var caroussel_poke_zoom = null;     // pokemon en cours de zoom dans le carrousel
+var etat_apres_evolution = null;    // état post-évolution à appliquer après l'animation
 var boutique_locked    = false;
 var zoom_pos = null, zoom_slot = null;
 var drag_pos = null, drag_slot = null;
@@ -465,8 +466,13 @@ function connecterWS() {
         var msg = JSON.parse(e.data);
 
         if (msg.etat) {
-            etat = msg.etat;
-            majInterface();
+            if (msg.type === 'fin_tour' && msg.evolutions && msg.evolutions.length > 0) {
+                // Ne pas majInterface tout de suite — garder l'ancien état pour l'animation
+                etat_apres_evolution = msg.etat;
+            } else {
+                etat = msg.etat;
+                majInterface();
+            }
         }
         if (msg.msg) {
             addLog(msg.msg, msg.type === 'fin_tour' ? 'gold' : '');
@@ -960,6 +966,12 @@ function animerEvolutions(evols, idx) {
     // Phase 3 : retirer la classe et passer au suivant
     setTimeout(function() {
         caseEl.classList.remove('evol-anim');
+        // Si dernière évolution : appliquer l'état final et majInterface
+        if (idx + 1 >= evols.length && etat_apres_evolution) {
+            etat = etat_apres_evolution;
+            etat_apres_evolution = null;
+            majInterface();
+        }
         animerEvolutions(evols, idx + 1);
     }, 1400);
 }
@@ -1142,6 +1154,7 @@ function ouvrirArene(resultats, tour) {
 
     rejouerLogs(monRes.logs || [], pseudoAdv, function() {
         document.getElementById('btn-fermer-combat').style.display = 'inline-block';
+        document.getElementById('btn-forcer-fermeture').style.display = 'inline-block';
         document.getElementById('arena-title').textContent         = '✅ Combat terminé — Tour ' + tour;
     });
 }
