@@ -187,6 +187,202 @@ def calculer_synergies(joueur):
         elif count >= 3: synergies[t] = 3
     return synergies
 
+def palier_synergie(joueur, type_poke):
+    """Retourne le palier de synergie (3/6/9) pour un type donné, ou 0."""
+    return joueur.get("synergies", {}).get(type_poke, 0)
+
+def seuil_de(palier):
+    """Retourne le seuil de dé (sur 6) pour 1/3, 2/3, 3/3."""
+    if palier >= 9: return 0   # 3/3 = automatique (toujours)
+    if palier >= 6: return 2   # 2/3 = dé >= 3
+    if palier >= 3: return 4   # 1/3 = dé >= 5
+    return 7  # jamais
+
+def jet_synergie(palier):
+    """Lance un dé, retourne True si l'effet se déclenche."""
+    seuil = seuil_de(palier)
+    if seuil >= 7: return False
+    if seuil == 0: return True
+    return random.randint(1, 6) > seuil
+
+def appliquer_effets_synergies_debut(j1, j2, equipe1, equipe2, logs):
+    """
+    Applique les effets de synergies permanents AVANT le combat :
+    Eau (+vitesse), Dragon (+dégâts), Normal (+PV max).
+    Ces effets sont temporaires pour le combat (on les retire après).
+    """
+    for joueur, equipe in [(j1, equipe1), (j2, equipe2)]:
+        for poke in equipe:
+            types = poke.get("types", [])
+            # Eau : +vitesse selon palier
+            for t in types:
+                pal = palier_synergie(joueur, "eau")
+                if pal and t == "eau":
+                    bonus = {3: 10, 6: 20, 9: 40}.get(pal, 0)
+                    poke["_vit_bonus"] = bonus
+                    poke["vitesse"] = poke.get("vitesse", 50) + bonus
+                # Dragon : +dégâts offensifs
+                pal_dragon = palier_synergie(joueur, "dragon")
+                if pal_dragon and t == "dragon":
+                    bonus = {3: 10, 6: 20, 9: 40}.get(pal_dragon, 0)
+                    poke["_dmg_bonus"] = bonus
+                # Normal : +PV max (et PV courants)
+                pal_normal = palier_synergie(joueur, "normal")
+                if pal_normal and t == "normal":
+                    bonus = {3: 10, 6: 20, 9: 40}.get(pal_normal, 0)
+                    if not poke.get("_normal_applique"):
+                        poke["pv_max"] = poke.get("pv_max", 100) + bonus
+                        poke["pv"]     = min(poke.get("pv", 100) + bonus, poke["pv_max"])
+                        poke["_normal_applique"] = bonus
+
+def retirer_effets_synergies_debut(equipe1, equipe2):
+    """Retire les bonus temporaires de début de combat."""
+    for equipe in [equipe1, equipe2]:
+        for poke in equipe:
+            if "_vit_bonus" in poke:
+                poke["vitesse"] = max(1, poke.get("vitesse", 50) - poke["_vit_bonus"])
+                del poke["_vit_bonus"]
+            poke.pop("_dmg_bonus", None)
+            if "_normal_applique" in poke:
+                bonus = poke["_normal_applique"]
+                poke["pv_max"] = max(1, poke.get("pv_max", 100) - bonus)
+                poke["pv"]     = min(poke.get("pv", 100), poke["pv_max"])
+                del poke["_normal_applique"]
+
+def appliquer_effets_post_attaque(attaquant, defenseur, joueur_att, joueur_def, logs):
+    """
+    Effets de synergies déclenchés après une attaque réussie :
+    Electrik/Feu/Glace/Poison/Psy/Sol/Ténèbre (statuts), Vol (ciblage géré ailleurs).
+    Retourne le defenseur réel (peut changer avec Vol).
+    """
+    if defenseur.get("ko"):
+        return
+    types_att = attaquant.get("types", [])
+    for t in types_att:
+        # Electrik → PAR
+        pal = palier_synergie(joueur_att, "electrik")
+        if pal and t == "electrik" and not defenseur.get("statut") and jet_synergie(pal):
+            ok, msg = appliquer_statut(defenseur, "PAR")
+            if ok: logs.append(f"    ⚡ Synergie Electrik : {msg}")
+        # Feu → BRN
+        pal = palier_synergie(joueur_att, "feu")
+        if pal and t == "feu" and not defenseur.get("statut") and jet_synergie(pal):
+            ok, msg = appliquer_statut(defenseur, "BRN")
+            if ok: logs.append(f"    🔥 Synergie Feu : {msg}")
+        # Glace → FRZ
+        pal = palier_synergie(joueur_att, "glace")
+        if pal and t == "glace" and not defenseur.get("statut") and jet_synergie(pal):
+            ok, msg = appliquer_statut(defenseur, "FRZ")
+            if ok: logs.append(f"    ❄️ Synergie Glace : {msg}")
+        # Poison → PSN
+        pal = palier_synergie(joueur_att, "poison")
+        if pal and t == "poison" and not defenseur.get("statut") and jet_synergie(pal):
+            ok, msg = appliquer_statut(defenseur, "PSN")
+            if ok: logs.append(f"    ☠️ Synergie Poison : {msg}")
+        # Psy → CNF
+        pal = palier_synergie(joueur_att, "psy")
+        if pal and t == "psy" and not defenseur.get("statut") and jet_synergie(pal):
+            ok, msg = appliquer_statut(defenseur, "CNF")
+            if ok: logs.append(f"    🌀 Synergie Psy : {msg}")
+        # Sol → PIE
+        pal = palier_synergie(joueur_att, "sol")
+        if pal and t == "sol" and not defenseur.get("piege") and jet_synergie(pal):
+            ok, msg = appliquer_statut(defenseur, "PIE")
+            if ok: logs.append(f"    🪤 Synergie Sol : {msg}")
+        # Ténèbre → FER (peur — seulement si défenseur moins rapide)
+        pal = palier_synergie(joueur_att, "ténèbre")
+        if pal and t == "ténèbre" and not defenseur.get("peur") and jet_synergie(pal):
+            if defenseur.get("vitesse", 50) < attaquant.get("vitesse", 50):
+                defenseur["peur"] = True
+                logs.append(f"    😨 Synergie Ténèbre : {defenseur['nom']} a peur !")
+
+def appliquer_effets_ko_synergie(ko_poke, equipe_ko, equipe_adv, joueur_ko, joueur_adv, partie, logs):
+    """
+    Effets déclenchés à chaque KO :
+    - Combat : soigne Pokémon Combat de la colonne vainqueur
+    - Spectre : inflige dégâts à la colonne adverse miroir
+    """
+    types_ko = ko_poke.get("types", [])
+    col_ko   = ko_poke["slot"]
+    col_miroir = 4 - col_ko
+
+    # Spectre : le pokemon KO inflige des dégâts à la colonne adverse miroir
+    pal_spectre = palier_synergie(joueur_ko, "spectre")
+    if pal_spectre and "spectre" in types_ko:
+        dmg_base = {3: 10, 6: 20, 9: 30}.get(pal_spectre, 0)
+        dmg_total = dmg_base * ko_poke.get("niveau", 1)
+        cibles = [p for p in equipe_adv if p["slot"] == col_miroir and not p.get("ko")]
+        for cible in cibles:
+            cible["pv"] = max(0, cible.get("pv", 0) - dmg_total)
+            logs.append(f"    👻 Synergie Spectre : {ko_poke['nom']} inflige {dmg_total} à {cible['nom']} → {cible['pv']}PV")
+            if cible["pv"] <= 0 and not cible.get("ko"):
+                cible["ko"] = True
+                logs.append(f"    💀 {cible['nom']} est KO (spectre) !")
+
+    # Combat : soigne les Pokémon Combat de la colonne adverse (vainqueur)
+    pal_combat = palier_synergie(joueur_adv, "combat")
+    if pal_combat:
+        soin_base = {3: 10, 6: 20, 9: 30}.get(pal_combat, 0)
+        soin_total = soin_base * ko_poke.get("niveau", 1)
+        colonne_adv = [p for p in equipe_adv if p["slot"] == col_miroir and not p.get("ko")]
+        for poke in colonne_adv:
+            if "combat" in poke.get("types", []):
+                ancien_pv = poke.get("pv", 0)
+                poke["pv"] = min(poke.get("pv", 0) + soin_total, poke.get("pv_max", 100))
+                logs.append(f"    🥊 Synergie Combat : {poke['nom']} soigné de {poke['pv']-ancien_pv} PV → {poke['pv']}PV")
+
+def appliquer_effets_post_combat(j1, p1, j2, p2, equipe1, equipe2, partie, logs):
+    """
+    Effets appliqués après la résolution complète du combat :
+    - Plante : soin PV
+    - Fée : pièces
+    - Insecte : force bonus (dégâts directs supplémentaires)
+    Retourne (bonus_force_j1, bonus_force_j2).
+    """
+    bonus_force_j1, bonus_force_j2 = 0, 0
+
+    for joueur, equipe, pseudo, adv_pv_key, j_adv in [
+        (j1, equipe1, p1, "pv", j2),
+        (j2, equipe2, p2, "pv", j1)
+    ]:
+        synergies = joueur.get("synergies", {})
+        vivants = [p for p in equipe if not p.get("ko")]
+
+        # Plante : soin post-combat
+        pal_plante = synergies.get("plante", 0)
+        if pal_plante:
+            soin = {3: 10, 6: 20, 9: 40}.get(pal_plante, 0)
+            for poke in vivants:
+                if "plante" in poke.get("types", []):
+                    poke["pv"] = min(poke.get("pv", 0) + soin, poke.get("pv_max", 100))
+                    logs.append(f"    🌿 Synergie Plante : {poke['nom']} +{soin} PV → {poke['pv']}PV")
+
+        # Fée : pièces
+        pal_fee = synergies.get("fée", 0)
+        if pal_fee:
+            pieces = {3: 1, 6: 2, 9: 4}.get(pal_fee, 0)
+            joueur["pieces"] = joueur.get("pieces", 0) + pieces
+            logs.append(f"    🧚 Synergie Fée : {pseudo} gagne {pieces} pièce(s)")
+
+        # Insecte : force bonus
+        pal_insecte = synergies.get("insecte", 0)
+        if pal_insecte:
+            bonus_par_insecte = {3: 1, 6: 2, 9: 3}.get(pal_insecte, 0)
+            nb_insectes = sum(1 for p in vivants if "insecte" in p.get("types", []))
+            bonus = nb_insectes * bonus_par_insecte
+            if joueur is j1: bonus_force_j1 += bonus
+            else:            bonus_force_j2 += bonus
+            if bonus:
+                logs.append(f"    🐛 Synergie Insecte : {pseudo} +{bonus} pts de force ({nb_insectes} insectes)")
+
+    return bonus_force_j1, bonus_force_j2
+
+def points_force_total(poke):
+    """Points de force avec bonus stade."""
+    base  = points_force(poke)
+    stade = poke.get("stade", 0)
+    return base + (1 if stade == 1 else 2 if stade >= 2 else 0)
+
 def appliquer_bonus_pv_synergies(joueur):
     synergies = calculer_synergies(joueur)
     joueur["synergies"] = synergies
@@ -462,6 +658,9 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         logs.append(f"  🔸 {a['nom']} [{a['position']}] (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV)"
                     f" vs {b['nom']} [{b['position']}] (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
 
+    # Effets synergies de début de combat (Eau, Dragon, Normal)
+    appliquer_effets_synergies_debut(j1, j2, equipe1, equipe2, logs)
+
     # File d'attaque globale triée par vitesse décroissante
     # Chaque entrée = (attaquant, defenseur)
     file_attaques = []
@@ -482,9 +681,12 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 attaquant["pv"] = 0
                 logs.append(f"    💀 {attaquant['nom']} est KO (confusion) !")
                 attaquant["xp_combats"] = max(0, attaquant.get("xp_combats", 0) - 1)
-                equipe_vainqueur = equipe2 if attaquant in equipe1 else equipe1
+                equipe_ko_cnf  = equipe1 if attaquant in equipe1 else equipe2
+                equipe_vict_cnf = equipe2 if attaquant in equipe1 else equipe1
+                joueur_ko_cnf  = j1 if attaquant in equipe1 else j2
+                joueur_vict_cnf = j2 if attaquant in equipe1 else j1
                 col_vainqueur    = 4 - attaquant["slot"]
-                colonne_vainqueur = [x for x in equipe_vainqueur if x["slot"] == col_vainqueur]
+                colonne_vainqueur = [x for x in equipe_vict_cnf if x["slot"] == col_vainqueur]
                 if attaquant in equipe1: pts2 += 1
                 else: pts1 += 1
                 for vainqueur in colonne_vainqueur:
@@ -493,40 +695,90 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                     evol_ko = vainqueur.get("evolution_ko")
                     logs.append(f"    ⭐ {vainqueur['nom']} gagne 1 XP combat !" +
                                 (f" ({xp}/{evol_ko} KO)" if evol_ko else ""))
+                appliquer_effets_ko_synergie(
+                    attaquant, equipe_ko_cnf, equipe_vict_cnf,
+                    joueur_ko_cnf, joueur_vict_cnf, partie, logs)
             continue
+        # Synergie Vol : cibler le défensif adverse si disponible
+        joueur_att = j1 if attaquant in equipe1 else j2
+        joueur_def = j2 if attaquant in equipe1 else j1
+        equipe_def = equipe2 if attaquant in equipe1 else equipe1
+        cible_reelle = defenseur
+        pal_vol = palier_synergie(joueur_att, "vol")
+        if pal_vol and "vol" in attaquant.get("types", []) and jet_synergie(pal_vol):
+            col_adv = 4 - attaquant["slot"]
+            support_adv = next((p for p in equipe_def
+                                if p["slot"] == col_adv and p["position"] == "def"
+                                and not p.get("ko")), None)
+            if support_adv:
+                cible_reelle = support_adv
+                bonus_vol = {3: 10, 6: 20, 9: 30}.get(pal_vol, 0)
+                logs.append(f"    🦅 Synergie Vol : {attaquant['nom']} cible {support_adv['nom']} (support) +{bonus_vol} dégâts")
+            else:
+                bonus_vol = 0
+        else:
+            bonus_vol = 0
+
         type_att = attaquant.get("att_off_type")
-        dmg, eff  = calculer_degats(attaquant, defenseur, type_attaque=type_att)
-        defenseur["pv"] = max(0, defenseur.get("pv", 0) - dmg)
-        logs.append(f"    ➤ {attaquant['nom']} attaque ({eff}) → {dmg} dégâts → {defenseur['nom']} {defenseur['pv']}PV")
+        dmg, eff  = calculer_degats(attaquant, cible_reelle, type_attaque=type_att)
+        # Bonus Dragon
+        if "dragon" in attaquant.get("types", []):
+            pal_dragon = palier_synergie(joueur_att, "dragon")
+            dmg += attaquant.get("_dmg_bonus", 0) if pal_dragon else 0
+        # Bonus Vol
+        dmg += bonus_vol
+        # Réduction Roche côté défenseur
+        pal_roche = palier_synergie(joueur_def, "roche")
+        if pal_roche and "roche" in cible_reelle.get("types", []):
+            reduction = {3: 10, 6: 20, 9: 30}.get(pal_roche, 0)
+            dmg = max(0, dmg - reduction)
+        cible_reelle["pv"] = max(0, cible_reelle.get("pv", 0) - dmg)
+        logs.append(f"    ➤ {attaquant['nom']} attaque ({eff}) → {dmg} dégâts → {cible_reelle['nom']} {cible_reelle['pv']}PV")
+        # Effets post-attaque (statuts)
+        if dmg > 0:
+            appliquer_effets_post_attaque(attaquant, cible_reelle, joueur_att, joueur_def, logs)
+        defenseur = cible_reelle
 
         # Vérification KO après chaque attaque
-        if defenseur["pv"] <= 0 and not defenseur.get("ko"):
-            defenseur["ko"] = True
-            defenseur["pv"] = 0
-            logs.append(f"    💀 {defenseur['nom']} est KO !")
-            defenseur["xp_combats"] = max(0, defenseur.get("xp_combats", 0) - 1)
-            equipe_vainqueur  = equipe2 if defenseur in equipe1 else equipe1
-            col_vainqueur     = 4 - defenseur["slot"]
-            colonne_vainqueur = [x for x in equipe_vainqueur if x["slot"] == col_vainqueur]
-            if defenseur in equipe1: pts2 += 1
-            else:                    pts1 += 1
+        if cible_reelle["pv"] <= 0 and not cible_reelle.get("ko"):
+            cible_reelle["ko"] = True
+            cible_reelle["pv"] = 0
+            logs.append(f"    💀 {cible_reelle['nom']} est KO !")
+            cible_reelle["xp_combats"] = max(0, cible_reelle.get("xp_combats", 0) - 1)
+            equipe_ko      = equipe1 if cible_reelle in equipe1 else equipe2
+            equipe_vict    = equipe2 if cible_reelle in equipe1 else equipe1
+            joueur_ko_ici  = j1 if cible_reelle in equipe1 else j2
+            joueur_vict    = j2 if cible_reelle in equipe1 else j1
+            col_vainqueur  = 4 - cible_reelle["slot"]
+            colonne_vainqueur = [x for x in equipe_vict if x["slot"] == col_vainqueur]
+            if cible_reelle in equipe1: pts2 += 1
+            else:                       pts1 += 1
             for vainqueur in colonne_vainqueur:
                 vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
                 xp = vainqueur["xp_combats"]
                 evol_ko = vainqueur.get("evolution_ko")
                 logs.append(f"    ⭐ {vainqueur['nom']} gagne 1 XP combat !" +
                             (f" ({xp}/{evol_ko} KO)" if evol_ko else ""))
+            # Synergies KO : Spectre + Combat
+            appliquer_effets_ko_synergie(
+                cible_reelle, equipe_ko, equipe_vict,
+                joueur_ko_ici, joueur_vict, partie, logs)
 
     # Dégâts directs
     degats_directs_j1, degats_directs_j2 = 0, 0
     for poke in sans_adv1:
-        dmg = points_force(poke)
+        dmg = points_force_total(poke)
         degats_directs_j2 += dmg
         logs.append(f"  💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p2}")
     for poke in sans_adv2:
-        dmg = points_force(poke)
+        dmg = points_force_total(poke)
         degats_directs_j1 += dmg
         logs.append(f"  💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p1}")
+    # Bonus force Insecte
+    degats_directs_j2 += bonus_force_j1
+    degats_directs_j1 += bonus_force_j2
+    if bonus_force_j1: logs.append(f"  🐛 Bonus Insecte {p1} : +{bonus_force_j1} dégâts directs à {p2}")
+    if bonus_force_j2: logs.append(f"  🐛 Bonus Insecte {p2} : +{bonus_force_j2} dégâts directs à {p1}")
 
     # Résultat KO
     if pts1 > pts2:
@@ -553,6 +805,13 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     if degats_directs_j1 > 0:
         j1["pv"] = max(0, j1["pv"] - degats_directs_j1)
         logs.append(f"💢 {p1} subit {degats_directs_j1} dégâts directs → {j1['pv']} PV")
+
+    # Retirer les effets temporaires de début de combat (Eau, Dragon, Normal)
+    retirer_effets_synergies_debut(equipe1, equipe2)
+
+    # Effets post-combat synergies : Plante, Fée, Insecte
+    bonus_force_j1, bonus_force_j2 = appliquer_effets_post_combat(
+        j1, p1, j2, p2, equipe1, equipe2, partie, logs)
 
     # Effets post-combat : PSN, BRN, Piégé
     for joueur_check in [j1, j2]:
