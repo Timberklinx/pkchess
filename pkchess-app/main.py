@@ -127,6 +127,167 @@ def retourner_au_pool(partie, pokemon_ids):
         if pid not in pool:
             pool.append(pid)
 
+def est_tour_caroussel(partie):
+    """Retourne True si le tour actuel est un tour carrousel (4, 8, 12...)."""
+    return partie.get("tour", 0) > 0 and partie["tour"] % 4 == 0
+
+def preparer_caroussel(partie):
+    """
+    Prépare le carrousel : pioche N+1 Pokémon (N = nb joueurs vivants)
+    dans le pool jusqu'au niveau max des joueurs. Stocke dans partie["caroussel"].
+    """
+    joueurs_vivants = {p: j for p, j in partie["joueurs"].items() if j.get("en_vie", True)}
+    nb_joueurs = len(joueurs_vivants)
+    # Niveau max parmi les joueurs vivants
+    niveau_max = max((j["niveau"] for j in joueurs_vivants.values()), default=1)
+    # Pioche N+1 Pokémon éligibles jusqu'au niveau max
+    pool = partie.get("pool", [])
+    eligibles = [pid for pid in pool
+                 if (lambda p: p
+                     and p.get("stade", 0) == 0
+                     and pid not in _IDS_INTERMEDIAIRES
+                     and p["niveau"] <= niveau_max)(_get_poke(pid))]
+    random.shuffle(eligibles)
+    nb_a_piocher = min(nb_joueurs + 1, len(eligibles))
+    choix_ids = eligibles[:nb_a_piocher]
+    for pid in choix_ids:
+        pool.remove(pid)
+    # Ordre de sélection : PV croissants (le moins de PV choisit en premier)
+    ordre = sorted(joueurs_vivants.keys(), key=lambda p: joueurs_vivants[p]["pv"])
+    # Timer par position
+    def timer_pour(idx, total):
+        if idx == 0:          return 30
+        if idx == total - 1:  return 8
+        return 15
+    caroussel = {
+        "pokemon":   [{"id": pid, "nom": _get_poke(pid)["nom"],
+                       "types": _get_poke(pid)["types"],
+                       "niveau": _get_poke(pid)["niveau"]} for pid in choix_ids],
+        "ordre":     ordre,
+        "index":     0,       # indice du joueur courant dans ordre
+        "choisis":   {},      # {pseudo: pokemon_id}
+        "timers":    {ordre[i]: timer_pour(i, len(ordre)) for i in range(len(ordre))},
+        "actif":     True,
+    }
+    partie["caroussel"] = caroussel
+    return caroussel
+
+def valeur_caroussel(pokemon_id):
+    """Valeur d'un Pokémon pour le choix automatique (niveau = valeur)."""
+    p = _get_poke(pokemon_id)
+    return p["niveau"] if p else 0
+
+async def avancer_caroussel(code, partie, gestionnaire):
+    """
+    Gère le tour du joueur courant dans le carrousel.
+    Envoie un message caroussel_tour au joueur actif.
+    Lance le timer et passe automatiquement si pas de réponse.
+    """
+    caroussel = partie.get("caroussel")
+    if not caroussel or not caroussel.get("actif"):
+        return
+    ordre  = caroussel["ordre"]
+    index  = caroussel["index"]
+    if index >= len(ordre):
+        await terminer_caroussel(code, partie, gestionnaire)
+        return
+    pseudo_actif = ordre[index]
+    timer = caroussel["timers"].get(pseudo_actif, 15)
+    # Pokémon encore disponibles
+    dispo = [p for p in caroussel["pokemon"]
+             if p["id"] not in caroussel["choisis"].values()]
+    # Notifier tout le monde + le joueur actif
+    await gestionnaire.diffuser(code, {
+        "type":         "caroussel_tour",
+        "pseudo_actif": pseudo_actif,
+        "pokemon":      caroussel["pokemon"],
+        "dispo":        [p["id"] for p in dispo],
+        "choisis":      caroussel["choisis"],
+        "ordre":        ordre,
+        "timer":        timer,
+    })
+    # Lancer le timer — annulable si le joueur choisit avant
+    caroussel["_timer_task"] = asyncio.create_task(
+        _timer_caroussel(code, partie, gestionnaire, pseudo_actif, timer, dispo))
+
+async def _timer_caroussel(code, partie, gestionnaire, pseudo, duree, dispo):
+    """Attend duree secondes puis choisit automatiquement le meilleur Pokémon disponible."""
+    await asyncio.sleep(duree)
+    caroussel = partie.get("caroussel")
+    if not caroussel or not caroussel.get("actif"):
+        return
+    # Vérifier que c'est toujours ce joueur qui doit choisir
+    if caroussel["ordre"][caroussel["index"]] != pseudo:
+        return
+    # Choix auto : Pokémon de plus haute valeur (niveau le plus élevé)
+    dispo_ids = [p["id"] for p in dispo if p["id"] not in caroussel["choisis"].values()]
+    if not dispo_ids:
+        return
+    meilleur = max(dispo_ids, key=lambda pid: (valeur_caroussel(pid), random.random()))
+    await _appliquer_choix_caroussel(code, partie, gestionnaire, pseudo, meilleur, auto=True)
+
+async def _appliquer_choix_caroussel(code, partie, gestionnaire, pseudo, pokemon_id, auto=False):
+    """Applique le choix d'un joueur et passe au joueur suivant."""
+    caroussel = partie.get("caroussel")
+    if not caroussel or not caroussel.get("actif"):
+        return
+    # Annuler le timer en cours
+    task = caroussel.pop("_timer_task", None)
+    if task and not task.done():
+        task.cancel()
+    # Enregistrer le choix
+    caroussel["choisis"][pseudo] = pokemon_id
+    # Ajouter le Pokémon au banc du joueur avec 1 XP
+    joueur = partie["joueurs"].get(pseudo)
+    if joueur:
+        poke_data = _get_poke(pokemon_id)
+        if poke_data:
+            slots_banc = {p["slot"] for p in joueur["pokemon"] if p["position"] == "banc"}
+            slot_libre = next((i for i in range(10) if i not in slots_banc), 0)
+            nouveau = {k: poke_data.get(k) for k in poke_data}
+            nouveau["position"]    = "banc"
+            nouveau["slot"]        = slot_libre
+            nouveau["pv"]          = poke_data.get("pv_max", 100)
+            nouveau["xp_combats"]  = 1  # 1 XP offert
+            nouveau["ko"]          = False
+            joueur["pokemon"].append(nouveau)
+            appliquer_bonus_pv_synergies(joueur)
+    msg_auto = " (automatique)" if auto else ""
+    await gestionnaire.diffuser(code, {
+        "type":    "caroussel_choix",
+        "pseudo":  pseudo,
+        "pokemon": pokemon_id,
+        "auto":    auto,
+        "msg":     f"🎠 {pseudo} choisit {_get_poke(pokemon_id)['nom']}{msg_auto}",
+    })
+    # Passer au joueur suivant
+    caroussel["index"] += 1
+    await avancer_caroussel(code, partie, gestionnaire)
+
+async def terminer_caroussel(code, partie, gestionnaire):
+    """Termine le carrousel : retourne le Pokémon restant au pool."""
+    caroussel = partie.get("caroussel", {})
+    caroussel["actif"] = False
+    # Retourner le(s) Pokémon non choisi(s) au pool
+    choisis = set(caroussel.get("choisis", {}).values())
+    restants = [p["id"] for p in caroussel.get("pokemon", []) if p["id"] not in choisis]
+    retourner_au_pool(partie, restants)
+    partie.pop("caroussel", None)
+    # Signaler la fin et ouvrir la boutique
+    await gestionnaire.diffuser(code, {
+        "type": "caroussel_termine", "etat": partie,
+        "msg":  "🎠 Carrousel terminé !",
+    })
+    # Envoyer la boutique à chaque joueur
+    for pj, j in partie["joueurs"].items():
+        await gestionnaire.envoyer_a(code, pj, {
+            "type":          "boutique_offre", "pour": pj,
+            "offre":         j["boutique_offre"],
+            "tour":          partie["tour"],
+            "tour1_gratuit": False,
+            "auto":          True,
+        })
+
 def generer_offre_boutique(partie, niveau_joueur, ancienne_offre=None, locked=False):
     if locked and ancienne_offre:
         return ancienne_offre
@@ -1279,6 +1440,25 @@ async def traiter_action(code, pseudo, action):
             "msg": f"⚡ {pseudo} capture {poke_data['nom']} !",
         })
 
+    elif t == "choix_caroussel":
+        pokemon_id = action.get("pokemon_id")
+        caroussel  = partie.get("caroussel")
+        if not caroussel or not caroussel.get("actif"):
+            return
+        ordre  = caroussel["ordre"]
+        index  = caroussel["index"]
+        if index >= len(ordre) or ordre[index] != pseudo:
+            await gestionnaire.envoyer_a(code, pseudo, {
+                "type": "erreur", "msg": "Ce n'est pas votre tour de choisir !", "pour": pseudo})
+            return
+        dispo_ids = [p["id"] for p in caroussel["pokemon"]
+                     if p["id"] not in caroussel["choisis"].values()]
+        if pokemon_id not in dispo_ids:
+            await gestionnaire.envoyer_a(code, pseudo, {
+                "type": "erreur", "msg": "Ce Pokémon n'est plus disponible !", "pour": pseudo})
+            return
+        await _appliquer_choix_caroussel(code, partie, gestionnaire, pseudo, pokemon_id)
+
     elif t == "vendre_pokemon":
         position = action.get("position")
         slot     = action.get("slot")
@@ -1459,11 +1639,17 @@ async def traiter_action(code, pseudo, action):
             "msg": f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
             "evolutions": evolutions_anim,
         })
-        for pj, j in partie["joueurs"].items():
-            await gestionnaire.envoyer_a(code, pj, {
-                "type": "boutique_offre", "pour": pj,
-                "offre": j["boutique_offre"],
-                "tour": partie["tour"],
-                "tour1_gratuit": partie["tour"] <= 1,
-                "auto": True,
-            })
+        # Carrousel tous les 4 tours (avant la boutique)
+        if est_tour_caroussel(partie):
+            preparer_caroussel(partie)
+            await avancer_caroussel(code, partie, gestionnaire)
+            # La boutique sera envoyée par terminer_caroussel()
+        else:
+            for pj, j in partie["joueurs"].items():
+                await gestionnaire.envoyer_a(code, pj, {
+                    "type": "boutique_offre", "pour": pj,
+                    "offre": j["boutique_offre"],
+                    "tour": partie["tour"],
+                    "tour1_gratuit": partie["tour"] <= 1,
+                    "auto": True,
+                })

@@ -215,6 +215,36 @@
             animation: evol-aura 1.2s ease-in-out, evol-flash 1.2s ease-in-out;
             z-index: 10; position: relative;
         }
+        /* ── Modal carrousel ── */
+        #modal-caroussel { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92);
+            z-index:200; flex-direction:column; align-items:center; justify-content:center; }
+        #modal-caroussel.open { display:flex; }
+        .caroussel-titre { font-family:"Press Start 2P",monospace; color:var(--gold);
+            font-size:1em; margin-bottom:8px; text-align:center; }
+        .caroussel-sous-titre { color:var(--text-muted); font-size:0.8em; margin-bottom:18px; text-align:center; }
+        .caroussel-cercle { position:relative; width:560px; height:420px; margin:0 auto; }
+        .caroussel-poke-slot { position:absolute; width:90px; cursor:pointer; transition:transform .15s; }
+        .caroussel-poke-slot:hover { transform:scale(1.08); }
+        .caroussel-poke-slot.choisi { opacity:0.35; pointer-events:none; }
+        .caroussel-poke-slot.selectionne { outline:3px solid var(--gold); border-radius:10px; }
+        .caroussel-poke-slot img { width:90px; height:110px; object-fit:cover;
+            border-radius:8px; border:2px solid rgba(255,255,255,0.15); }
+        .caroussel-poke-nom { font-size:0.55em; text-align:center; color:var(--text); margin-top:3px; }
+        .caroussel-poke-owner { font-size:0.5em; text-align:center; color:var(--gold); margin-top:1px; }
+        .caroussel-timer { font-family:"Press Start 2P",monospace; font-size:1.4em;
+            color:var(--gold); margin:10px 0 4px; }
+        .caroussel-timer.urgent { color:#ff4444; animation: pulse .5s infinite alternate; }
+        .caroussel-joueur-actif { color:var(--green); font-size:0.85em; margin-bottom:10px; }
+        .caroussel-ordre { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; justify-content:center; }
+        .caroussel-ordre-item { font-size:0.7em; padding:3px 8px; border-radius:12px;
+            background:rgba(255,255,255,0.07); color:var(--text-muted); }
+        .caroussel-ordre-item.actif { background:var(--gold); color:#000; font-weight:bold; }
+        .caroussel-ordre-item.fait  { background:rgba(82,183,136,0.3); color:var(--green); text-decoration:line-through; }
+        .caroussel-actions { display:flex; gap:12px; margin-top:14px; }
+        /* Modal zoom carte dans carrousel */
+        #modal-caroussel-zoom { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88);
+            z-index:300; align-items:center; justify-content:center; flex-direction:column; }
+        #modal-caroussel-zoom.open { display:flex; }
         /* Appliquer aux cartes plateau aussi */
         .case { position: relative; }
         .arena-card.active { box-shadow: 0 0 28px 6px var(--gold); border-color: var(--gold); z-index: 2; }
@@ -269,6 +299,28 @@
             <div class="sep"></div>
             <div class="rangee-label"><span class="dot-noir"></span> Boîte</div>
             <div class="rangee" id="rangee-boite"></div>
+        </div>
+
+        <!-- Modal carrousel -->
+        <div id="modal-caroussel">
+            <div class="caroussel-titre">🎠 CARROUSEL</div>
+            <div class="caroussel-sous-titre" id="caroussel-sous-titre"></div>
+            <div class="caroussel-ordre" id="caroussel-ordre"></div>
+            <div class="caroussel-joueur-actif" id="caroussel-joueur-actif"></div>
+            <div class="caroussel-timer" id="caroussel-timer"></div>
+            <div class="caroussel-cercle" id="caroussel-cercle"></div>
+            <div class="caroussel-actions">
+                <button class="btn btn-gold" id="btn-caroussel-choisir" onclick="validerChoixCaroussel()" disabled>✅ Choisir</button>
+            </div>
+        </div>
+
+        <!-- Modal zoom carrousel -->
+        <div id="modal-caroussel-zoom">
+            <div id="caroussel-zoom-contenu" style="max-width:340px;width:90%"></div>
+            <div style="display:flex;gap:12px;margin-top:16px">
+                <button class="btn" onclick="fermerZoomCaroussel()">✖ Fermer</button>
+                <button class="btn btn-gold" id="btn-zoom-choisir" onclick="choisirDepuisZoom()">✅ Choisir</button>
+            </div>
         </div>
 
         <!-- Actions -->
@@ -378,6 +430,10 @@ var ws, etat;
 var boutique_offre     = [];
 var boutique_selection = null;
 var evolutions_en_attente = [];
+var caroussel_etat = null;      // état courant du carrousel
+var caroussel_selection = null; // id du pokemon sélectionné
+var caroussel_timer_id = null;  // setInterval pour le countdown
+var caroussel_zoom_selection = null; // sélection depuis le zoom
 var boutique_locked    = false;
 var zoom_pos = null, zoom_slot = null;
 var drag_pos = null, drag_slot = null;
@@ -421,6 +477,28 @@ function connecterWS() {
                     return ev.pseudo === PSEUDO;
                 });
             }
+        }
+        if (msg.type === 'caroussel_tour') {
+            caroussel_etat = msg;
+            // Enrichir avec zoom possible sur clic
+            var estMonTour = msg.pseudo_actif === PSEUDO;
+            ouvrirCaroussel(msg);
+        }
+        if (msg.type === 'caroussel_choix') {
+            addLog(msg.msg, 'gold');
+            if (caroussel_etat) {
+                // Mettre à jour l'état local
+                if (!caroussel_etat.choisis) caroussel_etat.choisis = {};
+                caroussel_etat.choisis[msg.pseudo] = msg.pokemon;
+                // Retirer du dispo
+                caroussel_etat.dispo = (caroussel_etat.dispo || []).filter(function(id) { return id !== msg.pokemon; });
+                afficherCaroussel();
+            }
+        }
+        if (msg.type === 'caroussel_termine') {
+            fermerCaroussel();
+            if (msg.etat) { etat = msg.etat; majInterface(); }
+            addLog(msg.msg || '🎠 Carrousel terminé !', 'gold');
         }
         if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) {
             addLog(msg.pseudo + ' a rejoint', 'green');
@@ -679,6 +757,143 @@ function ouvrirBoutique() {
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'demander_boutique'}));
     }
+}
+
+// ══ CARROUSEL ════════════════════════════════════════════════════════════════
+function ouvrirCaroussel(msg) {
+    caroussel_etat      = msg;
+    caroussel_selection = null;
+    document.getElementById('modal-caroussel').classList.add('open');
+    afficherCaroussel();
+    demarrerTimerCaroussel(msg.timer, msg.pseudo_actif);
+}
+
+function afficherCaroussel() {
+    if (!caroussel_etat) return;
+    var msg        = caroussel_etat;
+    var estMonTour = msg.pseudo_actif === PSEUDO;
+    var pokemon    = msg.pokemon;
+    var dispo      = msg.dispo || [];
+    var choisis    = msg.choisis || {};
+
+    // Sous-titre
+    document.getElementById('caroussel-sous-titre').textContent =
+        'Sélectionnez un Pokémon gratuit — il arrive avec 1 XP !';
+
+    // Ordre joueurs
+    var ordreEl = document.getElementById('caroussel-ordre');
+    ordreEl.innerHTML = '';
+    (msg.ordre || []).forEach(function(p, i) {
+        var item = document.createElement('span');
+        item.className = 'caroussel-ordre-item' +
+            (p === msg.pseudo_actif ? ' actif' : '') +
+            (choisis[p] ? ' fait' : '');
+        item.textContent = p + (choisis[p] ? ' ✓' : '');
+        ordreEl.appendChild(item);
+    });
+
+    // Joueur actif
+    document.getElementById('caroussel-joueur-actif').textContent =
+        estMonTour ? "🌟 C'est votre tour de choisir !" : "⏳ " + msg.pseudo_actif + " choisit...";
+
+    // Bouton choisir
+    document.getElementById('btn-caroussel-choisir').disabled = !estMonTour || !caroussel_selection;
+
+    // Cercle de cartes
+    var cercle = document.getElementById('caroussel-cercle');
+    cercle.innerHTML = '';
+    var n = pokemon.length;
+    // Positions en ellipse
+    var cx = 280, cy = 210, rx = 220, ry = 160;
+    pokemon.forEach(function(poke, i) {
+        var angle  = (i / n) * 2 * Math.PI - Math.PI / 2;
+        var x      = cx + rx * Math.cos(angle) - 45;
+        var y      = cy + ry * Math.sin(angle) - 55;
+        var estDispo  = dispo.indexOf(poke.id) >= 0;
+        var owner  = Object.keys(choisis).find(function(p) { return choisis[p] === poke.id; });
+
+        var slot = document.createElement('div');
+        slot.className = 'caroussel-poke-slot' +
+            (!estDispo ? ' choisi' : '') +
+            (caroussel_selection === poke.id ? ' selectionne' : '');
+        slot.style.left = x + 'px';
+        slot.style.top  = y + 'px';
+        var id4 = String(poke.id).padStart(4, '0');
+        slot.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + poke.nom + '">'
+            + '<div class="caroussel-poke-nom">' + poke.nom + '</div>'
+            + (owner ? '<div class="caroussel-poke-owner">→ ' + owner + '</div>' : '');
+
+        if (estDispo && estMonTour) {
+            slot.addEventListener('click', function() { selectionnerCaroussel(poke.id); });
+        } else if (estDispo) {
+            // Zoom uniquement si pas son tour
+            slot.addEventListener('click', function() { ouvrirZoomCaroussel(poke, false); });
+        }
+        cercle.appendChild(slot);
+    });
+}
+
+function selectionnerCaroussel(pokemon_id) {
+    caroussel_selection = (caroussel_selection === pokemon_id) ? null : pokemon_id;
+    afficherCaroussel();
+}
+
+function ouvrirZoomCaroussel(poke, avecChoix) {
+    caroussel_zoom_selection = avecChoix ? poke.id : null;
+    var zoom = document.getElementById('modal-caroussel-zoom');
+    var id4  = String(poke.id).padStart(4, '0');
+    document.getElementById('caroussel-zoom-contenu').innerHTML =
+        '<img src="' + IMG + id4 + '.png" style="width:120px;border-radius:10px;display:block;margin:0 auto 12px">'
+        + '<div style="text-align:center;font-size:1em;font-weight:bold;margin-bottom:8px">' + poke.nom + '</div>'
+        + '<div style="text-align:center;font-size:0.75em;color:var(--text-muted)">Niveau ' + poke.niveau
+        + ' — Types : ' + (poke.types || []).join(', ') + '</div>';
+    document.getElementById('btn-zoom-choisir').style.display = avecChoix ? '' : 'none';
+    zoom.classList.add('open');
+}
+
+function fermerZoomCaroussel() {
+    document.getElementById('modal-caroussel-zoom').classList.remove('open');
+    caroussel_zoom_selection = null;
+}
+
+function choisirDepuisZoom() {
+    if (!caroussel_zoom_selection) return;
+    caroussel_selection = caroussel_zoom_selection;
+    fermerZoomCaroussel();
+    validerChoixCaroussel();
+}
+
+function validerChoixCaroussel() {
+    if (!caroussel_selection) return;
+    envoyer({ type: 'choix_caroussel', pokemon_id: caroussel_selection });
+    document.getElementById('btn-caroussel-choisir').disabled = true;
+}
+
+function demarrerTimerCaroussel(duree, pseudo_actif) {
+    if (caroussel_timer_id) clearInterval(caroussel_timer_id);
+    var restant  = duree;
+    var timerEl  = document.getElementById('caroussel-timer');
+    var estMoi   = pseudo_actif === PSEUDO;
+    function maj() {
+        if (!timerEl) return;
+        timerEl.textContent = restant + 's';
+        timerEl.className   = 'caroussel-timer' + (restant <= 8 ? ' urgent' : '');
+        if (restant <= 0) {
+            clearInterval(caroussel_timer_id);
+            caroussel_timer_id = null;
+        }
+        restant--;
+    }
+    maj();
+    caroussel_timer_id = setInterval(maj, 1000);
+}
+
+function fermerCaroussel() {
+    if (caroussel_timer_id) { clearInterval(caroussel_timer_id); caroussel_timer_id = null; }
+    document.getElementById('modal-caroussel').classList.remove('open');
+    document.getElementById('modal-caroussel-zoom').classList.remove('open');
+    caroussel_etat = null;
+    caroussel_selection = null;
 }
 
 function fermerBoutique() {
