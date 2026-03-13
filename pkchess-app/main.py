@@ -2,9 +2,28 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
+import asyncio
 import json, random, string, os
 
 app = FastAPI()
+
+async def nettoyer_parties_inactives():
+    """Supprime les parties sans activité depuis 15 minutes."""
+    while True:
+        await asyncio.sleep(60)
+        maintenant = time.time()
+        codes_a_supprimer = [
+            code for code, partie in list(parties.items())
+            if maintenant - partie.get("derniere_activite", maintenant) > 900
+        ]
+        for code in codes_a_supprimer:
+            parties.pop(code, None)
+            gestionnaire.connexions.pop(code, None)
+            print(f"[NETTOYAGE] Partie {code} supprimée (inactivité 15min)")
+
+@app.on_event("startup")
+async def demarrage():
+    asyncio.create_task(nettoyer_parties_inactives())
 templates = Jinja2Templates(directory="templates")
 
 # ── Base Pokémon ──────────────────────────────────────────────────────────────
@@ -190,6 +209,135 @@ def nb_emplacements_centre(niveau):
     if niveau >= 5:  return 2
     return 1
 
+# ── Statuts ───────────────────────────────────────────────────────────────────
+STATUTS_UNIQUES = {"PAR", "PSN", "FRZ", "SLP", "CNF", "BRN"}  # exclusifs entre eux
+
+def appliquer_statut(poke, statut):
+    """Applique un statut à un Pokémon. Respecte l'exclusivité et les effets immédiats."""
+    if poke.get("ko"):
+        return False, ""
+    statut_actuel = poke.get("statut")
+    # Déjà un statut unique → immunisé (sauf Piégé et Peur qui sont séparés)
+    if statut in STATUTS_UNIQUES and statut_actuel in STATUTS_UNIQUES:
+        return False, f"{poke['nom']} est déjà {statut_actuel}, statut {statut} ignoré"
+    if statut == "PAR":
+        poke["statut"] = "PAR"
+        poke["vitesse"] = max(1, poke.get("vitesse", 50) // 2)
+        return True, f"⚡ {poke['nom']} est paralysé ! (vitesse ÷2)"
+    elif statut == "PSN":
+        poke["statut"] = "PSN"
+        return True, f"☠️ {poke['nom']} est empoisonné !"
+    elif statut == "FRZ":
+        poke["statut"] = "FRZ"
+        return True, f"❄️ {poke['nom']} est gelé !"
+    elif statut == "SLP":
+        poke["statut"] = "SLP"
+        poke["slp_tours"] = 0  # compteur de tours de sommeil
+        return True, f"💤 {poke['nom']} s'endort !"
+    elif statut == "CNF":
+        poke["statut"] = "CNF"
+        return True, f"🌀 {poke['nom']} est confus !"
+    elif statut == "BRN":
+        poke["statut"] = "BRN"
+        poke["degats"] = max(1, poke.get("degats", 20) // 2)
+        return True, f"🔥 {poke['nom']} est brûlé ! (dégâts ÷2)"
+    elif statut == "PIE":  # Piégé — cumulable
+        poke["piege"] = True
+        return True, f"🪤 {poke['nom']} est piégé !"
+    elif statut == "FER":  # Peur — temporaire, géré dans la file
+        poke["peur"] = True
+        return True, f"😨 {poke['nom']} a peur !"
+    return False, ""
+
+def retirer_statut(poke):
+    """Supprime le statut principal et restaure les stats modifiées."""
+    statut = poke.get("statut")
+    if not statut:
+        return
+    if statut == "PAR":
+        # Restaurer la vitesse depuis la DB
+        from_db = _DB_MAP.get(poke.get("id"), {})
+        poke["vitesse"] = from_db.get("vitesse", poke.get("vitesse", 50) * 2)
+    elif statut == "BRN":
+        from_db = _DB_MAP.get(poke.get("id"), {})
+        poke["degats"] = from_db.get("degats", poke.get("degats", 20) * 2)
+    poke.pop("statut", None)
+    poke.pop("slp_tours", None)
+
+def retirer_piege(poke):
+    poke.pop("piege", None)
+
+def soigner_statuts(poke):
+    """Soin complet : supprime statut, piège, peur."""
+    retirer_statut(poke)
+    retirer_piege(poke)
+    poke.pop("peur", None)
+
+def verifier_peut_attaquer(poke, logs):
+    """
+    Vérifie si le Pokémon peut attaquer selon son statut.
+    Retourne True si l'attaque peut avoir lieu, False sinon.
+    Modifie les statuts en conséquence (FRZ dégel, SLP réveil, etc.)
+    """
+    statut = poke.get("statut")
+    nom = poke["nom"]
+
+    if poke.get("peur"):
+        logs.append(f"    😨 {nom} a peur et ne peut pas attaquer !")
+        poke.pop("peur", None)
+        return False
+
+    if statut == "PAR":
+        de = random.randint(1, 6)
+        if de <= 2:
+            logs.append(f"    ⚡ {nom} est paralysé et ne peut pas attaquer ! (dé: {de})")
+            return False
+        logs.append(f"    ⚡ {nom} est paralysé mais attaque quand même (dé: {de})")
+        return True
+
+    if statut == "FRZ":
+        de = random.randint(1, 6)
+        if de == 6:
+            retirer_statut(poke)
+            logs.append(f"    ❄️ {nom} est dégelé et attaque ! (dé: {de})")
+            return True
+        logs.append(f"    ❄️ {nom} est gelé et ne peut pas attaquer (dé: {de})")
+        return False
+
+    if statut == "SLP":
+        tours = poke.get("slp_tours", 0)
+        if tours >= 5:
+            retirer_statut(poke)
+            logs.append(f"    💤 {nom} se réveille !")
+            return True
+        # Probabilité de réveil : tour 0→1/6, 1→2/6, 2→3/6, 3→4/6, 4→5/6
+        seuil = tours + 1
+        de = random.randint(1, 6)
+        poke["slp_tours"] = tours + 1
+        if de > seuil:
+            logs.append(f"    💤 {nom} se réveille et attaque ! (dé: {de})")
+            retirer_statut(poke)
+            return True
+        logs.append(f"    💤 {nom} dort et ne peut pas attaquer (dé: {de}, seuil>{seuil})")
+        return False
+
+    if statut == "CNF":
+        de = random.randint(1, 6)
+        if de == 6:
+            retirer_statut(poke)
+            logs.append(f"    🌀 {nom} n'est plus confus ! (dé: {de})")
+            return True
+        if de >= 3:
+            logs.append(f"    🌀 {nom} est confus mais attaque normalement (dé: {de})")
+            return True
+        # 1-2 : se blesse avec sa propre attaque
+        degats_auto = poke.get("degats", 20)
+        poke["pv"] = max(0, poke.get("pv", 0) - degats_auto)
+        logs.append(f"    🌀 {nom} est confus et se blesse ! -{degats_auto} PV → {poke['pv']}PV (dé: {de})")
+        return False
+
+    return True
+
 # ── Transformations conditionnelles ──────────────────────────────────────────
 # Mapping type déclencheur → id variante Cheniti
 _CHENITI_FORMES = {"acier": "0412b", "sol": "0412c", "plante": "0412d"}
@@ -326,6 +474,26 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         # Ne pas attaquer si déjà KO
         if attaquant.get("ko") or defenseur.get("ko"):
             continue
+        # Vérifier statuts bloquants
+        if not verifier_peut_attaquer(attaquant, logs):
+            # KO auto possible (confusion)
+            if attaquant.get("pv", 1) <= 0 and not attaquant.get("ko"):
+                attaquant["ko"] = True
+                attaquant["pv"] = 0
+                logs.append(f"    💀 {attaquant['nom']} est KO (confusion) !")
+                attaquant["xp_combats"] = max(0, attaquant.get("xp_combats", 0) - 1)
+                equipe_vainqueur = equipe2 if attaquant in equipe1 else equipe1
+                col_vainqueur    = 4 - attaquant["slot"]
+                colonne_vainqueur = [x for x in equipe_vainqueur if x["slot"] == col_vainqueur]
+                if attaquant in equipe1: pts2 += 1
+                else: pts1 += 1
+                for vainqueur in colonne_vainqueur:
+                    vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
+                    xp = vainqueur["xp_combats"]
+                    evol_ko = vainqueur.get("evolution_ko")
+                    logs.append(f"    ⭐ {vainqueur['nom']} gagne 1 XP combat !" +
+                                (f" ({xp}/{evol_ko} KO)" if evol_ko else ""))
+            continue
         type_att = attaquant.get("att_off_type")
         dmg, eff  = calculer_degats(attaquant, defenseur, type_attaque=type_att)
         defenseur["pv"] = max(0, defenseur.get("pv", 0) - dmg)
@@ -385,6 +553,31 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     if degats_directs_j1 > 0:
         j1["pv"] = max(0, j1["pv"] - degats_directs_j1)
         logs.append(f"💢 {p1} subit {degats_directs_j1} dégâts directs → {j1['pv']} PV")
+
+    # Effets post-combat : PSN, BRN, Piégé
+    for joueur_check in [j1, j2]:
+        for poke in joueur_check.get("pokemon", []):
+            if poke.get("ko"):
+                continue
+            statut = poke.get("statut")
+            if statut == "PSN":
+                poke["pv"] = max(0, poke.get("pv", 0) - 20)
+                logs.append(f"    ☠️ {poke['nom']} est empoisonné → -20 PV → {poke['pv']}PV")
+                if poke["pv"] <= 0:
+                    poke["ko"] = True; poke["pv"] = 0
+                    logs.append(f"    💀 {poke['nom']} est KO (poison) !")
+            elif statut == "BRN":
+                poke["pv"] = max(0, poke.get("pv", 0) - 10)
+                logs.append(f"    🔥 {poke['nom']} est brûlé → -10 PV → {poke['pv']}PV")
+                if poke["pv"] <= 0:
+                    poke["ko"] = True; poke["pv"] = 0
+                    logs.append(f"    💀 {poke['nom']} est KO (brûlure) !")
+            if poke.get("piege") and not poke.get("ko"):
+                poke["pv"] = max(0, poke.get("pv", 0) - 10)
+                logs.append(f"    🪤 {poke['nom']} est piégé → -10 PV → {poke['pv']}PV")
+                if poke["pv"] <= 0:
+                    poke["ko"] = True; poke["pv"] = 0
+                    logs.append(f"    💀 {poke['nom']} est KO (piège) !")
 
     # Éliminations
     for pseudo_check, joueur_check in [(p1, j1), (p2, j2)]:
@@ -534,6 +727,7 @@ def appliquer_fin_tour(partie):
             poke_centre["soin_tours_restants"] = tours
             if tours <= 0:
                 poke_centre["pv"]       = poke_centre.get("pv_max", 100)
+                soigner_statuts(poke_centre)
                 poke_centre["position"] = "banc"
                 slots_banc = {p["slot"] for p in j.get("pokemon", []) if p["position"] == "banc"}
                 poke_centre["slot"] = next((i for i in range(10) if i not in slots_banc), 0)
@@ -684,6 +878,7 @@ async def traiter_action(code, pseudo, action):
     if code not in parties:
         return
     partie = parties[code]
+    partie["derniere_activite"] = time.time()
     joueur = partie["joueurs"].get(pseudo)
     if not joueur:
         return
@@ -880,6 +1075,11 @@ async def traiter_action(code, pseudo, action):
 
         poke     = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
         if not poke:
+            return
+        # Blocage déplacement si piégé (sauf vente)
+        if poke.get("piege") and tp != "vente":
+            await gestionnaire.envoyer_a(code, pseudo, {
+                "type": "erreur", "msg": f"{poke['nom']} est piégé et ne peut pas être déplacé !", "pour": pseudo})
             return
         # Pour le Centre, utiliser le slot libre calculé
         if tp == "centre":

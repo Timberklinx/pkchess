@@ -172,6 +172,33 @@
         .arena-card.ko .ko-overlay { display: block; }
         .arena-card.ko img { opacity: 0.3; filter: grayscale(1); }
         .arena-card.vide   { border-style: dashed; opacity: 0.2; }
+        /* ── Bandeaux statuts ── */
+        .statut-bandeau { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; border-radius: 8px; z-index: 3; }
+        .statut-bandeau::before, .statut-bandeau::after {
+            content: attr(data-label);
+            position: absolute; font-size: 0.55em; font-weight: 900; letter-spacing: 1px;
+            white-space: nowrap; transform: rotate(-35deg);
+            width: 200%; left: -50%;
+        }
+        .statut-bandeau::before { top: 28%; padding: 3px 0; opacity: 0.9; }
+        .statut-bandeau::after  { top: 38%; padding: 3px 0; opacity: 0.4; }
+        .statut-PAR::before, .statut-PAR::after { background: #b8860b; color: #ffe066; }
+        .statut-PAR::before { background: linear-gradient(transparent 0%, #b8860b 20%, #ffe066 50%, #b8860b 80%, transparent 100%); color: #b8860b; }
+        .statut-PAR::after  { background: linear-gradient(transparent 0%, #b8860b 20%, #ffe066 50%, #b8860b 80%, transparent 100%); color: #b8860b; }
+        .statut-PSN::before { background: linear-gradient(transparent 0%, #6a0dad 20%, #cc88ff 50%, #6a0dad 80%, transparent 100%); color: #6a0dad; }
+        .statut-PSN::after  { background: linear-gradient(transparent 0%, #6a0dad 20%, #cc88ff 50%, #6a0dad 80%, transparent 100%); color: #6a0dad; }
+        .statut-CNF::before { background: linear-gradient(transparent 0%, #c2185b 20%, #ffb3d1 50%, #c2185b 80%, transparent 100%); color: #c2185b; }
+        .statut-CNF::after  { background: linear-gradient(transparent 0%, #c2185b 20%, #ffb3d1 50%, #c2185b 80%, transparent 100%); color: #c2185b; }
+        .statut-BRN::before { background: linear-gradient(transparent 0%, #b71c1c 20%, #ff8a80 50%, #b71c1c 80%, transparent 100%); color: #b71c1c; }
+        .statut-BRN::after  { background: linear-gradient(transparent 0%, #b71c1c 20%, #ff8a80 50%, #b71c1c 80%, transparent 100%); color: #b71c1c; }
+        .statut-FRZ::before { background: linear-gradient(transparent 0%, #0277bd 20%, #b3e5fc 50%, #0277bd 80%, transparent 100%); color: #0277bd; }
+        .statut-FRZ::after  { background: linear-gradient(transparent 0%, #0277bd 20%, #b3e5fc 50%, #0277bd 80%, transparent 100%); color: #0277bd; }
+        .statut-SLP::before { background: linear-gradient(transparent 0%, #888 20%, #fff 50%, #888 80%, transparent 100%); color: #888; }
+        .statut-SLP::after  { background: linear-gradient(transparent 0%, #888 20%, #fff 50%, #888 80%, transparent 100%); color: #888; }
+        .statut-piege { position: absolute; top: 4px; right: 4px; font-size: 0.9em; z-index: 4; filter: drop-shadow(0 0 2px #4a2800); }
+        .statut-peur  { position: absolute; top: 4px; left: 4px; font-size: 0.9em; z-index: 4; }
+        /* Appliquer aux cartes plateau aussi */
+        .case { position: relative; }
         .arena-card.active { box-shadow: 0 0 28px 6px var(--gold); border-color: var(--gold); z-index: 2; }
         .arena-card.attaque-haut { animation: atk-haut 0.35s ease-in-out; }
         .arena-card.attaque-bas  { animation: atk-bas  0.35s ease-in-out; }
@@ -566,8 +593,9 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                 + '<div class="pv-mini-bg"><div class="pv-mini-bar' + pvCls + '" style="width:' + pvPct + '%"></div></div>'
                 + (poke.evolution_id ? '<div class="xp-mini-bg"><div class="xp-mini-bar" style="width:' + xpPct + '%"></div></div>' : '')
                 + (poke.evolution_id ? '<div class="xp-label">⚔️' + (poke.xp_combats||0) + '/' + poke.evolution_ko + '</div>' : '')
-                + '<div class="poke-nom">' + poke.nom + ' ' + poke.pv + '/' + poke.pv_max + '</div>';
-            el.draggable = !poke.ko;
+                + '<div class="poke-nom">' + poke.nom + ' ' + poke.pv + '/' + poke.pv_max + '</div>'
+                + htmlStatutBandeau(poke);
+            el.draggable = !poke.ko && !poke.piege;
             (function(p, s) {
                 el.addEventListener('dragstart', function(e) {
                     drag_pos = p; drag_slot = s;
@@ -598,7 +626,10 @@ function renderRangee(containerId, pos, dispo, cssClass) {
                     return p.position === 'off' && p.slot === ts && !(drag_pos === 'off' && drag_slot === ts);
                 });
                 var defSansOff = (tp === 'def') && !offensifColonne;
-                if (!estBloqueeAbsolue && !estTerrainPlein && !defSansOff && (drag_pos !== tp || drag_slot !== ts)) {
+                // Blocage déplacement si piégé
+                var pokeSrc = mesPokemon.find(function(p) { return p.position === drag_pos && p.slot === drag_slot; });
+                var estPiege = pokeSrc && pokeSrc.piege;
+                if (!estBloqueeAbsolue && !estTerrainPlein && !defSansOff && !estPiege && (drag_pos !== tp || drag_slot !== ts)) {
                     deplacerPokemon(drag_pos, drag_slot, tp, ts);
                 }
             }
@@ -803,6 +834,19 @@ function ouvrirArene(resultats, tour) {
     });
 }
 
+function htmlStatutBandeau(poke) {
+    if (!poke) return '';
+    var html = '';
+    var statut = poke.statut;
+    var labels = { PAR: 'PAR', PSN: 'PSN', FRZ: 'GEL', SLP: 'SOM', CNF: 'CNF', BRN: 'BRU' };
+    if (statut && labels[statut]) {
+        html += '<div class="statut-bandeau statut-' + statut + '" data-label="' + labels[statut] + '"></div>';
+    }
+    if (poke.piege) html += '<div class="statut-piege">✚</div>';
+    if (poke.peur)  html += '<div class="statut-peur">😨</div>';
+    return html;
+}
+
 function construireCartes(containerId, joueur, pos, miroir) {
     var container = document.getElementById(containerId);
     if (!container) return;
@@ -822,7 +866,8 @@ function construireCartes(containerId, joueur, pos, miroir) {
                 + '<div class="card-pv-bg"><div class="card-pv-bar' + pvCls + '"'
                 + ' id="pvbar-' + containerId + '-s' + slot + '" style="width:' + pvPct + '%"></div></div>'
                 + '<div class="ko-overlay">KO</div>'
-                + '<div class="card-nom">' + poke.nom + '</div>';
+                + '<div class="card-nom">' + poke.nom + '</div>'
+                + htmlStatutBandeau(poke);
         }
         container.appendChild(card);
     }
