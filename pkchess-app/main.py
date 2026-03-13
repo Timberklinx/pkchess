@@ -999,6 +999,40 @@ def appliquer_fin_tour(partie):
         j["a_achete_tour1"]  = False
     return messages
 
+def collecter_evolutions_a_venir(partie):
+    """
+    Retourne la liste des Pokémon qui vont évoluer ce tour,
+    AVANT que l'évolution soit appliquée.
+    [{pseudo, slot, position, id_avant, nom_avant, id_apres, nom_apres}]
+    """
+    evolutions = []
+    for pj, j in partie["joueurs"].items():
+        if not j.get("en_vie", True):
+            continue
+        for poke in j.get("pokemon", []):
+            if poke.get("ko"):
+                continue
+            evol_id  = poke.get("evolution_id")
+            evol_ko  = poke.get("evolution_ko")
+            evol_nom = poke.get("evolution_nom")
+            if not evol_id or evol_ko is None:
+                continue
+            if poke.get("xp_combats", 0) < evol_ko:
+                continue
+            evol_data = _get_poke(evol_id)
+            if not evol_data:
+                continue
+            evolutions.append({
+                "pseudo":    pj,
+                "slot":      poke["slot"],
+                "position":  poke["position"],
+                "id_avant":  poke["id"],
+                "nom_avant": poke["nom"],
+                "id_apres":  evol_id,
+                "nom_apres": evol_nom or evol_data.get("nom", evol_id),
+            })
+    return evolutions
+
 # ── WebSocket ─────────────────────────────────────────────────────────────────
 class GestionnaireConnexions:
     def __init__(self):
@@ -1335,6 +1369,11 @@ async def traiter_action(code, pseudo, action):
         poke     = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
         if not poke:
             return
+        # Blocage KO vers terrain
+        if poke.get("ko") and tp in ("off", "def"):
+            await gestionnaire.envoyer_a(code, pseudo, {
+                "type": "erreur", "msg": f"{poke['nom']} est KO et ne peut pas être placé sur le terrain !", "pour": pseudo})
+            return
         # Blocage déplacement si piégé (sauf vente)
         if poke.get("piege") and tp != "vente":
             await gestionnaire.envoyer_a(code, pseudo, {
@@ -1368,6 +1407,13 @@ async def traiter_action(code, pseudo, action):
             if slot_libre is not None:
                 poke["position"] = "banc"
                 poke["slot"]     = slot_libre
+            # Avancement automatique : si on retire un offensif, le défensif avance
+            if position == "off":
+                defensif = next((p for p in joueur["pokemon"]
+                                 if p["position"] == "def" and p["slot"] == slot
+                                 and not p.get("ko")), None)
+                if defensif:
+                    defensif["position"] = "off"
             appliquer_bonus_pv_synergies(joueur)
             appliquer_transformations(joueur)
             await gestionnaire.diffuser(code, {
@@ -1405,10 +1451,12 @@ async def traiter_action(code, pseudo, action):
             "tour": partie["tour"],
         })
 
+        evolutions_anim = collecter_evolutions_a_venir(partie)
         messages = appliquer_fin_tour(partie)
         await gestionnaire.diffuser(code, {
             "type": "fin_tour", "etat": partie,
             "msg": f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
+            "evolutions": evolutions_anim,
         })
         for pj, j in partie["joueurs"].items():
             await gestionnaire.envoyer_a(code, pj, {

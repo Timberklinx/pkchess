@@ -197,6 +197,24 @@
         .statut-SLP::after  { background: linear-gradient(transparent 0%, #888 20%, #fff 50%, #888 80%, transparent 100%); color: #888; }
         .statut-piege { position: absolute; top: 4px; right: 4px; font-size: 0.9em; z-index: 4; filter: drop-shadow(0 0 2px #4a2800); }
         .statut-peur  { position: absolute; top: 4px; left: 4px; font-size: 0.9em; z-index: 4; }
+        /* ── Animation évolution ── */
+        @keyframes evol-aura {
+            0%   { box-shadow: 0 0 0px 0px rgba(255,220,0,0); transform: scale(1); }
+            30%  { box-shadow: 0 0 18px 8px rgba(255,220,0,0.85); transform: scale(1.08); }
+            60%  { box-shadow: 0 0 30px 14px rgba(255,255,180,1); transform: scale(1.13); }
+            80%  { box-shadow: 0 0 18px 8px rgba(255,220,0,0.85); transform: scale(1.08); }
+            100% { box-shadow: 0 0 0px 0px rgba(255,220,0,0); transform: scale(1); }
+        }
+        @keyframes evol-flash {
+            0%   { opacity: 1; }
+            45%  { opacity: 0; }
+            55%  { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .evol-anim {
+            animation: evol-aura 1.2s ease-in-out, evol-flash 1.2s ease-in-out;
+            z-index: 10; position: relative;
+        }
         /* Appliquer aux cartes plateau aussi */
         .case { position: relative; }
         .arena-card.active { box-shadow: 0 0 28px 6px var(--gold); border-color: var(--gold); z-index: 2; }
@@ -359,6 +377,7 @@ document.getElementById('player-name').textContent  = '🎮 ' + PSEUDO;
 var ws, etat;
 var boutique_offre     = [];
 var boutique_selection = null;
+var evolutions_en_attente = [];
 var boutique_locked    = false;
 var zoom_pos = null, zoom_slot = null;
 var drag_pos = null, drag_slot = null;
@@ -396,6 +415,12 @@ function connecterWS() {
             boutique_locked = false;
             var btnL = document.getElementById('btn-lock');
             if (btnL) { btnL.textContent = '🔓 Garder'; btnL.classList.remove('locked'); }
+            // Stocker les évolutions à animer après fermeture boutique
+            if (msg.evolutions && msg.evolutions.length > 0) {
+                evolutions_en_attente = msg.evolutions.filter(function(ev) {
+                    return ev.pseudo === PSEUDO;
+                });
+            }
         }
         if (msg.type === 'joueur_connecte' && msg.pseudo !== PSEUDO) {
             addLog(msg.pseudo + ' a rejoint', 'green');
@@ -618,18 +643,23 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             if (drag_pos !== null) {
                 var tp = this.dataset.pos, ts = parseInt(this.dataset.slot);
                 var estBloqueeAbsolue = (tp !== 'banc') && (ts === 0 || ts === 4) && niveau_j < 5;
-                var ajoutDepuisBanc = (drag_pos === 'banc') && (tp === 'off' || tp === 'def');
-                var estTerrainPlein = ajoutDepuisBanc && nbTerrain >= niveau_j;
-                // Pas de défensif sans offensif dans la même colonne
                 var mesPokemon = (etat && etat.joueurs && etat.joueurs[PSEUDO]) ? etat.joueurs[PSEUDO].pokemon : [];
+                var caseDestOccupee = mesPokemon.some(function(p) { return p.position === tp && p.slot === ts; });
+                var ajoutDepuisBanc = (drag_pos === 'banc') && (tp === 'off' || tp === 'def');
+                // Terrain plein seulement si ajout réel (pas un échange)
+                var estTerrainPlein = ajoutDepuisBanc && !caseDestOccupee && nbTerrain >= niveau_j;
+                // Pas de défensif sans offensif dans la même colonne
                 var offensifColonne = mesPokemon.some(function(p) {
                     return p.position === 'off' && p.slot === ts && !(drag_pos === 'off' && drag_slot === ts);
                 });
-                var defSansOff = (tp === 'def') && !offensifColonne;
+                var defSansOff = (tp === 'def') && !offensifColonne && !caseDestOccupee;
                 // Blocage déplacement si piégé
                 var pokeSrc = mesPokemon.find(function(p) { return p.position === drag_pos && p.slot === drag_slot; });
                 var estPiege = pokeSrc && pokeSrc.piege;
-                if (!estBloqueeAbsolue && !estTerrainPlein && !defSansOff && !estPiege && (drag_pos !== tp || drag_slot !== ts)) {
+                // Blocage KO vers terrain
+                var estKo = pokeSrc && pokeSrc.ko;
+                var versTerrainKo = estKo && (tp === 'off' || tp === 'def');
+                if (!estBloqueeAbsolue && !estTerrainPlein && !defSansOff && !estPiege && !versTerrainKo && (drag_pos !== tp || drag_slot !== ts)) {
                     deplacerPokemon(drag_pos, drag_slot, tp, ts);
                 }
             }
@@ -654,6 +684,47 @@ function ouvrirBoutique() {
 function fermerBoutique() {
     document.getElementById('modal-boutique').classList.remove('open');
     boutique_selection = null;
+    // Déclencher animations d'évolution en attente
+    if (evolutions_en_attente && evolutions_en_attente.length > 0) {
+        var evols = evolutions_en_attente.slice();
+        evolutions_en_attente = [];
+        animerEvolutions(evols, 0);
+    }
+}
+
+function animerEvolutions(evols, idx) {
+    if (idx >= evols.length) return;
+    var ev = evols[idx];
+    // Trouver la case correspondante sur le plateau
+    var conteneur = document.getElementById('rangee-' + ev.position);
+    if (!conteneur) { animerEvolutions(evols, idx + 1); return; }
+    var cases = conteneur.querySelectorAll('.case');
+    var caseEl = null;
+    cases.forEach(function(c) {
+        if (parseInt(c.dataset.slot) === ev.slot) caseEl = c;
+    });
+    if (!caseEl) { animerEvolutions(evols, idx + 1); return; }
+
+    // Phase 1 : aura dorée + soulèvement
+    caseEl.classList.add('evol-anim');
+
+    // Phase 2 : au milieu de l'animation, changer l'image
+    setTimeout(function() {
+        var img = caseEl.querySelector('img');
+        if (img) {
+            var id4 = String(ev.id_apres).padStart(4, '0');
+            img.src = IMG + id4 + '.png';
+            img.alt = ev.nom_apres;
+        }
+        var nomEl = caseEl.querySelector('.poke-nom');
+        if (nomEl) nomEl.textContent = ev.nom_apres;
+    }, 600);
+
+    // Phase 3 : retirer la classe et passer au suivant
+    setTimeout(function() {
+        caseEl.classList.remove('evol-anim');
+        animerEvolutions(evols, idx + 1);
+    }, 1400);
 }
 
 function afficherBoutique(tour, tour1_gratuit) {
