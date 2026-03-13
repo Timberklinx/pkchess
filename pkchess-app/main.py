@@ -183,6 +183,13 @@ def appliquer_bonus_pv_synergies(joueur):
             poke["pv"]     = min(poke.get("pv", 100) + diff, poke["pv_max"])
             poke["bonus_pv_synergie"] = meilleur
 
+def nb_emplacements_centre(niveau):
+    """Nombre d'emplacements Centre Pokémon selon le niveau du dresseur."""
+    if niveau >= 10: return 4
+    if niveau >= 8:  return 3
+    if niveau >= 5:  return 2
+    return 1
+
 # ── Transformations conditionnelles ──────────────────────────────────────────
 # Mapping type déclencheur → id variante Cheniti
 _CHENITI_FORMES = {"acier": "0412b", "sol": "0412c", "plante": "0412d"}
@@ -199,12 +206,12 @@ def appliquer_transformations(joueur):
     pokemon = joueur.get("pokemon", [])
     terrain = [p for p in pokemon if p["position"] in ("off", "def")]
 
-    for poke in terrain:
+    for poke in pokemon:
         if poke.get("id") != "0412":
             continue
         # Déjà transformé → irréversible
         col = poke["slot"]
-        # Chercher un partenaire dans la même colonne (hors lui-même)
+        # Chercher un partenaire dans la même colonne sur le terrain (hors lui-même)
         partenaires = [p for p in terrain if p["slot"] == col and p is not poke]
         forme = None
         for partenaire in partenaires:
@@ -329,6 +336,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             defenseur["ko"] = True
             defenseur["pv"] = 0
             logs.append(f"    💀 {defenseur['nom']} est KO !")
+            defenseur["xp_combats"] = max(0, defenseur.get("xp_combats", 0) - 1)
             equipe_vainqueur  = equipe2 if defenseur in equipe1 else equipe1
             col_vainqueur     = 4 - defenseur["slot"]
             colonne_vainqueur = [x for x in equipe_vainqueur if x["slot"] == col_vainqueur]
@@ -775,6 +783,8 @@ async def traiter_action(code, pseudo, action):
             "ko":            False,
             "xp_combats":    0,
         })
+        appliquer_bonus_pv_synergies(joueur)
+        appliquer_transformations(joueur)
         await gestionnaire.diffuser(code, {
             "type": "etat_mis_a_jour", "etat": partie,
             "msg": f"⚡ {pseudo} capture {poke_data['nom']} !",
@@ -787,7 +797,7 @@ async def traiter_action(code, pseudo, action):
                      if p["position"] == position and p["slot"] == slot), None)
         if not poke:
             return
-        gain = poke.get("niveau", 1)
+        gain = poke.get("niveau", 1) + poke.get("xp_combats", 0)
         joueur["pokemon"].remove(poke)
         joueur["pieces"] += gain
         retourner_au_pool(partie, [poke["id"]])
@@ -847,9 +857,11 @@ async def traiter_action(code, pseudo, action):
                 return
 
         if tp == "centre":
-            if any(p["position"] == "centre" for p in joueur["pokemon"]):
+            nb_centres_max = nb_emplacements_centre(joueur["niveau"])
+            nb_centres_occ = sum(1 for p in joueur["pokemon"] if p["position"] == "centre")
+            if nb_centres_occ >= nb_centres_max:
                 await gestionnaire.envoyer_a(code, pseudo, {
-                    "type": "erreur", "msg": "Le Centre Pokémon est déjà occupé !", "pour": pseudo})
+                    "type": "erreur", "msg": "Centre Pokémon plein !", "pour": pseudo})
                 return
             poke_src = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
             if poke_src and poke_src.get("ko"):
@@ -861,11 +873,18 @@ async def traiter_action(code, pseudo, action):
                     "type": "erreur", "msg": "Ce Pokémon est déjà à pleine santé !", "pour": pseudo})
                 return
             if poke_src:
+                # Assigner le slot Centre libre correspondant à la case ciblée
+                slots_centre = {p["slot"] for p in joueur["pokemon"] if p["position"] == "centre"}
+                slot_centre  = ts if ts not in slots_centre else next((i for i in range(4) if i not in slots_centre), 0)
                 poke_src["soin_tours_restants"] = points_force(poke_src)
 
         poke     = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
         if not poke:
             return
+        # Pour le Centre, utiliser le slot libre calculé
+        if tp == "centre":
+            slots_centre_occ = {p["slot"] for p in joueur["pokemon"] if p["position"] == "centre"}
+            ts = ts if ts not in slots_centre_occ else next((i for i in range(4) if i not in slots_centre_occ), 0)
         occupant = next((p for p in joueur["pokemon"] if p["position"] == tp and p["slot"] == ts), None)
         if occupant:
             occupant["position"] = fp
@@ -903,9 +922,19 @@ async def traiter_action(code, pseudo, action):
                 "type": "erreur", "msg": "Seul l'hôte peut lancer le combat !", "pour": pseudo})
             return
         partie["phase"] = "combat"
-        # Snapshot AVANT le combat pour l'arène animée (PV et positions d'origine)
-        import copy
-        etat_avant_combat = copy.deepcopy(partie)
+        # Snapshot léger AVANT le combat — uniquement les données nécessaires à l'arène
+        def snapshot_joueur(j):
+            return {
+                "niveau": j.get("niveau", 1),
+                "pokemon": [
+                    {k: p.get(k) for k in ("id","nom","pv","pv_max","slot","position","ko","types")}
+                    for p in j.get("pokemon", [])
+                ]
+            }
+        etat_avant_combat = {
+            "joueurs": {pj: snapshot_joueur(j) for pj, j in partie["joueurs"].items()},
+            "tour": partie.get("tour", 0),
+        }
         resultats = lancer_combat(partie)
         partie["phase"] = "preparation"
 

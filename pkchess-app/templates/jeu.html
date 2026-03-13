@@ -469,45 +469,60 @@ function renderPlateau() {
     renderRangee('rangee-boite',  'banc', 5,                   'boite');
 }
 
+function nbEmplacementsCentre(niveau) {
+    if (niveau >= 10) return 4;
+    if (niveau >= 8)  return 3;
+    if (niveau >= 5)  return 2;
+    return 1;
+}
+
 function renderCentre(containerId) {
     var container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
-    var pokeCentre = etat && etat.joueurs && etat.joueurs[PSEUDO]
-        ? (etat.joueurs[PSEUDO].pokemon || []).find(function(p) { return p.position === 'centre'; })
-        : null;
-    var el = document.createElement('div');
-    el.className       = 'case centre' + (pokeCentre ? ' occupee' : '');
-    el.dataset.pos     = 'centre';
-    el.dataset.slot    = 0;
+    var niveau_j = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
+    var nbMax    = nbEmplacementsCentre(niveau_j);
+    var pokemons = etat && etat.joueurs && etat.joueurs[PSEUDO]
+        ? (etat.joueurs[PSEUDO].pokemon || []).filter(function(p) { return p.position === 'centre'; })
+        : [];
 
-    if (pokeCentre) {
-        var id4  = String(pokeCentre.id).padStart(4, '0');
-        var tours = pokeCentre.soin_tours_restants || 0;
-        el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom
-            + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',0)">'
-            + '<div class="poke-nom">⏳' + tours + ' tour' + (tours > 1 ? 's' : '') + '</div>';
-        el.draggable = true;
-        el.addEventListener('dragstart', function(e) {
-            drag_pos = 'centre'; drag_slot = 0;
-            e.dataTransfer.effectAllowed = 'move';
-            el.style.opacity = '0.4';
-        });
-        el.addEventListener('dragend', function() { el.style.opacity = '1'; });
-    } else {
-        el.innerHTML = '<span class="plus" style="color:rgba(82,183,136,0.4)">+</span>';
+    for (var slot = 0; slot < nbMax; slot++) {
+        (function(s) {
+            var pokeCentre = pokemons.find(function(p) { return p.slot === s; }) || null;
+            var el = document.createElement('div');
+            el.className   = 'case centre' + (pokeCentre ? ' occupee' : '');
+            el.dataset.pos  = 'centre';
+            el.dataset.slot = s;
+
+            if (pokeCentre) {
+                var id4  = String(pokeCentre.id).padStart(4, '0');
+                var tours = pokeCentre.soin_tours_restants || 0;
+                el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom
+                    + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',' + s + ')">'
+                    + '<div class="poke-nom">⏳' + tours + ' tour' + (tours > 1 ? 's' : '') + '</div>';
+                el.draggable = true;
+                el.addEventListener('dragstart', function(e) {
+                    drag_pos = 'centre'; drag_slot = s;
+                    e.dataTransfer.effectAllowed = 'move';
+                    el.style.opacity = '0.4';
+                });
+                el.addEventListener('dragend', function() { el.style.opacity = '1'; });
+            } else {
+                el.innerHTML = '<span class="plus" style="color:rgba(82,183,136,0.4)">+</span>';
+            }
+
+            el.addEventListener('dragover',  function(e) { e.preventDefault(); this.classList.add('droppable'); });
+            el.addEventListener('dragleave', function()  { this.classList.remove('droppable'); });
+            el.addEventListener('drop', function(e) {
+                e.preventDefault(); this.classList.remove('droppable');
+                if (drag_pos !== null && drag_pos !== 'centre') {
+                    deplacerPokemon(drag_pos, drag_slot, 'centre', s);
+                }
+                drag_pos = drag_slot = null;
+            });
+            container.appendChild(el);
+        })(slot);
     }
-
-    el.addEventListener('dragover',  function(e) { e.preventDefault(); this.classList.add('droppable'); });
-    el.addEventListener('dragleave', function()  { this.classList.remove('droppable'); });
-    el.addEventListener('drop', function(e) {
-        e.preventDefault(); this.classList.remove('droppable');
-        if (drag_pos !== null && drag_pos !== 'centre') {
-            deplacerPokemon(drag_pos, drag_slot, 'centre', 0);
-        }
-        drag_pos = drag_slot = null;
-    });
-    container.appendChild(el);
 }
 
 function renderRangee(containerId, pos, dispo, cssClass) {
