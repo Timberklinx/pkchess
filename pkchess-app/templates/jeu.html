@@ -379,8 +379,9 @@
     <div class="zoom-inner" onclick="event.stopPropagation()">
         <img id="zoom-img" src="" alt="">
         <div class="zoom-btns">
-            <button class="btn btn-red"   id="btn-vendre"   onclick="vendrePokemon()"   style="display:none">💸 Vendre</button>
-            <button class="btn btn-green" id="btn-racheter" onclick="racheterPokemon()" style="display:none">💊 Racheter</button>
+            <button class="btn btn-red"   id="btn-vendre"      onclick="vendrePokemon()"        style="display:none">💸 Vendre</button>
+            <button class="btn btn-green" id="btn-racheter"    onclick="racheterPokemon()"      style="display:none">💊 Racheter</button>
+            <button class="btn btn-gold"  id="btn-zoom-caroussel" onclick="choisirDepuisZoom()" style="display:none">✅ Choisir</button>
             <button class="btn btn-gray"  onclick="fermerZoom()">✕ Fermer</button>
         </div>
     </div>
@@ -392,6 +393,7 @@
         <div class="arena-header">
             <span id="arena-title">⚔️ Combat !</span>
             <button class="btn btn-gray" id="btn-fermer-combat" onclick="fermerCombat()" style="display:none">✕ Fermer</button>
+        <button class="btn btn-red"  id="btn-forcer-fermeture" onclick="forcerFermetureCombat()" style="display:none">⚡ Forcer fermeture</button>
         </div>
         <div class="arena-side">
             <div class="arena-label" id="arena-adv-label">Adversaire</div>
@@ -434,6 +436,8 @@ var caroussel_etat = null;      // état courant du carrousel
 var caroussel_selection = null; // id du pokemon sélectionné
 var caroussel_timer_id = null;  // setInterval pour le countdown
 var caroussel_zoom_selection = null; // sélection depuis le zoom
+var caroussel_en_attente = null;    // carrousel stocké en attente fermeture combat
+var caroussel_poke_zoom = null;     // pokemon en cours de zoom dans le carrousel
 var boutique_locked    = false;
 var zoom_pos = null, zoom_slot = null;
 var drag_pos = null, drag_slot = null;
@@ -479,10 +483,17 @@ function connecterWS() {
             }
         }
         if (msg.type === 'caroussel_tour') {
-            caroussel_etat = msg;
-            // Enrichir avec zoom possible sur clic
-            var estMonTour = msg.pseudo_actif === PSEUDO;
-            ouvrirCaroussel(msg);
+            var combatOuvert = document.getElementById('combat-bg') &&
+                               document.getElementById('combat-bg').classList.contains('open');
+            if (combatOuvert) {
+                // Stocker en attente, sera déclenché à la fermeture du combat
+                caroussel_en_attente = msg;
+                // Afficher le bouton forcer fermeture pour tous les joueurs
+                var btnFF = document.getElementById('btn-forcer-fermeture');
+                if (btnFF) btnFF.style.display = 'inline-block';
+            } else {
+                ouvrirCaroussel(msg);
+            }
         }
         if (msg.type === 'caroussel_choix') {
             addLog(msg.msg, 'gold');
@@ -823,11 +834,13 @@ function afficherCaroussel() {
             + '<div class="caroussel-poke-nom">' + poke.nom + '</div>'
             + (owner ? '<div class="caroussel-poke-owner">→ ' + owner + '</div>' : '');
 
-        if (estDispo && estMonTour) {
-            slot.addEventListener('click', function() { selectionnerCaroussel(poke.id); });
-        } else if (estDispo) {
-            // Zoom uniquement si pas son tour
-            slot.addEventListener('click', function() { ouvrirZoomCaroussel(poke, false); });
+        if (estDispo) {
+            // Clic = zoom avec bouton Choisir si c'est son tour
+            (function(p, monTour) {
+                slot.addEventListener('click', function() {
+                    ouvrirZoomCaroussel(p, monTour);
+                });
+            })(poke, estMonTour);
         }
         cercle.appendChild(slot);
     });
@@ -839,21 +852,23 @@ function selectionnerCaroussel(pokemon_id) {
 }
 
 function ouvrirZoomCaroussel(poke, avecChoix) {
+    caroussel_poke_zoom      = poke;
     caroussel_zoom_selection = avecChoix ? poke.id : null;
-    var zoom = document.getElementById('modal-caroussel-zoom');
-    var id4  = String(poke.id).padStart(4, '0');
-    document.getElementById('caroussel-zoom-contenu').innerHTML =
-        '<img src="' + IMG + id4 + '.png" style="width:120px;border-radius:10px;display:block;margin:0 auto 12px">'
-        + '<div style="text-align:center;font-size:1em;font-weight:bold;margin-bottom:8px">' + poke.nom + '</div>'
-        + '<div style="text-align:center;font-size:0.75em;color:var(--text-muted)">Niveau ' + poke.niveau
-        + ' — Types : ' + (poke.types || []).join(', ') + '</div>';
-    document.getElementById('btn-zoom-choisir').style.display = avecChoix ? '' : 'none';
-    zoom.classList.add('open');
+    var id4 = String(poke.id).padStart(4, '0');
+    // Réutiliser le modal zoom existant
+    document.getElementById('zoom-img').src = IMG + id4 + '.png';
+    document.getElementById('btn-vendre').style.display      = 'none';
+    document.getElementById('btn-racheter').style.display    = 'none';
+    var btnC = document.getElementById('btn-zoom-caroussel');
+    btnC.style.display = avecChoix ? '' : 'none';
+    document.getElementById('zoom-bg').classList.add('open');
+    zoom_pos = zoom_slot = null; // pas de vente possible depuis le carrousel
 }
 
 function fermerZoomCaroussel() {
-    document.getElementById('modal-caroussel-zoom').classList.remove('open');
+    document.getElementById('zoom-bg').classList.remove('open');
     caroussel_zoom_selection = null;
+    caroussel_poke_zoom      = null;
 }
 
 function choisirDepuisZoom() {
@@ -1046,6 +1061,10 @@ function ouvrirZoom(src, pos, slot) {
 function fermerZoom() {
     document.getElementById('zoom-bg').classList.remove('open');
     zoom_pos = zoom_slot = null;
+    // Nettoyer aussi l'état zoom carrousel si ouvert depuis le carrousel
+    caroussel_poke_zoom      = null;
+    caroussel_zoom_selection = null;
+    document.getElementById('btn-zoom-caroussel').style.display = 'none';
 }
 
 function vendrePokemon() {
@@ -1259,7 +1278,19 @@ function rejouerLogs(logs, pseudoAdv, onDone) {
 
 function fermerCombat() {
     document.getElementById('combat-bg').classList.remove('open');
+    document.getElementById('btn-forcer-fermeture').style.display = 'none';
     arenaEtat = null;
+    // Déclencher le carrousel en attente si présent
+    if (caroussel_en_attente) {
+        var msg = caroussel_en_attente;
+        caroussel_en_attente = null;
+        setTimeout(function() { ouvrirCaroussel(msg); }, 300);
+    }
+}
+
+function forcerFermetureCombat() {
+    // Accessible à tous — ferme immédiatement le combat pour voir le carrousel
+    fermerCombat();
 }
 
 // ── Log & Toast ───────────────────────────────────────────────────────────────
