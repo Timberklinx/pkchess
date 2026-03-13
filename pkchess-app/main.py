@@ -39,6 +39,7 @@ def _get_poke(pid):
 _IDS_INTERMEDIAIRES = {p["evolution_id"] for p in POKEMONS_DB if p.get("evolution_id")}
 # Formes intermédiaires dont le lien d'entrée est absent dans la DB
 _IDS_INTERMEDIAIRES |= {"0266"}  # Armulys
+_IDS_INTERMEDIAIRES |= {"0292"}  # Munja (obtenu avec Ninjask, pas un Pokémon de base)
 
 def _calculer_formes_exclusives():
     import re as _re
@@ -831,7 +832,10 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         file_attaques.append((b, a))
     file_attaques.sort(key=lambda x: x[0].get("vitesse", 50), reverse=True)
 
-    for (attaquant, defenseur) in file_attaques:
+    idx_file = 0
+    while idx_file < len(file_attaques):
+        attaquant, defenseur = file_attaques[idx_file]
+        idx_file += 1
         # Ne pas attaquer si déjà KO
         if attaquant.get("ko") or defenseur.get("ko"):
             continue
@@ -925,6 +929,33 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             appliquer_effets_ko_synergie(
                 cible_reelle, equipe_ko, equipe_vict,
                 joueur_ko_ici, joueur_vict, partie, logs)
+            # Avancement immédiat : si l'offensif KO a un défensif derrière,
+            # il avance en position offensive et peut encore attaquer ce tour
+            if cible_reelle["position"] == "off":
+                joueur_ko_obj = j1 if cible_reelle in equipe1 else j2
+                defensif = next((p for p in joueur_ko_obj.get("pokemon", [])
+                                 if p["position"] == "def"
+                                 and p["slot"] == cible_reelle["slot"]
+                                 and not p.get("ko")), None)
+                if defensif:
+                    defensif["position"] = "off"
+                    equipe_ko.append(defensif)
+                    logs.append(f"    ↑ {defensif['nom']} avance en position offensive (col. {defensif['slot'] + 1})")
+                    # Chercher son adversaire (offensif miroir ou défensif)
+                    col_def = 4 - defensif["slot"]
+                    equipe_adv_ko = equipe_vict
+                    adv = next((p for p in equipe_adv_ko
+                                if p["slot"] == col_def and p["position"] == "off"
+                                and not p.get("ko")), None) or                           next((p for p in equipe_adv_ko
+                                if p["slot"] == col_def and p["position"] == "def"
+                                and not p.get("ko")), None)
+                    if adv:
+                        # Insérer dans la file à la bonne position selon vitesse
+                        vit = defensif.get("vitesse", 50)
+                        insert_pos = idx_file
+                        while insert_pos < len(file_attaques) and                               file_attaques[insert_pos][0].get("vitesse", 50) > vit:
+                            insert_pos += 1
+                        file_attaques.insert(insert_pos, (defensif, adv))
 
     # Effets post-combat synergies : Plante, Fée, Insecte
     bonus_force_j1, bonus_force_j2 = appliquer_effets_post_combat(
