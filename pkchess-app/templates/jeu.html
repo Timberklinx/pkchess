@@ -437,6 +437,7 @@ var caroussel_selection = null; // id du pokemon sélectionné
 var caroussel_timer_id = null;  // setInterval pour le countdown
 var caroussel_zoom_selection = null; // sélection depuis le zoom
 var caroussel_en_attente = null;    // carrousel stocké en attente fermeture combat
+var boutique_en_attente = null;     // boutique stockée en attente fermeture combat
 var caroussel_poke_zoom = null;     // pokemon en cours de zoom dans le carrousel
 var boutique_locked    = false;
 var zoom_pos = null, zoom_slot = null;
@@ -537,7 +538,13 @@ function connecterWS() {
             boutique_offre = msg.offre || [];
             afficherBoutique(msg.tour, msg.tour1_gratuit);
             if (msg.auto) {
-                document.getElementById('modal-boutique').classList.add('open');
+                var combatOuvert = document.getElementById('combat-bg') &&
+                                   document.getElementById('combat-bg').classList.contains('open');
+                if (combatOuvert) {
+                    boutique_en_attente = msg;
+                } else {
+                    document.getElementById('modal-boutique').classList.add('open');
+                }
             }
         }
     };
@@ -1280,6 +1287,15 @@ function fermerCombat() {
     document.getElementById('combat-bg').classList.remove('open');
     document.getElementById('btn-forcer-fermeture').style.display = 'none';
     arenaEtat = null;
+    // Ouvrir la boutique en attente (déclenche aussi l'animation évolution)
+    if (boutique_en_attente) {
+        var msgB = boutique_en_attente;
+        boutique_en_attente = null;
+        setTimeout(function() {
+            document.getElementById('modal-boutique').classList.add('open');
+            // L'animation évolution se déclenchera à la fermeture de la boutique
+        }, 300);
+    }
     // Déclencher le carrousel en attente si présent
     if (caroussel_en_attente) {
         var msg = caroussel_en_attente;
