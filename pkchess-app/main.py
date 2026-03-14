@@ -886,15 +886,20 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         cible_reelle = defenseur
         pal_vol = palier_synergie(joueur_att, "vol")
         if pal_vol and "vol" in attaquant.get("types", []) and jet_synergie(pal_vol):
-            col_adv = 4 - attaquant["slot"]
-            support_adv = next((p for p in equipe_def
-                                if p["slot"] == col_adv and p["position"] == "def"
+            # Chercher le défensif dans la même colonne que le défenseur (offensif adverse)
+            col_def = defenseur["slot"]
+            equipe_adverse = equipe2 if attaquant in equipe1 else equipe1
+            support_adv = next((p for p in equipe_adverse
+                                if p["slot"] == col_def
+                                and p["position"] == "def"
                                 and not p.get("ko")), None)
             if support_adv:
                 cible_reelle = support_adv
                 bonus_vol = {3: 10, 6: 20, 9: 30}.get(pal_vol, 0)
                 logs.append(f"    🦅 Synergie Vol : {attaquant['nom']} cible {support_adv['nom']} (support) +{bonus_vol} dégâts")
             else:
+                # Pas de défensif → attaque normale sans bonus
+                logs.append(f"    🦅 Synergie Vol : pas de support adverse en col.{col_def+1}, attaque normale")
                 bonus_vol = 0
         else:
             bonus_vol = 0
