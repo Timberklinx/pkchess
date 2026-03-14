@@ -197,6 +197,45 @@
         .statut-SLP::after  { background: linear-gradient(transparent 0%, #888 20%, #fff 50%, #888 80%, transparent 100%); color: #888; }
         .statut-piege { position: absolute; top: 4px; right: 4px; font-size: 0.9em; z-index: 4; filter: drop-shadow(0 0 2px #4a2800); }
         .statut-peur  { position: absolute; top: 4px; left: 4px; font-size: 0.9em; z-index: 4; }
+        /* ── Logo PKChess ── */
+        .logo-container { display:flex; flex-direction:column; align-items:center; gap:4px; }
+        .logo-texte { height:36px; object-fit:contain; }
+        .logo-pokeball { height:32px; object-fit:contain;
+            animation: pokeball-spin 4s linear infinite; }
+        @keyframes pokeball-spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* ── Pièces ── */
+        .pokecoin-icon { height:16px; width:16px; object-fit:contain;
+            vertical-align:middle; margin-right:2px; }
+
+        /* ── Barre XP joueur ── */
+        .xp-joueur-wrap { display:flex; flex-direction:column; gap:2px; min-width:120px; }
+        .xp-joueur-label { font-size:0.6em; color:var(--text-muted); }
+        .xp-joueur-bg { background:rgba(255,255,255,0.08); border-radius:4px;
+            height:6px; width:100%; overflow:hidden; }
+        .xp-joueur-bar { background:linear-gradient(90deg,#52b788,#95d5b2);
+            height:100%; border-radius:4px; transition:width .4s ease; }
+
+        /* ── Synergies avec logos ── */
+        .synergie-item { display:flex; align-items:center; gap:5px;
+            position:relative; cursor:default; }
+        .synergie-logo { width:20px; height:20px; object-fit:contain;
+            border-radius:3px; }
+        .synergie-palier { font-size:0.7em; font-weight:bold; color:var(--gold); }
+        .synergie-tooltip { display:none; position:absolute; left:30px; top:50%;
+            transform:translateY(-50%); background:rgba(15,20,30,0.97);
+            border:1px solid rgba(255,255,255,0.15); border-radius:8px;
+            padding:8px 12px; min-width:220px; z-index:100; pointer-events:none; }
+        .synergie-item:hover .synergie-tooltip { display:block; }
+        .synergie-tooltip-titre { font-size:0.7em; font-weight:bold;
+            color:var(--gold); margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+        .synergie-tooltip-ligne { font-size:0.65em; padding:2px 0;
+            color:rgba(255,255,255,0.4); }
+        .synergie-tooltip-ligne.actif { color:#fff; font-weight:bold; }
+
         /* ── Animation évolution ── */
         @keyframes evol-aura {
             0%   { box-shadow: 0 0 0px 0px rgba(255,220,0,0); transform: scale(1); }
@@ -263,7 +302,12 @@
 
 <!-- Header -->
 <div class="header">
-    <div class="header-logo">⚔️ PKChess</div>
+    <div class="header-logo">
+        <div class="logo-container">
+            <img src="/static/PKChess.png" alt="PKChess" class="logo-texte">
+            <img src="/static/pokeball.png" alt="Pokeball" class="logo-pokeball">
+        </div>
+    </div>
     <div class="header-code" id="header-code">----</div>
     <div class="header-status">
         <div class="dot" id="dot"></div>
@@ -280,9 +324,14 @@
             <div class="player-name" id="player-name">🎮 Dresseur</div>
             <div class="stat-pill hp">❤️ <span class="stat-val" id="mes-pv">100</span></div>
             <div class="pv-bar-bg"><div class="pv-bar" id="pv-bar" style="width:100%"></div></div>
-            <div class="stat-pill gp">🪙 <span class="stat-val" id="mes-pieces">0</span></div>
+            <div class="stat-pill gp"><img src="/static/PokecoinBack.png" class="pokecoin-icon" alt="🪙"> <span class="stat-val" id="mes-pieces">0</span></div>
             <div class="stat-pill lv">⭐ Niv.<span class="stat-val" id="mon-niveau">1</span></div>
-            <div class="stat-pill xp">📊 <span class="stat-val" id="mon-exp">0</span> XP</div>
+            <div class="stat-pill xp">
+        <div class="xp-joueur-wrap">
+            <div class="xp-joueur-label">📊 XP <span id="mon-exp">0</span>/<span id="mon-xp-max">1</span></div>
+            <div class="xp-joueur-bg"><div class="xp-joueur-bar" id="mon-xp-bar" style="width:0%"></div></div>
+        </div>
+    </div>
             <div style="font-size:0.82em;font-weight:800;color:rgba(255,255,255,0.5)">Tour <span id="tour-num">0</span></div>
         </div>
 
@@ -575,7 +624,15 @@ function majInterface() {
     document.getElementById('mes-pv').textContent     = moi.pv;
     document.getElementById('mes-pieces').textContent = moi.pieces;
     document.getElementById('mon-niveau').textContent = moi.niveau;
-    document.getElementById('mon-exp').textContent    = moi.exp || 0;
+    var xpActuel = moi.exp || 0;
+    var niv = moi.niveau || 1;
+    var xpTable = [0,1,1,2,4,8,16,24,32,40];
+    var xpMax = niv < 10 ? (xpTable[niv] || 40) : 40;
+    var xpPct = xpMax > 0 ? Math.min(100, Math.round(xpActuel / xpMax * 100)) : 100;
+    document.getElementById('mon-exp').textContent    = xpActuel;
+    document.getElementById('mon-xp-max').textContent = xpMax;
+    var xpBar = document.getElementById('mon-xp-bar');
+    if (xpBar) xpBar.style.width = xpPct + '%';
     document.getElementById('tour-num').textContent   = etat.tour || 0;
     document.getElementById('pv-bar').style.width     = Math.max(0, Math.min(100, moi.pv)) + '%';
 
@@ -590,8 +647,57 @@ function majInterface() {
     if (keys.length === 0) {
         synEl.innerHTML = '<span style="color:rgba(255,255,255,0.3);font-size:0.8em;font-weight:700">Aucune synergie</span>';
     } else {
+        var SYNERGIES_DESC = {
+            "Acier":    ["Palier 3 : 1/3 chance d'esquiver un effet adverse", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
+            "Combat":   ["Palier 3 : Soigne Pokemon Combat +10PV x niv KO", "Palier 6 : +20PV x niv", "Palier 9 : +30PV x niv"],
+            "Dragon":   ["Palier 3 : +10 degats offensifs", "Palier 6 : +20 degats", "Palier 9 : +40 degats"],
+            "Eau":      ["Palier 3 : +10 Vitesse", "Palier 6 : +20 Vitesse", "Palier 9 : +40 Vitesse"],
+            "Electrik": ["Palier 3 : 1/3 chance de Paralyser", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
+            "Fee":      ["Palier 3 : +1 piece par combat", "Palier 6 : +2 pieces", "Palier 9 : +4 pieces"],
+            "Feu":      ["Palier 3 : 1/3 chance de Brulure", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
+            "Glace":    ["Palier 3 : 1/3 chance de Gel", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
+            "Insecte":  ["Palier 3 : +1 pt de Force par Insecte vivant", "Palier 6 : +2 pts", "Palier 9 : +3 pts"],
+            "Normal":   ["Palier 3 : +10 PV MAX", "Palier 6 : +20 PV MAX", "Palier 9 : +40 PV MAX"],
+            "Plante":   ["Palier 3 : +10 PV soignes post-combat", "Palier 6 : +20 PV", "Palier 9 : +40 PV"],
+            "Poison":   ["Palier 3 : 1/3 chance d'Empoisonnement", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
+            "Psy":      ["Palier 3 : 1/3 chance de Confusion", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
+            "Roche":    ["Palier 3 : -10 degats recus", "Palier 6 : -20 degats", "Palier 9 : -30 degats"],
+            "Sol":      ["Palier 3 : 1/3 chance de Pieger", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
+            "Spectre":  ["Palier 3 : KO -> 10x niv degats colonne adverse", "Palier 6 : 20x niv", "Palier 9 : 30x niv"],
+            "Tenebres": ["Palier 3 : 1/3 chance d'Apeur (si defenseur moins rapide)", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
+            "Vol":      ["Palier 3 : 1/3 chance de cibler support (+10 degats)", "Palier 6 : 2/3 chance (+20)", "Palier 9 : 3/3 chance (+30)"],
+            "Nucleaire":["Palier 3 : effet Nucleaire 1", "Palier 6 : effet 2", "Palier 9 : effet 3"],
+            "Stellaire":["Palier 3 : effet Stellaire 1", "Palier 6 : effet 2", "Palier 9 : effet 3"],
+        };
+        var TYPE_IMG = {
+            "Acier":"Acier","Combat":"Combat","Dragon":"Dragon","Eau":"Eau",
+            "Electrik":"Electrik","Fee":"Fee","Feu":"Feu","Glace":"Glace",
+            "Insecte":"Insect","Normal":"Normal","Nucleaire":"Nucleaire",
+            "Plante":"Plante","Poison":"Poison","Psy":"Psy","Roche":"Roche",
+            "Sol":"Sol","Spectre":"Spectre","Stellaire":"Stellaire",
+            "Tenebres":"Tenebres","Vol":"Vol"
+        };
         synEl.innerHTML = keys.map(function(t) {
-            return '<span class="syn-badge actif">' + t + ' ' + syns[t] + '</span>';
+            var palier = syns[t];
+            // Normaliser la clé pour matcher TYPE_IMG (sans accents)
+            var tNorm = t.replace(/[éèê]/g,'e').replace(/[àâ]/g,'a').replace(/[ù]/g,'u')
+                         .replace(/è/g,'e').replace(/ï/g,'i');
+            var imgFile = TYPE_IMG[t] || TYPE_IMG[tNorm] || t;
+            var imgUrl  = '/static/types/' + imgFile + '.png';
+            var descs   = SYNERGIES_DESC[t] || SYNERGIES_DESC[tNorm] || ["Palier 3", "Palier 6", "Palier 9"];
+            var paliers = [3, 6, 9];
+            var lignes  = paliers.map(function(p, i) {
+                var cls = (palier === p) ? 'actif' : '';
+                return '<div class="synergie-tooltip-ligne ' + cls + '">' + descs[i] + '</div>';
+            }).join('');
+            return '<div class="synergie-item">'
+                + '<img src="' + imgUrl + '" class="synergie-logo" alt="' + t + '">'
+                + '<span class="synergie-palier">' + palier + '</span>'
+                + '<div class="synergie-tooltip">'
+                + '<div class="synergie-tooltip-titre"><img src="' + imgUrl + '" style="width:14px;height:14px"> ' + t + '</div>'
+                + lignes
+                + '</div>'
+                + '</div>';
         }).join('');
     }
 
@@ -877,6 +983,7 @@ function selectionnerCaroussel(pokemon_id) {
 function ouvrirZoomCaroussel(poke, avecChoix) {
     caroussel_poke_zoom      = poke;
     caroussel_zoom_selection = avecChoix ? poke.id : null;
+    if (avecChoix) caroussel_selection = poke.id;
     var id4 = String(poke.id).padStart(4, '0');
     // Réutiliser le modal zoom existant
     document.getElementById('zoom-img').src = IMG + id4 + '.png';

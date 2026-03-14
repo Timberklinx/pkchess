@@ -2,11 +2,13 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
+from fastapi.staticfiles import StaticFiles
 import asyncio
 import time
 import json, random, string, os
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 async def nettoyer_parties_inactives():
     """Supprime les parties sans activité depuis 15 minutes."""
@@ -563,11 +565,16 @@ def points_force_total(poke):
 def appliquer_bonus_pv_synergies(joueur):
     synergies = calculer_synergies(joueur)
     joueur["synergies"] = synergies
+    pal_normal = synergies.get("Normal", 0)
     for poke in joueur.get("pokemon", []):
+        # Bonus PV général : meilleur palier parmi toutes les synergies actives du Pokémon
         meilleur = 0
         for t in poke.get("types", []):
             if t in synergies:
                 meilleur = max(meilleur, BONUS_PV_SYNERGIE.get(synergies[t], 0))
+        # Bonus supplémentaire pour la synergie Normal (cumulatif)
+        if "Normal" in poke.get("types", []) and pal_normal:
+            meilleur += BONUS_PV_SYNERGIE.get(pal_normal, 0)
         ancien = poke.get("bonus_pv_synergie", 0)
         if meilleur != ancien:
             diff = meilleur - ancien
