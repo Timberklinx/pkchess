@@ -938,9 +938,6 @@ function fermerBoutique() {
     document.getElementById('modal-boutique').classList.remove('open');
     boutique_selection = null;
     // Déclencher animations d'évolution en attente
-    console.log('[EVOL] evolutions_en_attente:', JSON.stringify(evolutions_en_attente));
-    console.log('[EVOL] etat_apres_evolution:', etat_apres_evolution ? 'présent' : 'null');
-    console.log('[EVOL] PSEUDO:', PSEUDO);
     if (evolutions_en_attente && evolutions_en_attente.length > 0) {
         var evols = evolutions_en_attente.slice();
         evolutions_en_attente = [];

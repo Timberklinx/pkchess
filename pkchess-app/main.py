@@ -1072,11 +1072,6 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                     poke["position"] = "banc"
                     poke["slot"]     = slot_libre
 
-    # Évolutions post-combat
-    for pseudo_check, joueur_check in [(p1, j1), (p2, j2)]:
-        for msg in verifier_evolutions(partie, joueur_check):
-            logs.append(f"[{pseudo_check}] {msg}")
-
     return {
         "type_duel": "normal",
         "joueurs":   [p1, p2],
@@ -1199,6 +1194,9 @@ def appliquer_fin_tour(partie):
                 poke_centre["slot"] = next((i for i in range(10) if i not in slots_banc), 0)
                 poke_centre.pop("soin_tours_restants", None)
                 messages.append(f"💊 {poke_centre['nom']} de {pj} est soigné !")
+        # Évolutions après le combat
+        for msg_evol in verifier_evolutions(partie, j):
+            messages.append(msg_evol)
         locked = j.get("boutique_locked", False)
         j["boutique_offre"]  = generer_offre_boutique(partie, j["niveau"],
                                                        ancienne_offre=j["boutique_offre"], locked=locked)
