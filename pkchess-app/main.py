@@ -82,26 +82,6 @@ BONUS_SERIE       = [0, 0, 1, 1, 2, 3]
 XP_PAR_NIVEAU     = [0, 1, 1, 2, 4, 8, 16, 24, 32, 40]
 BONUS_PV_SYNERGIE = {3: 10, 6: 20, 9: 40}
 
-SYNERGIES = {
-    "Acier":    {3: "1/3 esquive",          6: "2/3 esquive",   9: "3/3 esquive"},
-    "Combat":   {3: "Soigne 10PV/niv KO",   6: "20PV/niv KO",   9: "30PV/niv KO"},
-    "Dragon":   {3: "+10 dégâts off.",       6: "+20 dégâts",    9: "+40 dégâts"},
-    "Eau":      {3: "+10 Vitesse",           6: "+20 Vitesse",   9: "+40 Vitesse"},
-    "Electrik": {3: "1/3 Paralyse",          6: "2/3 Paralyse",  9: "3/3 Paralyse"},
-    "Fée":      {3: "+1 pièce/combat",       6: "+2 pièces",     9: "+4 pièces"},
-    "Feu":      {3: "1/3 Brûlure",           6: "2/3 Brûlure",   9: "3/3 Brûlure"},
-    "Glace":    {3: "1/3 Gel",               6: "2/3 Gel",       9: "3/3 Gel"},
-    "Insecte":  {3: "+1 pt Force/Insecte",   6: "+2 pts",        9: "+3 pts"},
-    "Normal":   {3: "+10 PV MAX",            6: "+20 PV MAX",    9: "+40 PV MAX"},
-    "Plante":   {3: "+10 PV soignés",        6: "+20 PV",        9: "+40 PV"},
-    "Poison":   {3: "1/3 Empoisonnement",    6: "2/3",           9: "3/3"},
-    "Psy":      {3: "1/3 Confusion",         6: "2/3",           9: "3/3"},
-    "Roche":    {3: "-10 dégâts reçus",      6: "-20 dégâts",    9: "-30 dégâts"},
-    "Sol":      {3: "1/3 Piège",             6: "2/3",           9: "3/3"},
-    "Spectre":  {3: "KO→10 dég×niv adverse", 6: "KO→20 dég",    9: "KO→30 dég"},
-    "Ténèbre":  {3: "1/3 Peur",              6: "2/3",           9: "3/3"},
-    "Vol":      {3: "1/3 cible Support",     6: "2/3+20 dég",    9: "3/3+30 dég"},
-}
 
 # ── Pool ──────────────────────────────────────────────────────────────────────
 def init_pool(partie):
@@ -905,7 +885,9 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         equipe_def = equipe2 if attaquant in equipe1 else equipe1
         cible_reelle = defenseur
         pal_vol = palier_synergie(joueur_att, "vol")
-        if pal_vol and "vol" in [_normaliser_type(t) for t in attaquant.get("types", [])] and jet_synergie(pal_vol):
+        types_norm_att = [_normaliser_type(t) for t in attaquant.get("types", [])]
+        logs.append(f"    [DEBUG VOL] {attaquant['nom']} types={types_norm_att} pal_vol={pal_vol}")
+        if pal_vol and "vol" in types_norm_att and jet_synergie(pal_vol):
             # Chercher le défensif dans la même colonne que le défenseur (offensif adverse)
             col_def = defenseur["slot"]
             equipe_adverse = equipe2 if attaquant in equipe1 else equipe1
@@ -913,6 +895,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                                 if p["slot"] == col_def
                                 and p["position"] == "def"
                                 and not p.get("ko")), None)
+            logs.append(f"    [DEBUG VOL] col_def={col_def} support_adv={support_adv['nom'] if support_adv else None}")
             if support_adv:
                 cible_reelle = support_adv
                 bonus_vol = {3: 10, 6: 20, 9: 30}.get(pal_vol, 0)
