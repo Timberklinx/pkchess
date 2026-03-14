@@ -466,8 +466,15 @@ function connecterWS() {
         var msg = JSON.parse(e.data);
 
         if (msg.etat) {
-            if (msg.type === 'fin_tour' && msg.evolutions && msg.evolutions.length > 0) {
-                // Ne pas majInterface tout de suite — garder l'ancien état pour l'animation
+            if (msg.type === 'resultat_combat') {
+                // Ne pas majInterface ici — l'arène utilise etat_avant
+                // On stocke l'état pour l'appliquer après fermeture du combat
+                etat_apres_evolution = msg.etat;
+            } else if (msg.type === 'fin_tour' && msg.evolutions && msg.evolutions.length > 0) {
+                // Garder l'état post-évolution pour après l'animation
+                etat_apres_evolution = msg.etat;
+            } else if (msg.type === 'fin_tour') {
+                // Même sans évolutions, attendre fermeture combat pour majInterface
                 etat_apres_evolution = msg.etat;
             } else {
                 etat = msg.etat;
@@ -1308,13 +1315,17 @@ function fermerCombat() {
     document.getElementById('combat-bg').classList.remove('open');
     document.getElementById('btn-forcer-fermeture').style.display = 'none';
     arenaEtat = null;
-    // Ouvrir la boutique en attente (déclenche aussi l'animation évolution)
+    // Appliquer l'état post-combat si pas d'animations en attente
+    if (etat_apres_evolution && evolutions_en_attente.length === 0 && !boutique_en_attente) {
+        etat = etat_apres_evolution;
+        etat_apres_evolution = null;
+        majInterface();
+    }
+    // Ouvrir la boutique en attente (l'animation évolution se déclenchera à sa fermeture)
     if (boutique_en_attente) {
-        var msgB = boutique_en_attente;
         boutique_en_attente = null;
         setTimeout(function() {
             document.getElementById('modal-boutique').classList.add('open');
-            // L'animation évolution se déclenchera à la fermeture de la boutique
         }, 300);
     }
     // Déclencher le carrousel en attente si présent
