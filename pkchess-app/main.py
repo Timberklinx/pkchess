@@ -870,6 +870,8 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 if attaquant in equipe1: pts2 += 1
                 else: pts1 += 1
                 for vainqueur in colonne_vainqueur:
+                    if vainqueur.get("ko"):
+                        continue
                     vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
                     xp = vainqueur["xp_combats"]
                     evol_ko = vainqueur.get("evolution_ko")
@@ -939,6 +941,8 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             if cible_reelle in equipe1: pts2 += 1
             else:                       pts1 += 1
             for vainqueur in colonne_vainqueur:
+                if vainqueur.get("ko"):
+                    continue  # Pokémon KO ne gagne pas d'XP
                 vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
                 xp = vainqueur["xp_combats"]
                 evol_ko = vainqueur.get("evolution_ko")

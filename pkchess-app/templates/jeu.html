@@ -212,7 +212,7 @@
             100% { opacity: 1; }
         }
         .evol-anim {
-            animation: evol-aura 1.2s ease-in-out, evol-flash 1.2s ease-in-out;
+            animation: evol-aura 2.5s ease-in-out, evol-flash 2.5s ease-in-out;
             z-index: 10; position: relative;
         }
         /* ── Modal carrousel ── */
@@ -971,7 +971,7 @@ function animerEvolutions(evols, idx) {
         }
         var nomEl = caseEl.querySelector('.poke-nom');
         if (nomEl) nomEl.textContent = ev.nom_apres;
-    }, 600);
+    }, 1250);
 
     // Phase 3 : retirer la classe et passer au suivant
     setTimeout(function() {
@@ -983,7 +983,7 @@ function animerEvolutions(evols, idx) {
             majInterface();
         }
         animerEvolutions(evols, idx + 1);
-    }, 1400);
+    }, 2800);
 }
 
 function afficherBoutique(tour, tour1_gratuit) {
@@ -1293,6 +1293,31 @@ function rejouerLogs(logs, pseudoAdv, onDone) {
                 }, 200, res.card, res.prefix, res.slot);
             }
             delay = 600;
+        }
+
+        // Avancement défensif → offensif
+        var mAvance = log.match(/↑ (.+?) avance en position offensive/);
+        if (mAvance) {
+            var nomAvance = mAvance[1].trim();
+            // Trouver la carte en position défensive et la déplacer en offensive
+            var resAvance = trouverCarte(nomAvance);
+            if (resAvance && resAvance.prefix) {
+                var prefDef = resAvance.prefix.replace('-off', '-def').replace('-def', '-def');
+                // Chercher dans def si elle est en def, sinon elle est déjà en off
+                var cardDef = document.querySelector('#arena-' + (resAvance.prefix.indexOf('moi') >= 0 ? 'moi' : 'adv') + '-def-s' + resAvance.slot);
+                var cardOff = document.querySelector('#arena-' + (resAvance.prefix.indexOf('moi') >= 0 ? 'moi' : 'adv') + '-off-s' + resAvance.slot);
+                if (cardDef && cardOff) {
+                    setTimeout(function(cd, co) {
+                        // Copier le contenu de la carte def dans la case off
+                        co.className = cd.className;
+                        co.innerHTML = cd.innerHTML;
+                        // Vider la case def
+                        cd.className = 'arena-card vide';
+                        cd.innerHTML = '';
+                    }, 200, cardDef, cardOff);
+                }
+            }
+            delay = 400;
         }
 
         // Résultat final
