@@ -353,12 +353,22 @@ def appliquer_xp(joueur, xp_gagnes=1):
     return messages
 
 # ── Synergies ─────────────────────────────────────────────────────────────────
+def _normaliser_type(t):
+    """Normalise un type Pokémon en minuscules sans accents."""
+    return (t.lower()
+             .replace("é", "e").replace("è", "e").replace("ê", "e")
+             .replace("à", "a").replace("â", "a")
+             .replace("ù", "u").replace("û", "u")
+             .replace("î", "i").replace("ï", "i")
+             .replace("ô", "o"))
+
 def calculer_synergies(joueur):
     terrain = [p for p in joueur.get("pokemon", []) if p["position"] in ("off", "def")]
     compteur = {}
     for poke in terrain:
         for t in poke.get("types", []):
-            compteur[t] = compteur.get(t, 0) + 1
+            tn = _normaliser_type(t)
+            compteur[tn] = compteur.get(tn, 0) + 1
     synergies = {}
     for t, count in compteur.items():
         if count >= 9:   synergies[t] = 9
@@ -392,7 +402,7 @@ def appliquer_effets_synergies_debut(j1, j2, equipe1, equipe2, logs):
     """
     for joueur, equipe in [(j1, equipe1), (j2, equipe2)]:
         for poke in equipe:
-            types = poke.get("types", [])
+            types = [_normaliser_type(t) for t in poke.get("types", [])]
             # Eau : +vitesse selon palier
             for t in types:
                 pal = palier_synergie(joueur, "eau")
@@ -436,7 +446,7 @@ def appliquer_effets_post_attaque(attaquant, defenseur, joueur_att, joueur_def, 
     """
     if defenseur.get("ko"):
         return
-    types_att = attaquant.get("types", [])
+    types_att = [_normaliser_type(t) for t in attaquant.get("types", [])]
     for t in types_att:
         # Electrik → PAR
         pal = palier_synergie(joueur_att, "electrik")
@@ -469,7 +479,7 @@ def appliquer_effets_post_attaque(attaquant, defenseur, joueur_att, joueur_def, 
             ok, msg = appliquer_statut(defenseur, "PIE")
             if ok: logs.append(f"    🪤 Synergie Sol : {msg}")
         # Ténèbre → FER (peur — seulement si défenseur moins rapide)
-        pal = palier_synergie(joueur_att, "ténèbre")
+        pal = palier_synergie(joueur_att, "tenebres")
         if pal and t == "ténèbre" and not defenseur.get("peur") and jet_synergie(pal):
             if defenseur.get("vitesse", 50) < attaquant.get("vitesse", 50):
                 defenseur["peur"] = True
@@ -481,7 +491,7 @@ def appliquer_effets_ko_synergie(ko_poke, equipe_ko, equipe_adv, joueur_ko, joue
     - Combat : soigne Pokémon Combat de la colonne vainqueur
     - Spectre : inflige dégâts à la colonne adverse miroir
     """
-    types_ko = ko_poke.get("types", [])
+    types_ko = [_normaliser_type(t) for t in ko_poke.get("types", [])]
     col_ko   = ko_poke["slot"]
     col_miroir = 4 - col_ko
 
@@ -505,7 +515,7 @@ def appliquer_effets_ko_synergie(ko_poke, equipe_ko, equipe_adv, joueur_ko, joue
         soin_total = soin_base * ko_poke.get("niveau", 1)
         colonne_adv = [p for p in equipe_adv if p["slot"] == col_miroir and not p.get("ko")]
         for poke in colonne_adv:
-            if "combat" in poke.get("types", []):
+            if "combat" in [_normaliser_type(t) for t in poke.get("types", [])]:
                 ancien_pv = poke.get("pv", 0)
                 poke["pv"] = min(poke.get("pv", 0) + soin_total, poke.get("pv_max", 100))
                 logs.append(f"    🥊 Synergie Combat : {poke['nom']} soigné de {poke['pv']-ancien_pv} PV → {poke['pv']}PV")
@@ -532,12 +542,12 @@ def appliquer_effets_post_combat(j1, p1, j2, p2, equipe1, equipe2, partie, logs)
         if pal_plante:
             soin = {3: 10, 6: 20, 9: 40}.get(pal_plante, 0)
             for poke in vivants:
-                if "plante" in poke.get("types", []):
+                if "plante" in [_normaliser_type(t) for t in poke.get("types", [])]:
                     poke["pv"] = min(poke.get("pv", 0) + soin, poke.get("pv_max", 100))
                     logs.append(f"    🌿 Synergie Plante : {poke['nom']} +{soin} PV → {poke['pv']}PV")
 
         # Fée : pièces
-        pal_fee = synergies.get("fée", 0)
+        pal_fee = synergies.get("fee", 0)
         if pal_fee:
             pieces = {3: 1, 6: 2, 9: 4}.get(pal_fee, 0)
             joueur["pieces"] = joueur.get("pieces", 0) + pieces
@@ -547,7 +557,7 @@ def appliquer_effets_post_combat(j1, p1, j2, p2, equipe1, equipe2, partie, logs)
         pal_insecte = synergies.get("insecte", 0)
         if pal_insecte:
             bonus_par_insecte = {3: 1, 6: 2, 9: 3}.get(pal_insecte, 0)
-            nb_insectes = sum(1 for p in vivants if "insecte" in p.get("types", []))
+            nb_insectes = sum(1 for p in vivants if "insecte" in [_normaliser_type(t) for t in p.get("types", [])])
             bonus = nb_insectes * bonus_par_insecte
             if joueur is j1: bonus_force_j1 += bonus
             else:            bonus_force_j2 += bonus
@@ -565,7 +575,7 @@ def points_force_total(poke):
 def appliquer_bonus_pv_synergies(joueur):
     synergies = calculer_synergies(joueur)
     joueur["synergies"] = synergies
-    pal_normal = synergies.get("Normal", 0)
+    pal_normal = synergies.get("normal", 0)
     for poke in joueur.get("pokemon", []):
         # Bonus PV général : meilleur palier parmi toutes les synergies actives du Pokémon
         meilleur = 0
@@ -573,7 +583,7 @@ def appliquer_bonus_pv_synergies(joueur):
             if t in synergies:
                 meilleur = max(meilleur, BONUS_PV_SYNERGIE.get(synergies[t], 0))
         # Bonus supplémentaire pour la synergie Normal (cumulatif)
-        if "Normal" in poke.get("types", []) and pal_normal:
+        if "normal" in [_normaliser_type(t) for t in poke.get("types", [])] and pal_normal:
             meilleur += BONUS_PV_SYNERGIE.get(pal_normal, 0)
         ancien = poke.get("bonus_pv_synergie", 0)
         if meilleur != ancien:
@@ -894,7 +904,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         equipe_def = equipe2 if attaquant in equipe1 else equipe1
         cible_reelle = defenseur
         pal_vol = palier_synergie(joueur_att, "vol")
-        if pal_vol and "vol" in attaquant.get("types", []) and jet_synergie(pal_vol):
+        if pal_vol and "vol" in [_normaliser_type(t) for t in attaquant.get("types", [])] and jet_synergie(pal_vol):
             # Chercher le défensif dans la même colonne que le défenseur (offensif adverse)
             col_def = defenseur["slot"]
             equipe_adverse = equipe2 if attaquant in equipe1 else equipe1
@@ -916,14 +926,14 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         type_att = attaquant.get("att_off_type")
         dmg, eff  = calculer_degats(attaquant, cible_reelle, type_attaque=type_att)
         # Bonus Dragon
-        if "dragon" in attaquant.get("types", []):
+        if "dragon" in [_normaliser_type(t) for t in attaquant.get("types", [])]:
             pal_dragon = palier_synergie(joueur_att, "dragon")
             dmg += attaquant.get("_dmg_bonus", 0) if pal_dragon else 0
         # Bonus Vol
         dmg += bonus_vol
         # Réduction Roche côté défenseur
         pal_roche = palier_synergie(joueur_def, "roche")
-        if pal_roche and "roche" in cible_reelle.get("types", []):
+        if pal_roche and "roche" in [_normaliser_type(t) for t in cible_reelle.get("types", [])]:
             reduction = {3: 10, 6: 20, 9: 30}.get(pal_roche, 0)
             dmg = max(0, dmg - reduction)
         cible_reelle["pv"] = max(0, cible_reelle.get("pv", 0) - dmg)
