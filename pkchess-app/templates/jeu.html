@@ -495,9 +495,11 @@ function connecterWS() {
             if (combatOuvert) {
                 // Stocker en attente, sera déclenché à la fermeture du combat
                 caroussel_en_attente = msg;
-                // Afficher le bouton forcer fermeture pour tous les joueurs
-                var btnFF = document.getElementById('btn-forcer-fermeture');
-                if (btnFF) btnFF.style.display = 'inline-block';
+                // Afficher le bouton forcer fermeture uniquement pour l'hôte
+                if (etat && etat.hote === PSEUDO) {
+                    var btnFF = document.getElementById('btn-forcer-fermeture');
+                    if (btnFF) btnFF.style.display = 'inline-block';
+                }
             } else {
                 ouvrirCaroussel(msg);
             }
@@ -523,6 +525,10 @@ function connecterWS() {
         }
         if (msg.type === 'joueur_deconnecte') {
             addLog(msg.pseudo + ' déconnecté', 'red');
+        }
+        if (msg.type === 'forcer_fermeture_combat') {
+            addLog(msg.msg, 'gold');
+            fermerCombat();
         }
         if (msg.type === 'erreur' && msg.pour === PSEUDO) {
             showToast(msg.msg, true);
@@ -1154,7 +1160,9 @@ function ouvrirArene(resultats, tour) {
 
     rejouerLogs(monRes.logs || [], pseudoAdv, function() {
         document.getElementById('btn-fermer-combat').style.display = 'inline-block';
-        document.getElementById('btn-forcer-fermeture').style.display = 'inline-block';
+        if (etat && etat.hote === PSEUDO) {
+            document.getElementById('btn-forcer-fermeture').style.display = 'inline-block';
+        }
         document.getElementById('arena-title').textContent         = '✅ Combat terminé — Tour ' + tour;
     });
 }
@@ -1318,8 +1326,7 @@ function fermerCombat() {
 }
 
 function forcerFermetureCombat() {
-    // Accessible à tous — ferme immédiatement le combat pour voir le carrousel
-    fermerCombat();
+    envoyer({ type: 'forcer_fermeture_combat' });
 }
 
 // ── Log & Toast ───────────────────────────────────────────────────────────────

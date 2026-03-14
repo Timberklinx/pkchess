@@ -1485,6 +1485,16 @@ async def traiter_action(code, pseudo, action):
             "msg": f"⚡ {pseudo} capture {poke_data['nom']} !",
         })
 
+    elif t == "forcer_fermeture_combat":
+        if partie.get("hote") != pseudo:
+            await gestionnaire.envoyer_a(code, pseudo, {
+                "type": "erreur", "msg": "Seul l'hôte peut forcer la fermeture !", "pour": pseudo})
+            return
+        await gestionnaire.diffuser(code, {
+            "type": "forcer_fermeture_combat",
+            "msg": f"⚡ {pseudo} a forcé la fermeture du combat.",
+        })
+
     elif t == "choix_caroussel":
         pokemon_id = action.get("pokemon_id")
         caroussel  = partie.get("caroussel")
