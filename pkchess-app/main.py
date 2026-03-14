@@ -876,6 +876,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             if attaquant.get("pv", 1) <= 0 and not attaquant.get("ko"):
                 attaquant["ko"] = True
                 attaquant["pv"] = 0
+                soigner_statuts(attaquant)  # KO supprime tous les statuts
                 logs.append(f"    💀 {attaquant['nom']} est KO (confusion) !")
                 attaquant["xp_combats"] = max(0, attaquant.get("xp_combats", 0) - 1)
                 equipe_ko_cnf  = equipe1 if attaquant in equipe1 else equipe2
@@ -947,6 +948,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         if cible_reelle["pv"] <= 0 and not cible_reelle.get("ko"):
             cible_reelle["ko"] = True
             cible_reelle["pv"] = 0
+            soigner_statuts(cible_reelle)  # KO supprime tous les statuts
             logs.append(f"    💀 {cible_reelle['nom']} est KO !")
             cible_reelle["xp_combats"] = max(0, cible_reelle.get("xp_combats", 0) - 1)
             equipe_ko      = equipe1 if cible_reelle in equipe1 else equipe2
@@ -1057,18 +1059,21 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 logs.append(f"    ☠️ {poke['nom']} est empoisonné → -20 PV → {poke['pv']}PV")
                 if poke["pv"] <= 0:
                     poke["ko"] = True; poke["pv"] = 0
+                    soigner_statuts(poke)
                     logs.append(f"    💀 {poke['nom']} est KO (poison) !")
             elif statut == "BRN":
                 poke["pv"] = max(0, poke.get("pv", 0) - 10)
                 logs.append(f"    🔥 {poke['nom']} est brûlé → -10 PV → {poke['pv']}PV")
                 if poke["pv"] <= 0:
                     poke["ko"] = True; poke["pv"] = 0
+                    soigner_statuts(poke)
                     logs.append(f"    💀 {poke['nom']} est KO (brûlure) !")
             if poke.get("piege") and not poke.get("ko"):
                 poke["pv"] = max(0, poke.get("pv", 0) - 10)
                 logs.append(f"    🪤 {poke['nom']} est piégé → -10 PV → {poke['pv']}PV")
                 if poke["pv"] <= 0:
                     poke["ko"] = True; poke["pv"] = 0
+                    soigner_statuts(poke)
                     logs.append(f"    💀 {poke['nom']} est KO (piège) !")
 
     # Éliminations
