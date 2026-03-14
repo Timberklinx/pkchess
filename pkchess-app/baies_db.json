@@ -1,0 +1,404 @@
+[
+  {
+    "id": "01",
+    "nom": "Baie Ceriz",
+    "effet_combat": "- Soigne la Paralysie du Pokemon immédiatement.",
+    "effet_hors": "- Soigne la Paralysie du Pokemon."
+  },
+  {
+    "id": "02",
+    "nom": "Baie Maron",
+    "effet_combat": "- Soigne le Sommeil du Pokemon immédiatement.",
+    "effet_hors": "- Soigne le Sommeil du Pokemon."
+  },
+  {
+    "id": "03",
+    "nom": "Baie Pêcha",
+    "effet_combat": "- Soigne l'Empoisonnement du Pokemon immédiatement.",
+    "effet_hors": "- Soigne l'Empoisonnement du Pokemon."
+  },
+  {
+    "id": "04",
+    "nom": "Baie Fraive",
+    "effet_combat": "- Soigne la Brûlure du Pokemon immédiatement.",
+    "effet_hors": "- Soigne la Brûlure du Pokemon."
+  },
+  {
+    "id": "05",
+    "nom": "Baie Willia",
+    "effet_combat": "- Soigne le Gel du Pokemon immédiatement.",
+    "effet_hors": "- Soigne le Gel du Pokemon."
+  },
+  {
+    "id": "06",
+    "nom": "Baie Mepo",
+    "effet_combat": "- Soigne la Peur du Pokemon immédiatement.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "07",
+    "nom": "Baie Oran",
+    "effet_combat": "- Soigne immédiatement 20 PV à votre Pokemon si il tombe en dessous de 50% de ses PV Max.",
+    "effet_hors": "- Soigne le Pokemon de 20 PV."
+  },
+  {
+    "id": "08",
+    "nom": "Baie Kika",
+    "effet_combat": "- Soigne la Confusion du Pokemon immédiatement.",
+    "effet_hors": "- Soigne la Confusion du Pokemon."
+  },
+  {
+    "id": "09",
+    "nom": "Baie Prine",
+    "effet_combat": "- Soigne le statut du Pokemon immédiatement.",
+    "effet_hors": "- Soigne le statut du Pokemon."
+  },
+  {
+    "id": "10",
+    "nom": "Baie Sitrus",
+    "effet_combat": "- Soigne immédiatement 40 PV à votre Pokemon si il tombe en dessous de 50% de ses PV Max.",
+    "effet_hors": "- Soigne le Pokemon de 40 PV."
+  },
+  {
+    "id": "11",
+    "nom": "Baie Figuy",
+    "effet_combat": "- Empêche le Pokemon de se faire déplacer dans une autre case ou d'être retiré.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "12",
+    "nom": "Baie Wiki",
+    "effet_combat": "- Empêche le Pokemon de se faire piéger.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "13",
+    "nom": "Baie Mago",
+    "effet_combat": "- Annule immédiatement le Malus en précision reçu par le Pokemon.",
+    "effet_hors": "- Annule le Malus en précision du Pokemon."
+  },
+  {
+    "id": "14",
+    "nom": "Baie Gowav",
+    "effet_combat": "- Réduit de 50% les dégâts d'attaque du Pokemon adverse ce tour si ce Pokemon attaque avant votre Pokemon, si votre Pokemon attaque avant, cette Baie est utilisée et n'a aucun effet.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "15",
+    "nom": "Baie Papaya",
+    "effet_combat": "- Augmente de 50% les dégâts d'attaque ce tour si votre Pokemon attaque après le Pokemon adverse, si votre Pokemon attaque avant, cette Baie est utilisée et n'a aucun effet.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "16",
+    "nom": "Baie Framby",
+    "effet_combat": "- Double le prochain effet de soin reçu en combat.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "17",
+    "nom": "Baie Remu",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Feu ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "18",
+    "nom": "Baie Nanab",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Eau ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "19",
+    "nom": "Baie Repoi",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Electrik ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "20",
+    "nom": "Baie Nanana",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Plante ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "21",
+    "nom": "Baie Grena",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Glace ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "22",
+    "nom": "Baie Alga",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Combat ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "23",
+    "nom": "Baie Qualot",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Poison ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "24",
+    "nom": "Baie Lonme",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Sol ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "25",
+    "nom": "Baie Résin",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Vol ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "26",
+    "nom": "Baie Tamato",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Psy ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "27",
+    "nom": "Baie Siam",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Insecte ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "28",
+    "nom": "Baie Mangou",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Roche ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "29",
+    "nom": "Baie Rabuta",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Spectre ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "30",
+    "nom": "Baie Tronci",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Dragon ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "31",
+    "nom": "Baie Kiwan",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Ténèbre ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "32",
+    "nom": "Baie Palma",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Acier ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "33",
+    "nom": "Baie Stekpa",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Fée ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "34",
+    "nom": "Baie Durin",
+    "effet_combat": "- Augmente de 50% les dégâts de base d'une attaque offensive de type Normal ce tour.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "35",
+    "nom": "Baie Myrte",
+    "effet_combat": "- Annule tout effet d'attaque infligeant des dégâts supplémentaires au Pokemon.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "36",
+    "nom": "Baie Chocco",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Feu.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "37",
+    "nom": "Baie Pocpoc",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Eau.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "38",
+    "nom": "Baie Parma",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Electrik.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "39",
+    "nom": "Baie Ratam",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Plante.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "40",
+    "nom": "Baie Nanone",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Glace.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "41",
+    "nom": "Baie Pomroz",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Combat.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "42",
+    "nom": "Baie Kébia",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Poison.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "43",
+    "nom": "Baie Jouca",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Sol.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "44",
+    "nom": "Baie Cobaba",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Vol.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "45",
+    "nom": "Baie Yapap",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Psy.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "46",
+    "nom": "Baie Panga",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Insecte.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "47",
+    "nom": "Baie Charti",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Roche.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "48",
+    "nom": "Baie Sédra",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Spectre.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "49",
+    "nom": "Baie Fraigo",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Dragon.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "50",
+    "nom": "Baie Lampou",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Ténèbre.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "51",
+    "nom": "Baie Babiri",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Acier.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "52",
+    "nom": "Baie Zalis",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Normal.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "53",
+    "nom": "Baie Lichii",
+    "effet_combat": "- Augmente de 50% les dégâts d'attaque du Pokemon si ses PV tombent en dessous de 50%.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "54",
+    "nom": "Baie Lingan",
+    "effet_combat": "- Si votre Pokemon offensif tombe en dessous de 50% de ses PV Max, il reçoit un bonus en défense: 10 (Niveau 1-3), 20 (Niveau 4-6), 30 (Niveau 7-9), 40 (Niveau 10+).",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "55",
+    "nom": "Baie Sailak",
+    "effet_combat": "- Augmente de 50% la Vitesse du Pokemon si ses PV tombent en dessous de 50%.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "56",
+    "nom": "Baie Pitaye",
+    "effet_combat": "- Si un Pokemon adverse utilise une attaque de Vol de Vie contre le Pokemon alors la Baie est consommée et le Pokemon adverse subit des dégâts équivalent à la valeur dont il aurait dû se soigner.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "57",
+    "nom": "Baie Abriko",
+    "effet_combat": "- Transforme le Malus reçu en Bonus.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "58",
+    "nom": "Baie Lansat",
+    "effet_combat": "- Si le Pokemon tombe en dessous de 50% de ses PV Max, alors lorsqu'il attaquera lancer un dé, sur un 5-6 son attaque infligera 20 dégâts supplémentaires (10 dégâts supplémentaires pour les attaques multi cibles).",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "59",
+    "nom": "Baie Frista",
+    "effet_combat": "- Change le type du Pokemon en celui de l'attaque subie.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "60",
+    "nom": "Baie Enigma",
+    "effet_combat": "- Si votre Pokemon tombe en dessous de 50% de ses PV Max, échanger le avec le premier Pokemon de la pioche.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "61",
+    "nom": "Baie Micle",
+    "effet_combat": "- Si votre Pokemon est sensé tombé K.O. par une attaque, il restera en jeu avec 5 PV.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "62",
+    "nom": "Baie Chérim",
+    "effet_combat": "- Si votre Pokemon tombe en dessous de 50% de ses PV Max, au prochain tour il attaquera en premier.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "63",
+    "nom": "Baie Jaboca",
+    "effet_combat": "- Renvoie 50% des dégâts subis vers le Pokemon offensif adverse.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "64",
+    "nom": "Baie Pommo",
+    "effet_combat": "- Renvoie 50% des dégâts subis vers le Pokemon support adverse.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "65",
+    "nom": "Baie Selro",
+    "effet_combat": "- Divise par 2 les dégâts subis d'une attaque de type Fée.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "66",
+    "nom": "Baie Éka",
+    "effet_combat": "- Le Pokemon obtient un Bonus en Défense équivalent aux dégâts de base de l'attaque subie si celle-ci est de type: Acier, Combat, Insecte, Normal, Poison, Roche, Sol, Spectre, Vol. Sinon la Baie est consommée et n'a aucun effet.",
+    "effet_hors": "- Aucun effet."
+  },
+  {
+    "id": "67",
+    "nom": "Baie Rangma",
+    "effet_combat": "- Le Pokemon obtient un Bonus en Défense équivalent aux dégâts de base de l'attaque subie si celle-ci est de type: Dragon, Eau, Electrik, Feu, Glace, Plante, Psy, Ténèbre. Sinon la Baie est consommée et n'a aucun effet.",
+    "effet_hors": "- Aucun effet."
+  }
+]

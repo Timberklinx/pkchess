@@ -94,51 +94,24 @@
             margin-bottom: 36px;
         }
 
-        .logo-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 2.6em;
-            color: var(--gold);
-            text-shadow:
-                0 0 20px rgba(255,215,0,0.6),
-                0 0 40px rgba(255,215,0,0.3),
-                4px 4px 0 rgba(0,0,0,0.5);
-            letter-spacing: 2px;
-            line-height: 1.2;
-            animation: glow-pulse 3s ease-in-out infinite;
-        }
-        @keyframes glow-pulse {
-            0%, 100% { text-shadow: 0 0 20px rgba(255,215,0,0.6), 0 0 40px rgba(255,215,0,0.3), 4px 4px 0 rgba(0,0,0,0.5); }
-            50% { text-shadow: 0 0 30px rgba(255,215,0,0.9), 0 0 60px rgba(255,215,0,0.5), 4px 4px 0 rgba(0,0,0,0.5); }
+        .logo-img-texte {
+            height: 60px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 12px;
+            filter: drop-shadow(0 0 16px rgba(255,215,0,0.5));
         }
 
-        .logo-pokeball {
-            display: inline-block;
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            border: 4px solid var(--gold);
-            position: relative;
-            margin: 14px auto 10px;
-            box-shadow: 0 0 20px rgba(255,215,0,0.4);
-            animation: spin-pokeball 8s linear infinite;
+        .logo-img-pokeball {
+            height: 80px;
+            width: 80px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto 12px;
+            animation: spin-pokeball 6s linear infinite;
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.4));
         }
-        .logo-pokeball::before {
-            content: '';
-            position: absolute;
-            top: 50%; left: -4px; right: -4px;
-            height: 3px;
-            background: var(--gold);
-            transform: translateY(-50%);
-        }
-        .logo-pokeball::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 14px; height: 14px;
-            border-radius: 50%;
-            background: var(--blue-deep);
-            border: 3px solid var(--gold);
-        }
+
         @keyframes spin-pokeball { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .logo-sub {
@@ -305,8 +278,8 @@
 
 <div class="main">
     <div class="logo-wrap">
-        <div class="logo-title">PKChess</div>
-        <div class="logo-pokeball"></div>
+        <img src="/static/PKChess.png" alt="PKChess" class="logo-img-texte">
+        <img src="/static/pokeball.png" alt="Pokeball" class="logo-img-pokeball">
         <div class="logo-sub">The Pokémon Auto Battler</div>
     </div>
 

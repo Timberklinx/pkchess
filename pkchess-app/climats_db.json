@@ -1,0 +1,154 @@
+[
+  {
+    "id": "01",
+    "nom": "Brouillard",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Fée et Psy.",
+      "- Empêche d'appliquer les statuts pendant le tour."
+    ],
+    "malus": [
+      "- -50% de dégâts pour les attaques de type Ténèbre et Spectre.",
+      "- -50% de soin pour Aurore et Synthèse.",
+      "- Les attaques de type autre que Fée et Psy ont un Malus de 1 en précision.",
+      "- Les attaques de priorité ne fonctionnent pas."
+    ]
+  },
+  {
+    "id": "02",
+    "nom": "Canicule",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Feu.",
+      "- Double la Vitesse des Pokemon de type Plante.",
+      "- +50% de dégâts pour les attaques Lance-Soleil et Lame Solaire.",
+      "- Double le soin de Synthèse et Aurore.",
+      "- A la fin du tour les Pokemon de type Sol regagnent 20 PV."
+    ],
+    "malus": [
+      "- -50% de dégâts pour les attaques de type Eau et Glace.",
+      "- -50% de précision pour les attaques de type Electrik et Vol.",
+      "- Les Baies en jeu non utilisées seront détruites à la fin du tour.",
+      "- Supprime les Bonus en Défense des Pokemon de type Glace.",
+      "- -50% de soin pour Rayon Lune.",
+      "- -50% de dégâts pour l'attaque Pouvoir Lunaire."
+    ]
+  },
+  {
+    "id": "03",
+    "nom": "Distorsion",
+    "bonus": [
+      "- Aucun effet."
+    ],
+    "malus": [
+      "- Pendant 3 tours, l'ordre des Vitesses sera inversé. (Le Pokemon avec la vitesse la plus faible jouera en premier)."
+    ]
+  },
+  {
+    "id": "04",
+    "nom": "Ensoleillé",
+    "bonus": [
+      "- Aucun effet."
+    ],
+    "malus": [
+      "- Aucun effet."
+    ]
+  },
+  {
+    "id": "05",
+    "nom": "Grêle",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Glace.",
+      "- Double la Vitesse des Pokemon de type Glace.",
+      "- Les attaques de type Glace ont 100% de précision.",
+      "- A la fin du tour les Pokemon de type Glace regagnent 20 PV.",
+      "- Les attaques de type Eau deviennent de type Glace."
+    ],
+    "malus": [
+      "- -50% de dégâts pour les attaques de type Feu et Plante.",
+      "- -50% de soin pour Aurore, Synthèse et Rayon Lune.",
+      "- A la fin du tour les Pokemon de type autre que Glace perdent 10 PV.",
+      "- Les Baies en jeu non utilisées seront détruites à la fin du tour."
+    ]
+  },
+  {
+    "id": "06",
+    "nom": "Nuageux",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Normal."
+    ],
+    "malus": [
+      "- -50% de soin pour Aurore et Synthèse."
+    ]
+  },
+  {
+    "id": "07",
+    "nom": "Nuit",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Ténèbre et Spectre.",
+      "- Double le soin de Rayon Lune.",
+      "- Double les dégâts de Pouvoir Lunaire.",
+      "- Toutes les attaques offensives de ce tour ont une chance supplémentaire d'apeurer le Pokemon adverse."
+    ],
+    "malus": [
+      "- -50% de dégâts pour les attaques de type Fée.",
+      "- Les attaques de type autre que Ténèbre et Spectre ont un Malus de 1 en précision.",
+      "- Les attaques Aurore, Synthèse, Lance-Soleil, Lame Solaire ne fonctionnent pas.",
+      "- Les joueurs ne piocheront pas de Baie au début du prochain tour."
+    ]
+  },
+  {
+    "id": "08",
+    "nom": "Nuée",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Insecte.",
+      "- Les Pokemon Insecte ont un bonus en Défense de 10 supplémentaire ce tour.",
+      "- A la fin du tour si un Pokemon Insecte a été mis K.O. il est immédiatement soigné."
+    ],
+    "malus": [
+      "- Réduit de 50% les dégâts des attaques de type Plante.",
+      "- A la fin du tour les baies non utilisées sont détruites."
+    ]
+  },
+  {
+    "id": "09",
+    "nom": "Orage",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Electrik.",
+      "- Double la Vitesse des Pokemon de type Electrik et Acier.",
+      "- Les attaques de type Electrik ont une chance supplémentaire de brûler.",
+      "- Les Pokemon en jeu endormis son réveillés et aucun Pokemon ne peut être endormis ce tour."
+    ],
+    "malus": [
+      "- -50% de dégâts pour les attaques de type Vol.",
+      "- Le Pokemon en jeu le plus grand sera mis K.O. à la fin du tour.",
+      "- A la fin du tour les Pokemon de type Vol perdent 10 PV."
+    ]
+  },
+  {
+    "id": "10",
+    "nom": "Pluie",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Eau.",
+      "- Double la Vitesse des Pokemon de type Eau.",
+      "- Les attaques de type Electrik et Vol ont 100% de précision.",
+      "- Les Baies utilisées ce tour sont récupérées par leur dresseur.",
+      "- A la fin du tour les Pokemon de type Eau regagnent 20 PV."
+    ],
+    "malus": [
+      "- -50% de dégâts pour les attaques de type Feu et Plante.",
+      "- -50% de dégâts pour les attaques Lance-Soleil et Lame Solaire.",
+      "- -50% de soin pour Aurore, Synthèse et Rayon Lune."
+    ]
+  },
+  {
+    "id": "11",
+    "nom": "Smog",
+    "bonus": [
+      "- +50% de dégâts pour les attaques de type Poison.",
+      "- Les attaques de type Eau deviennent de type Poison."
+    ],
+    "malus": [
+      "- -50% de dégâts pour les attaques de type Fée.",
+      "- Les Baies utilisées ce tour empoisonnent les Pokemon qui les utilisent."
+    ]
+  }
+]

@@ -1,0 +1,482 @@
+[
+  {
+    "id": "001",
+    "nom": "Pokéball",
+    "categorie": "ball",
+    "effet": "Ajouter à votre banc le prochain Pokemon de Niveau 1, 2, ou 3 de la pioche."
+  },
+  {
+    "id": "002",
+    "nom": "Superball",
+    "categorie": "ball",
+    "effet": "Ajouter à votre banc le prochain Pokemon de Niveau 4, 5, ou 6 de la pioche."
+  },
+  {
+    "id": "003",
+    "nom": "Hyperball",
+    "categorie": "ball",
+    "effet": "Ajouter à votre banc le prochain Pokemon de Niveau 7, 8, ou 9 de la pioche."
+  },
+  {
+    "id": "004",
+    "nom": "Masterball",
+    "categorie": "ball",
+    "effet": "Ajouter à votre banc le prochain Pokemon de Niveau 10 ou plus de la pioche."
+  },
+  {
+    "id": "005",
+    "nom": "Potion",
+    "categorie": "potion",
+    "effet": "Restaure 20 PV d'un Pokemon."
+  },
+  {
+    "id": "006",
+    "nom": "Super Potion",
+    "categorie": "potion",
+    "effet": "Restaure 50 PV d'un Pokemon."
+  },
+  {
+    "id": "007",
+    "nom": "Hyper Potion",
+    "categorie": "potion",
+    "effet": "Restaure 80 PV d'un Pokemon."
+  },
+  {
+    "id": "008",
+    "nom": "Potion Max",
+    "categorie": "potion",
+    "effet": "Restaure tous les PV d'un Pokemon."
+  },
+  {
+    "id": "009",
+    "nom": "Anti-Para",
+    "categorie": "potion",
+    "effet": "Soigne le statut de la Paralysie du Pokémon."
+  },
+  {
+    "id": "010",
+    "nom": "Antidote",
+    "categorie": "potion",
+    "effet": "Soigne le statut de l'Empoisonnement du Pokémon."
+  },
+  {
+    "id": "011",
+    "nom": "Anti-Brûle",
+    "categorie": "potion",
+    "effet": "Soigne le statut de la Brûlure du Pokémon."
+  },
+  {
+    "id": "012",
+    "nom": "Antigel",
+    "categorie": "potion",
+    "effet": "Soigne le statut du Gel du Pokémon."
+  },
+  {
+    "id": "013",
+    "nom": "Réveil",
+    "categorie": "potion",
+    "effet": "Soigne le statut du Sommeil du Pokémon."
+  },
+  {
+    "id": "014",
+    "nom": "Anti-Confusion",
+    "categorie": "potion",
+    "effet": "Soigne le statut de la Confusion du Pokémon."
+  },
+  {
+    "id": "015",
+    "nom": "Total Soin",
+    "categorie": "potion",
+    "effet": "Soigne n'importe quel statut du Pokémon."
+  },
+  {
+    "id": "016",
+    "nom": "Guérison",
+    "categorie": "potion",
+    "effet": "Restaure tous les PV d'un Pokemon et soigne n'importe quel statut."
+  },
+  {
+    "id": "017",
+    "nom": "Rappel",
+    "categorie": "potion",
+    "effet": "Soigne un Pokemon K.O. de la moitié de ses PV Max."
+  },
+  {
+    "id": "018",
+    "nom": "Rappel Max",
+    "categorie": "potion",
+    "effet": "Soigne un Pokemon K.O. de la totalité de ses PV Max."
+  },
+  {
+    "id": "019",
+    "nom": "Super Bonbon",
+    "categorie": "potion",
+    "effet": "Donne un point d'expérience à un Pokemon."
+  },
+  {
+    "id": "020",
+    "nom": "Repousse",
+    "categorie": "potion",
+    "effet": "Empêche d'avoir des Pokemon de niveau 2 ou moins dans votre prochaine pioche."
+  },
+  {
+    "id": "021",
+    "nom": "Superepousse",
+    "categorie": "potion",
+    "effet": "Empêche d'avoir des Pokemon de niveau 4 ou moins dans votre prochaine pioche."
+  },
+  {
+    "id": "022",
+    "nom": "Max Repousse",
+    "categorie": "potion",
+    "effet": "Empêche d'avoir des Pokemon de niveau 6 ou moins dans votre prochaine pioche."
+  },
+  {
+    "id": "023",
+    "nom": "Méga Gemme",
+    "categorie": "potion",
+    "effet": "Permet de faire Méga-Evoluer un Pokemon. ( Le Pokemon reste Méga-Evolué jusqu'à ce qu'il soit mis K.O. ou vendu)."
+  },
+  {
+    "id": "024",
+    "nom": "Étoile Vœu",
+    "categorie": "potion",
+    "effet": "Permet de faire Gigamaxer un Pokemon. ( Le Pokemon reste en forme Gigamax jusqu'à ce qu'il soit mis K.O., retiré, ou vendu)."
+  },
+  {
+    "id": "025",
+    "nom": "Clonage",
+    "categorie": "potion",
+    "effet": "Met en jeu un Clone du Pokemon allié dans la même colonne. Le clone a les mêmes PV Max que le Pokemon et n'a aucune attaque."
+  },
+  {
+    "id": "026",
+    "nom": "Pièce Rune",
+    "categorie": "combat",
+    "effet": "Vous obtenez une pièce supplémentaire à la fin du combat si le Pokemon n'est pas K.O."
+  },
+  {
+    "id": "027",
+    "nom": "Vive Griffe",
+    "categorie": "combat",
+    "effet": "Au début du combat, lancer un dé: sur un 6 le Pokemon attaquera en premier."
+  },
+  {
+    "id": "028",
+    "nom": "Restes",
+    "categorie": "combat",
+    "effet": "A la fin du combat, si le Pokemon n'est pas mis K.O. il regagne 20 PV."
+  },
+  {
+    "id": "029",
+    "nom": "Roche Royale",
+    "categorie": "combat",
+    "effet": "Lors d'une attaque offensive: Lancer un dé, sur un 6 le(s) Pokemon adverse(s) ciblé(s) est/sont apeuré(s)."
+  },
+  {
+    "id": "030",
+    "nom": "Ceinture Force",
+    "categorie": "combat",
+    "effet": "Si une attaque est sensée mettre K.O. votre Pokemon, il resta sur le terrain avec 5 PV. (Cela consomme l'objet)."
+  },
+  {
+    "id": "031",
+    "nom": "Casque Brut",
+    "categorie": "combat",
+    "effet": "Lorsque le Pokemon subit une attaque offensive, le Pokemon à l'origine de l'attaque perd 10 PV."
+  },
+  {
+    "id": "032",
+    "nom": "Orbe Vie",
+    "categorie": "combat",
+    "effet": "Augmente les dégâts de base de l'attaque offensive du Pokemon de 20. En contrepartie le Pokemon perd 10 PV après avoir attaqué."
+  },
+  {
+    "id": "033",
+    "nom": "Herbe Blanche",
+    "categorie": "combat",
+    "effet": "Annule la prochaine baisse de statistique subie par le Pokemon. (Cela consomme l'objet)."
+  },
+  {
+    "id": "034",
+    "nom": "Lentilscope",
+    "categorie": "combat",
+    "effet": "Lors d'une attaque offensive, lancer un dé, sur un 6 cette attaque inflige 20 dégâts supplémentaires."
+  },
+  {
+    "id": "035",
+    "nom": "Carton Rouge",
+    "categorie": "combat",
+    "effet": "Le Pokemon adverse prenant pour cible le Pokemon est renvoyé sur le banc après son attaque. (Cela consomme l'objet)."
+  },
+  {
+    "id": "036",
+    "nom": "Évoluroc",
+    "categorie": "combat",
+    "effet": "Donne un Bonus en Défense supplémentaire de 10 à un Pokemon qui peut encore évoluer (Hors Méga-Evolution, Gigamax et Forme Alternative)."
+  },
+  {
+    "id": "037",
+    "nom": "Vulné-Assurance",
+    "categorie": "combat",
+    "effet": "Augmente de 20 les dégâts de base de l'attaque offensive du Pokemon après avoir subi une attaque super efficace. (Cela consomme l'objet)."
+  },
+  {
+    "id": "038",
+    "nom": "Veste de Combat",
+    "categorie": "combat",
+    "effet": "Réduit de 20 les dégâts subis par le Pokemon, mais celui ne peut être placé uniquement en Pokemon offensif."
+  },
+  {
+    "id": "039",
+    "nom": "Bandeau Choix",
+    "categorie": "combat",
+    "effet": "Augmente de 50% les dégâts d'attaque du Pokemon mais celui-ci ne peut plus être retiré ni changé de case."
+  },
+  {
+    "id": "040",
+    "nom": "Mouchoir Choix",
+    "categorie": "combat",
+    "effet": "Augmente de 50% la Vitesse du Pokemon mais celui-ci ne peut plus être retiré ni changé de case."
+  },
+  {
+    "id": "041",
+    "nom": "Plaque Ciel",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Vol en type secondaire."
+  },
+  {
+    "id": "042",
+    "nom": "Plaque Draco",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Dragon en type secondaire."
+  },
+  {
+    "id": "043",
+    "nom": "Plaque Esprit",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Psy en type secondaire."
+  },
+  {
+    "id": "044",
+    "nom": "Plaque Fantôme",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Spectre en type secondaire."
+  },
+  {
+    "id": "045",
+    "nom": "Plaque Fer",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Acier en type secondaire."
+  },
+  {
+    "id": "046",
+    "nom": "Plaque Flamme",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Feu en type secondaire."
+  },
+  {
+    "id": "047",
+    "nom": "Plaque Glace",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Glace en type secondaire."
+  },
+  {
+    "id": "048",
+    "nom": "Plaque Herbe",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Plante en type secondaire."
+  },
+  {
+    "id": "049",
+    "nom": "Plaque Hydro",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Eau en type secondaire."
+  },
+  {
+    "id": "050",
+    "nom": "Plaque Insecte",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Insecte en type secondaire."
+  },
+  {
+    "id": "051",
+    "nom": "Plaque Ombre",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Ténèbre en type secondaire."
+  },
+  {
+    "id": "052",
+    "nom": "Plaque Pixie",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Fée en type secondaire."
+  },
+  {
+    "id": "053",
+    "nom": "Plaque Poing",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Combat en type secondaire."
+  },
+  {
+    "id": "054",
+    "nom": "Plaque Roc",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Roche en type secondaire."
+  },
+  {
+    "id": "055",
+    "nom": "Plaque Terre",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Sol en type secondaire."
+  },
+  {
+    "id": "056",
+    "nom": "Plaque Toxik",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Poison en type secondaire."
+  },
+  {
+    "id": "057",
+    "nom": "Plaque Volt",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Electrik en type secondaire."
+  },
+  {
+    "id": "058",
+    "nom": "Plaque Neutre",
+    "categorie": "combat",
+    "effet": "Le Pokemon porteur s'il n'a qu'un seul type obtient le type Normal en type secondaire."
+  },
+  {
+    "id": "059",
+    "nom": "Point de Mire",
+    "categorie": "combat",
+    "effet": "Inverse les faiblesses et résistances du Pokemon."
+  },
+  {
+    "id": "060",
+    "nom": "Switch",
+    "categorie": "potion",
+    "effet": "Vous pouvez échanger un de vos Pokemon avec celui d'un autre dresseur de même niveau. (Retirer les objets, les blessures et les points d'expérience respectifs des 2 Pokemon)."
+  },
+  {
+    "id": "076",
+    "nom": "Mouchoir Soie",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Normal."
+  },
+  {
+    "id": "061",
+    "nom": "Multi Exp",
+    "categorie": "combat",
+    "effet": "A la fin du combat, si votre Pokemon n'est pas K.O. Transférer les Points d'Expérience acquis ce tour vers le Pokemon en combat de votre choix."
+  },
+  {
+    "id": "062",
+    "nom": "Charbon",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Feu."
+  },
+  {
+    "id": "063",
+    "nom": "Eau Mystique",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Eau."
+  },
+  {
+    "id": "064",
+    "nom": "Graine Miracle",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Plante."
+  },
+  {
+    "id": "065",
+    "nom": "Aimant",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Electrik."
+  },
+  {
+    "id": "066",
+    "nom": "Glacéternel",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Glace."
+  },
+  {
+    "id": "067",
+    "nom": "Ceinture Noire",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Combat."
+  },
+  {
+    "id": "068",
+    "nom": "Poudre Argentée",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Insecte."
+  },
+  {
+    "id": "069",
+    "nom": "Pic Venin",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Poison."
+  },
+  {
+    "id": "070",
+    "nom": "Sable Doux",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Sol."
+  },
+  {
+    "id": "071",
+    "nom": "Pierre Dure",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Roche."
+  },
+  {
+    "id": "072",
+    "nom": "Bec Pointu",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Vol."
+  },
+  {
+    "id": "073",
+    "nom": "Cuillère Tordue",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Psy."
+  },
+  {
+    "id": "074",
+    "nom": "Rune Sort",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Spectre."
+  },
+  {
+    "id": "075",
+    "nom": "Croc Dragon",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Dragon."
+  },
+  {
+    "id": "077",
+    "nom": "Lunettes Noires",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Ténèbre."
+  },
+  {
+    "id": "078",
+    "nom": "Peau Métal",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Acier."
+  },
+  {
+    "id": "079",
+    "nom": "Ruban Rose",
+    "categorie": "combat",
+    "effet": "L'attaque offensive du Pokemon devient de type Fée."
+  },
+  {
+    "id": "080",
+    "nom": "Chaîne Rouge",
+    "categorie": "combat",
+    "effet": "Le Pokemon devient un \"Baron\": sa taille et son poids son doublé et il gagne un bonus de 10 en dégât d'attaque et en Défense. Ses types comptent double dans le total des synergies. Chaque joueur ne peut avoir qu'un Pokemon \"Baron\". De plus un Pokemon de Base de Niveau 10 ou plus ne peut pas être équipé d'une Chaîne Rouge."
+  }
+]
