@@ -198,9 +198,9 @@
         .statut-piege { position: absolute; top: 4px; right: 4px; font-size: 0.9em; z-index: 4; filter: drop-shadow(0 0 2px #4a2800); }
         .statut-peur  { position: absolute; top: 4px; left: 4px; font-size: 0.9em; z-index: 4; }
         /* ── Logo PKChess ── */
-        .logo-container { display:flex; flex-direction:column; align-items:center; gap:4px; }
-        .logo-texte { height:36px; object-fit:contain; }
-        .logo-pokeball { height:32px; object-fit:contain;
+        .logo-container { display:flex; flex-direction:row; align-items:center; gap:8px; }
+        .logo-texte { height:40px; object-fit:contain; }
+        .logo-pokeball { height:36px; width:36px; object-fit:contain;
             animation: pokeball-spin 4s linear infinite; }
         @keyframes pokeball-spin {
             from { transform: rotate(0deg); }
@@ -688,13 +688,13 @@ function majInterface() {
             var paliers = [3, 6, 9];
             var lignes  = paliers.map(function(p, i) {
                 var cls = (palier === p) ? 'actif' : '';
-                return '<div class="synergie-tooltip-ligne ' + cls + '">' + descs[i] + '</div>';
+                return '<div class="synergie-tooltip-ligne ' + cls + '"><b>Palier ' + p + '/9 :</b> ' + descs[i].replace(/^Palier [369] : /, '') + '</div>';
             }).join('');
             return '<div class="synergie-item">'
                 + '<img src="' + imgUrl + '" class="synergie-logo" alt="' + t + '">'
                 + '<span class="synergie-palier">' + palier + '</span>'
                 + '<div class="synergie-tooltip">'
-                + '<div class="synergie-tooltip-titre"><img src="' + imgUrl + '" style="width:14px;height:14px"> ' + t + '</div>'
+                + '<div class="synergie-tooltip-titre"><img src="' + imgUrl + '" style="width:14px;height:14px"> Synergie ' + t + '</div>'
                 + lignes
                 + '</div>'
                 + '</div>';
