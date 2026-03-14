@@ -473,9 +473,6 @@ function connecterWS() {
             } else if (msg.type === 'fin_tour' && msg.evolutions && msg.evolutions.length > 0) {
                 // Garder l'état post-évolution pour après l'animation
                 etat_apres_evolution = msg.etat;
-            } else if (msg.type === 'fin_tour') {
-                // Même sans évolutions, attendre fermeture combat pour majInterface
-                etat_apres_evolution = msg.etat;
             } else {
                 etat = msg.etat;
                 majInterface();
