@@ -96,7 +96,6 @@ def piocher_depuis_pool(partie, niveau_joueur, n=5, niveau_max_pool=10):
     eligibles = [pid for pid in pool
                  if (lambda p: p
                      and p.get("stade", 0) == 0
-                     and p["id"] not in _IDS_INTERMEDIAIRES
                      and p["niveau"] <= max_niv)(_get_poke(pid))]
     random.shuffle(eligibles)
     choix = eligibles[:n]
