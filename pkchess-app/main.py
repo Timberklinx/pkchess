@@ -43,6 +43,20 @@ _IDS_INTERMEDIAIRES = {p["evolution_id"] for p in POKEMONS_DB if p.get("evolutio
 _IDS_INTERMEDIAIRES |= {"0266"}  # Armulys
 _IDS_INTERMEDIAIRES |= {"0292"}  # Munja (obtenu avec Ninjask, pas un Pokémon de base)
 
+# Pokémon exclus du pool boutique (cas spéciaux)
+_EXCLUS_POOL = {"0266", "0292"}  # Armulys, Munja
+
+# Mapping synergie → évolition d'Évoli (palier 6 requis)
+EVOLITIONS_MAP = {
+    "insecte":   "0133c",  "dragon":    "0133d",  "vol":       "0133e",
+    "acier":     "0133f",  "normal":    "0133g",  "nucleaire": "0133h",
+    "roche":     "0133i",  "sol":       "0133j",  "spectre":   "0133k",
+    "poison":    "0133l",  "combat":    "0133m",  "eau":       "0134",
+    "electrik":  "0135",   "feu":       "0136",   "psy":       "0196",
+    "tenebres":  "0197",   "plante":    "0470",   "glace":     "0471",
+    "fee":       "0700",
+}
+
 def _calculer_formes_exclusives():
     import re as _re
     from collections import defaultdict as _dd
@@ -91,12 +105,12 @@ def init_pool(partie):
 
 def piocher_depuis_pool(partie, niveau_joueur, n=5, niveau_max_pool=10):
     """Pioche n Pokémon stade 0 de niveau <= niveau_max_pool, choix aléatoire."""
-    max_niv = niveau_max_pool
+    max_niv = min(niveau_joueur, niveau_max_pool)
     pool = partie.get("pool", [])
     eligibles = [pid for pid in pool
                  if (lambda p: p
                      and p.get("stade", 0) == 0
-                     and p["id"] not in _IDS_INTERMEDIAIRES
+                     and p["id"] not in _EXCLUS_POOL
                      and p["niveau"] <= max_niv)(_get_poke(pid))]
     random.shuffle(eligibles)
     choix = eligibles[:n]
@@ -356,6 +370,14 @@ def calculer_synergies(joueur):
         elif count >= 3: synergies[t] = 3
     return synergies
 
+def calculer_evoli_forme(joueur):
+    """Retourne l'ID de l'évolition si une synergie 6+ est active, sinon None."""
+    synergies = calculer_synergies(joueur)
+    for syn, palier in synergies.items():
+        if palier >= 6 and syn in EVOLITIONS_MAP:
+            return EVOLITIONS_MAP[syn]
+    return None
+
 def palier_synergie(joueur, type_poke):
     """Retourne le palier de synergie (3/6/9) pour un type donné, ou 0."""
     return joueur.get("synergies", {}).get(type_poke, 0)
@@ -536,9 +558,9 @@ def appliquer_effets_post_combat(j1, p1, j2, p2, equipe1, equipe2, partie, logs)
         # Insecte : force bonus
         pal_insecte = synergies.get("insecte", 0)
         if pal_insecte:
-            bonus_par_insecte = {3: 1, 6: 2, 9: 4}.get(pal_insecte, 0)
+            bonus_par_insecte = {3: 1, 6: 2, 9: 3}.get(pal_insecte, 0)
             nb_insectes = sum(1 for p in vivants if "insecte" in [_normaliser_type(t) for t in p.get("types", [])])
-            bonus = bonus_par_insecte  # Bonus fixe indépendant du nombre d'insectes
+            bonus = nb_insectes * bonus_par_insecte
             if joueur is j1: bonus_force_j1 += bonus
             else:            bonus_force_j2 += bonus
             if bonus:
@@ -554,7 +576,8 @@ def points_force_total(poke):
 
 def appliquer_bonus_pv_synergies(joueur):
     synergies = calculer_synergies(joueur)
-    joueur["synergies"] = synergies
+    joueur["synergies"]   = synergies
+    joueur["evoli_forme"] = calculer_evoli_forme(joueur)
     pal_normal = synergies.get("normal", 0)
     for poke in joueur.get("pokemon", []):
         # Bonus PV général : meilleur palier parmi toutes les synergies actives du Pokémon

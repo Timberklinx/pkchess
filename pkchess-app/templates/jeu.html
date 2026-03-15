@@ -772,6 +772,7 @@ function renderCentre(containerId) {
     if (!container) return;
     container.innerHTML = '';
     var niveau_j = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
+    var moi = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO] : null;
     var nbMax    = nbEmplacementsCentre(niveau_j);
     var pokemons = etat && etat.joueurs && etat.joueurs[PSEUDO]
         ? (etat.joueurs[PSEUDO].pokemon || []).filter(function(p) { return p.position === 'centre'; })
@@ -788,8 +789,11 @@ function renderCentre(containerId) {
             if (pokeCentre) {
                 var id4  = String(pokeCentre.id).padStart(4, '0');
                 var tours = pokeCentre.soin_tours_restants || 0;
-                el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom
-                    + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',' + s + ')">'
+                var evoliFormeCentre = moi ? moi.evoli_forme : null;
+                var isEvoliCentre = (pokeCentre.id === '0133');
+                var displayId4C = (isEvoliCentre && evoliFormeCentre) ? String(evoliFormeCentre).padStart(4,'0') : id4;
+                el.innerHTML = '<img src="' + IMG + displayId4C + '.png" alt="' + pokeCentre.nom
+                    + '" onclick="ouvrirZoom(\'' + IMG + displayId4C + '.png\',\'centre\',' + s + ')">'
                     + '<div class="poke-nom">⏳' + tours + ' tour' + (tours > 1 ? 's' : '') + '</div>';
                 el.draggable = true;
                 el.addEventListener('dragstart', function(e) {
@@ -862,7 +866,13 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             var pvCls  = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
             var xpPct  = poke.evolution_ko > 0 ? Math.min(100, Math.round((poke.xp_combats || 0) / poke.evolution_ko * 100)) : 100;
             var evolOk = poke.evolution_id && (poke.xp_combats || 0) >= poke.evolution_ko;
-            var imgSrc = IMG + id4 + '.png';
+            // Évoli : afficher la forme selon synergie active
+            var moi = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO] : null;
+            var evoliForme = moi ? moi.evoli_forme : null;
+            var isEvoli = (poke.id === '0133');
+            var displayId4 = (isEvoli && evoliForme) ? String(evoliForme).padStart(4,'0') : id4;
+            var displayNom  = (isEvoli && evoliForme && etat.joueurs[PSEUDO]) ? (evoliForme) : poke.nom;
+            var imgSrc = IMG + displayId4 + '.png';
             el.innerHTML = '<img src="' + imgSrc + '" alt="' + poke.nom
                 + '" onclick="ouvrirZoom(\'' + imgSrc + '\',\'' + pos + '\',' + i + ')">'
                 + (poke.ko   ? '<div class="ko-badge">KO</div>' : '')
