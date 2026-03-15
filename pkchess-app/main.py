@@ -61,8 +61,26 @@ EVOLITIONS_MAP = {
 NOMS_CLIMATS_SPECIAUX = [
     "Brouillard", "Canicule", "Distorsion", "Grêle", "Nuageux",
     "Nuit", "Nuée", "Orage", "Pluie", "Smog",
-    "Brume", "Tempête", "Volcan"
+    "Tempête", "Tempête de Sable", "Vent"
 ]
+
+# Correspondance nom → fichier image
+CLIMAT_IMG = {
+    "Ensoleillé":       "C-Ensoleille",
+    "Brouillard":       "C-Brouillard",
+    "Canicule":         "C-Canicule",
+    "Distorsion":       "C-Distorsion",
+    "Grêle":            "C-Grele",
+    "Nuageux":          "C-Nuageux",
+    "Nuit":             "C-Nuit",
+    "Nuée":             "C-Nuee",
+    "Orage":            "C-Orage",
+    "Pluie":            "C-Pluie",
+    "Smog":             "C-Smog",
+    "Tempête":          "C-Tempete",
+    "Tempête de Sable": "C-Tempete_de_Sable",
+    "Vent":             "C-Vent",
+}
 
 def init_pool_climat():
     """Crée un pool de 26 cartes climat : 13x Ensoleillé + 13 spéciaux."""
@@ -1755,13 +1773,14 @@ async def traiter_action(code, pseudo, action):
 
         evolutions_anim = collecter_evolutions_a_venir(partie)
         messages = appliquer_fin_tour(partie)
-        # Piocher le climat du prochain tour (visible sur le plateau avant le combat)
-        piocher_climat(partie)
         await gestionnaire.diffuser(code, {
             "type": "fin_tour", "etat": partie,
             "msg": f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
             "evolutions": evolutions_anim,
         })
+        # Piocher le climat du tour SUIVANT (après diffusion, visible sur plateau avant prochain combat)
+        piocher_climat(partie)
+        await gestionnaire.diffuser(code, {"type": "etat_mis_a_jour", "etat": partie, "msg": ""})
         # Carrousel tous les 4 tours (avant la boutique)
         if est_tour_caroussel(partie):
             preparer_caroussel(partie)
@@ -2981,8 +3000,6 @@ def appliquer_fin_tour(partie):
                                                        niveau_max_pool=j.get("niveau_max_pool", 10))
         j["boutique_locked"] = False
         j["a_achete_tour1"]  = False
-    # Piocher un nouveau climat (global à la partie)
-    piocher_climat(partie)
     return messages
 
 def collecter_evolutions_a_venir(partie):

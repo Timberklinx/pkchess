@@ -150,5 +150,35 @@
       "- -50% de dégâts pour les attaques de type Fée.",
       "- Les Baies utilisées ce tour empoisonnent les Pokemon qui les utilisent."
     ]
+  },
+  {
+    "id": "12",
+    "nom": "Tempête de Sable",
+    "bonus": [
+      "- À compléter."
+    ],
+    "malus": [
+      "- À compléter."
+    ]
+  },
+  {
+    "id": "13",
+    "nom": "Vent",
+    "bonus": [
+      "- À compléter."
+    ],
+    "malus": [
+      "- À compléter."
+    ]
+  },
+  {
+    "id": "14",
+    "nom": "Tempête",
+    "bonus": [
+      "- À compléter."
+    ],
+    "malus": [
+      "- À compléter."
+    ]
   }
 ]

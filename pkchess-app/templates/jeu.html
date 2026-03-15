@@ -668,8 +668,7 @@ function majInterface() {
         "Grêle":      "C-Grele",      "Nuageux":    "C-Nuageux",
         "Nuit":       "C-Nuit",       "Nuée":       "C-Nuee",
         "Orage":      "C-Orage",      "Pluie":      "C-Pluie",
-        "Smog":       "C-Smog",       "Brume":      "C-Brume",
-        "Tempête":    "C-Tempete",    "Volcan":     "C-Volcan"
+        "Smog":"C-Smog","Tempête":"C-Tempete","Tempête de Sable":"C-Tempete_de_Sable","Vent":"C-Vent"
     };
     var fichier = CLIMAT_FICHIER[climatActuel] || "C-Ensoleille";
     var climatImg = document.getElementById('climat-img');
@@ -1278,7 +1277,7 @@ function ouvrirZoomClimat() {
         "Ensoleillé":"C-Ensoleille","Brouillard":"C-Brouillard","Canicule":"C-Canicule",
         "Distorsion":"C-Distorsion","Grêle":"C-Grele","Nuageux":"C-Nuageux",
         "Nuit":"C-Nuit","Nuée":"C-Nuee","Orage":"C-Orage","Pluie":"C-Pluie",
-        "Smog":"C-Smog","Brume":"C-Brume","Tempête":"C-Tempete","Volcan":"C-Volcan"
+        "Smog":"C-Smog","Tempête":"C-Tempete","Tempête de Sable":"C-Tempete_de_Sable","Vent":"C-Vent"
     };
     var fichier = CLIMAT_FICHIER[climatActuel] || "C-Ensoleille";
     ouvrirZoom(IMG_CLIMAT + fichier + ".png", null, null);
