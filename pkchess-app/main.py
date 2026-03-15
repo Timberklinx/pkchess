@@ -1239,6 +1239,8 @@ def appliquer_fin_tour(partie):
                                                        niveau_max_pool=j.get("niveau_max_pool", 10))
         j["boutique_locked"] = False
         j["a_achete_tour1"]  = False
+    # Piocher un nouveau climat (global à la partie)
+    piocher_climat(partie)
     return messages
 
 def collecter_evolutions_a_venir(partie):

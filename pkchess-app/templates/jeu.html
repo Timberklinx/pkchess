@@ -55,6 +55,8 @@
         .case-objet { width: 22px; height: 28px; border-radius: 6px; border: 2px dashed rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; transition: all 0.2s; background: rgba(0,0,0,0.2); }
         .case-objet:hover { border-color: rgba(255,215,0,0.5); background: rgba(255,215,0,0.05); }
         .case-objet-bloquee { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
+        .case-climat-card { width: 100px; height: 140px; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(255,215,0,0.08); cursor: pointer; flex-shrink: 0; }
+        .case-climat-card:hover { background: rgba(255,215,0,0.15); }
         .case { width: 100px; height: 140px; border-radius: 10px; border: 2px dashed rgba(255,255,255,0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s; position: relative; overflow: hidden; flex-shrink: 0; }
         .case.offensive   { border-color: rgba(230,57,70,0.3); }
         .case.defensive   { border-color: rgba(74,144,217,0.3); }
@@ -334,7 +336,13 @@
                 <span class="dot-rouge"></span> Arène Offensive
                 <button class="btn btn-red" id="btn-fin-tour" onclick="lancerCombat()" style="display:none;margin-left:auto;padding:5px 12px;font-size:0.72em">⚔️ Fin de tour &amp; Combat</button>
             </div>
-            <div class="rangee" id="rangee-off"></div>
+            <div style="display:flex;align-items:flex-start;gap:10px">
+                <div class="rangee" id="rangee-off" style="flex:1;margin-bottom:0"></div>
+                <div class="case case-climat-card" id="case-climat" title="Climat actif">
+                    <span style="font-size:1.6em">🌤️</span>
+                    <span id="climat-nom" style="font-size:0.55em;font-weight:800;color:var(--gold);text-align:center;padding:0 4px">Ensoleillé</span>
+                </div>
+            </div>
             <div class="sep"></div>
             <div class="rangee-label"><span class="dot-bleu"></span> Arène Défensive</div>
             <div class="rangee" id="rangee-def"></div>
@@ -639,6 +647,23 @@ function majInterface() {
     if (!etat || !etat.joueurs) return;
     var moi = etat.joueurs[PSEUDO];
     if (!moi) return;
+
+    // Mise à jour du climat
+    var climatActuel = etat.climat_actuel || "Ensoleillé";
+    var climatNomEl = document.getElementById('climat-nom');
+    var caseClimat = document.getElementById('case-climat');
+    if (climatNomEl) climatNomEl.textContent = climatActuel;
+    if (caseClimat) {
+        var EMOJI_CLIMAT = {
+            "Ensoleillé": "☀️", "Brouillard": "🌫️", "Canicule": "🌡️",
+            "Distorsion": "🌀", "Grêle": "🌨️", "Nuageux": "☁️",
+            "Nuit": "🌙", "Nuée": "🐛", "Orage": "⛈️",
+            "Pluie": "🌧️", "Smog": "💨", "Brume": "🌁",
+            "Tempête": "🌪️", "Volcan": "🌋"
+        };
+        var emoji = EMOJI_CLIMAT[climatActuel] || "🌤️";
+        caseClimat.querySelector('span').textContent = emoji;
+    }
 
     document.getElementById('mes-pv').textContent     = moi.pv;
     document.getElementById('mes-pieces').textContent = moi.pieces;
