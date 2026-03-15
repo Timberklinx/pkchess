@@ -316,14 +316,14 @@
             <div class="player-name" id="player-name">🎮 Dresseur</div>
             <div class="stat-pill hp">❤️ <span class="stat-val" id="mes-pv">100</span></div>
             <div class="pv-bar-bg" style="min-width:80px;max-width:200px"><div class="pv-bar" id="pv-bar" style="width:100%"></div></div>
-            <div class="stat-pill gp"><img src="/static/PokecoinBack.png" class="pokecoin-icon" alt="🪙"> <span class="stat-val" id="mes-pieces">0</span></div>
+            <div class="stat-pill gp"><img src="/static/PokecoinBack.png" class="pokecoin-icon" alt="<img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">"> <span class="stat-val" id="mes-pieces">0</span></div>
             <div class="stat-pill lv">⭐ Niv.<span class="stat-val" id="mon-niveau">1</span></div>
             <div class="stat-pill xp" style="display:flex;align-items:center;gap:8px">
                 <div class="xp-joueur-wrap">
                     <div class="xp-joueur-label">📊 XP <span id="mon-exp">0</span>/<span id="mon-xp-max">1</span></div>
                     <div class="xp-joueur-bg"><div class="xp-joueur-bar" id="mon-xp-bar" style="width:0%"></div></div>
                 </div>
-                <button class="btn btn-blue" onclick="acheterXp()" style="padding:4px 10px;font-size:0.72em;white-space:nowrap">📈 XP (4🪙)</button>
+                <button class="btn btn-blue" onclick="acheterXp()" style="padding:4px 10px;font-size:0.72em;white-space:nowrap">📈 XP (4<img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin-left:1px">)</button>
             </div>
             <div style="font-size:0.82em;font-weight:800;color:rgba(255,255,255,0.5)">Tour <span id="tour-num">0</span></div>
         </div>
@@ -358,7 +358,7 @@
             <div class="sep"></div>
             <div class="rangee-label" style="display:flex;align-items:center">
                 <span class="dot-noir"></span> Boîte
-                <button class="btn btn-gold" onclick="ouvrirBoutique()" style="margin-left:auto;padding:5px 12px;font-size:0.72em">🛒 Boutique</button>
+                <button class="btn btn-gold" onclick="ouvrirBoutique()" style="margin-left:auto;padding:7px 16px;font-size:0.85em">🛒 Boutique</button>
             </div>
             <div class="rangee" id="rangee-boite"></div>
         </div>
@@ -431,7 +431,7 @@
         </div>
         <div class="modal-actions">
             <div style="display:flex;gap:10px;">
-                <button class="btn btn-blue" onclick="roll()">🎲 Roll (2🪙)</button>
+                <button class="btn btn-blue" onclick="roll()">🎲 Roll (2<img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin-left:1px">)</button>
                 <button class="btn btn-lock" id="btn-lock" onclick="toggleLock()">🔓 Garder</button>
             </div>
             <div style="display:flex;gap:10px;">
@@ -735,7 +735,7 @@ function majInterface() {
                  + '<div class="adv-info">'
                  + '<div class="adv-nom">' + p + '</div>'
                  + '<div class="adv-stats"><span class="adv-hp">❤️' + j.pv + '</span>'
-                 + '<span class="adv-gp">🪙' + j.pieces + '</span>'
+                 + '<span class="adv-gp"><img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">' + j.pieces + '</span>'
                  + '<span class="adv-lv">⭐' + j.niveau + '</span></div>'
                  + '</div></div>';
         }).join('');
@@ -1145,7 +1145,7 @@ function afficherBoutique(tour, tour1_gratuit) {
 
     document.getElementById('boutique-info').textContent = gratuit
         ? '🎁 Capture un Pokémon gratuitement !'
-        : '🪙 ' + pieces + ' pièces disponibles';
+        : '<img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px"> ' + pieces + ' pièces disponibles';
 
     var container = document.getElementById('boutique-cartes');
     if (!boutique_offre || boutique_offre.length === 0) {
@@ -1158,7 +1158,7 @@ function afficherBoutique(tour, tour1_gratuit) {
         var cout    = poke.niveau;
         var peux    = gratuit || pieces >= cout;
         var types   = Array.isArray(poke.types) ? poke.types.join(', ') : (poke.types || '');
-        var coutTxt = gratuit ? '🎁 Gratuit' : (cout + ' 🪙');
+        var coutTxt = gratuit ? '🎁 Gratuit' : (cout + ' <img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">');
         return '<div class="boutique-carte' + (peux ? '' : ' bloquee') + '" '
              + (peux ? 'onclick="selectionnerPoke(' + i + ')"' : '') + '>'
              + '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
@@ -1230,10 +1230,10 @@ function ouvrirZoom(src, pos, slot) {
         var poke = getPoke(pos, slot);
         if (poke) {
             btnV.style.display = 'inline-block';
-            btnV.textContent   = '💸 Vendre (' + poke.niveau + ' 🪙)';
+            btnV.innerHTML     = '💸 Vendre (' + poke.niveau + ' <img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">)';
             if (poke.ko) {
                 btnR.style.display = 'inline-block';
-                btnR.textContent   = '💊 Racheter (' + poke.niveau + ' 🪙)';
+                btnR.innerHTML     = '💊 Racheter (' + poke.niveau + ' <img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">)';
             }
         }
     }
