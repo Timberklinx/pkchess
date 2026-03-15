@@ -338,9 +338,8 @@
             </div>
             <div style="display:flex;align-items:flex-start;gap:10px">
                 <div class="rangee" id="rangee-off" style="flex:1;margin-bottom:0"></div>
-                <div class="case case-climat-card" id="case-climat" title="Climat actif">
-                    <span style="font-size:1.6em">🌤️</span>
-                    <span id="climat-nom" style="font-size:0.55em;font-weight:800;color:var(--gold);text-align:center;padding:0 4px">Ensoleillé</span>
+                <div class="case case-climat-card" id="case-climat" title="Climat actif" onclick="ouvrirZoomClimat()">
+                    <img id="climat-img" src="" alt="Climat" style="width:85%;height:auto;object-fit:contain">
                 </div>
             </div>
             <div class="sep"></div>
@@ -498,7 +497,8 @@
 // ── Config ────────────────────────────────────────────────────────────────────
 var CODE   = "{{ code }}";
 var PSEUDO = new URLSearchParams(window.location.search).get('pseudo') || 'Dresseur';
-var IMG    = "https://media.githubusercontent.com/media/Timberklinx/pkchess/master/pkchess-app/cartes/";
+var IMG        = "https://media.githubusercontent.com/media/Timberklinx/pkchess/master/pkchess-app/cartes/"
+    var IMG_CLIMAT = "https://media.githubusercontent.com/media/Timberklinx/pkchess/master/pkchess-app/cartes/cartes_climat/";
 
 document.getElementById('header-code').textContent = CODE;
 document.getElementById('player-name').textContent  = '🎮 ' + PSEUDO;
@@ -650,19 +650,21 @@ function majInterface() {
 
     // Mise à jour du climat
     var climatActuel = etat.climat_actuel || "Ensoleillé";
-    var climatNomEl = document.getElementById('climat-nom');
-    var caseClimat = document.getElementById('case-climat');
-    if (climatNomEl) climatNomEl.textContent = climatActuel;
-    if (caseClimat) {
-        var EMOJI_CLIMAT = {
-            "Ensoleillé": "☀️", "Brouillard": "🌫️", "Canicule": "🌡️",
-            "Distorsion": "🌀", "Grêle": "🌨️", "Nuageux": "☁️",
-            "Nuit": "🌙", "Nuée": "🐛", "Orage": "⛈️",
-            "Pluie": "🌧️", "Smog": "💨", "Brume": "🌁",
-            "Tempête": "🌪️", "Volcan": "🌋"
-        };
-        var emoji = EMOJI_CLIMAT[climatActuel] || "🌤️";
-        caseClimat.querySelector('span').textContent = emoji;
+    var CLIMAT_FICHIER = {
+        "Ensoleillé": "C-Ensoleille", "Brouillard": "C-Brouillard",
+        "Canicule":   "C-Canicule",   "Distorsion": "C-Distorsion",
+        "Grêle":      "C-Grele",      "Nuageux":    "C-Nuageux",
+        "Nuit":       "C-Nuit",       "Nuée":       "C-Nuee",
+        "Orage":      "C-Orage",      "Pluie":      "C-Pluie",
+        "Smog":       "C-Smog",       "Brume":      "C-Brume",
+        "Tempête":    "C-Tempete",    "Volcan":     "C-Volcan"
+    };
+    var climatImg = document.getElementById('climat-img');
+    if (climatImg) {
+        var fichier = CLIMAT_FICHIER[climatActuel] || "C-Ensoleille";
+        climatImg.src = IMG_CLIMAT + fichier + ".png";
+        climatImg.alt = climatActuel;
+        climatImg.title = climatActuel;
     }
 
     document.getElementById('mes-pv').textContent     = moi.pv;
@@ -1252,6 +1254,19 @@ function acheterXp() {
 }
 
 // ── Zoom / Actions carte ──────────────────────────────────────────────────────
+
+function ouvrirZoomClimat() {
+    var climatActuel = etat && etat.climat_actuel ? etat.climat_actuel : "Ensoleillé";
+    var CLIMAT_FICHIER = {
+        "Ensoleillé":"C-Ensoleille","Brouillard":"C-Brouillard","Canicule":"C-Canicule",
+        "Distorsion":"C-Distorsion","Grêle":"C-Grele","Nuageux":"C-Nuageux",
+        "Nuit":"C-Nuit","Nuée":"C-Nuee","Orage":"C-Orage","Pluie":"C-Pluie",
+        "Smog":"C-Smog","Brume":"C-Brume","Tempête":"C-Tempete","Volcan":"C-Volcan"
+    };
+    var fichier = CLIMAT_FICHIER[climatActuel] || "C-Ensoleille";
+    ouvrirZoom(IMG_CLIMAT + fichier + ".png", null, null);
+}
+
 function ouvrirZoom(src, pos, slot) {
     document.getElementById('zoom-img').src = src;
     document.getElementById('zoom-bg').classList.add('open');
