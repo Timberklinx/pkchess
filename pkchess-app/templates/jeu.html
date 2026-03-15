@@ -166,7 +166,9 @@
         .arena-label   { font-size: 0.85em; font-weight: 800; color: rgba(255,255,255,0.5); text-align: center; padding: 4px 0; letter-spacing: 2px; text-transform: uppercase; }
         .arena-rangee  { display: flex; justify-content: center; gap: 16px; }
         #arena-adv-off, #arena-adv-def { flex-direction: row-reverse; }
-        .arena-mid  { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 0; }
+        .arena-mid  { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 0; gap: 20px; }
+        .case-climat-combat { width: 100px; height: 140px; flex-shrink: 0; cursor: pointer; border: 2px solid var(--gold); border-radius: 10px; overflow: hidden; background: rgba(255,215,0,0.05); }
+        .case-climat-combat:hover { border-color: rgba(255,215,0,0.8); }
         .arena-log  { font-size: 1.05em; font-weight: 700; color: #fff; text-align: center; line-height: 1.7; max-width: 800px; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 12px 24px; }
         .arena-card { width: 130px; height: 182px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.15); background: var(--blue-card); position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s, opacity 0.4s; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
         .arena-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px 8px 0 0; }
@@ -476,6 +478,9 @@
             <div class="arena-rangee" id="arena-adv-off"></div>
         </div>
         <div class="arena-mid">
+            <div class="case-climat-combat" id="case-climat-combat" onclick="ouvrirZoomClimat()" title="Climat actif">
+                <img id="climat-img-combat" src="" alt="Climat" style="width:100%;height:100%;object-fit:contain;border-radius:8px">
+            </div>
             <div class="arena-log" id="arena-log">En attente du combat...</div>
         </div>
         <div class="arena-side">
@@ -659,12 +664,17 @@ function majInterface() {
         "Smog":       "C-Smog",       "Brume":      "C-Brume",
         "Tempête":    "C-Tempete",    "Volcan":     "C-Volcan"
     };
+    var fichier = CLIMAT_FICHIER[climatActuel] || "C-Ensoleille";
     var climatImg = document.getElementById('climat-img');
     if (climatImg) {
-        var fichier = CLIMAT_FICHIER[climatActuel] || "C-Ensoleille";
         climatImg.src = IMG_CLIMAT + fichier + ".png";
         climatImg.alt = climatActuel;
         climatImg.title = climatActuel;
+    }
+    var climatImgCombat = document.getElementById('climat-img-combat');
+    if (climatImgCombat) {
+        climatImgCombat.src = IMG_CLIMAT + fichier + ".png";
+        climatImgCombat.alt = climatActuel;
     }
 
     document.getElementById('mes-pv').textContent     = moi.pv;
