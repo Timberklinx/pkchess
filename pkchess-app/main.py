@@ -285,12 +285,12 @@ async def terminer_caroussel(code, partie, gestionnaire):
             "auto":          True,
         })
 
-def generer_offre_boutique(partie, niveau_joueur, ancienne_offre=None, locked=False):
+def generer_offre_boutique(partie, niveau_joueur, ancienne_offre=None, locked=False, niveau_max_pool=10):
     if locked and ancienne_offre:
         return ancienne_offre
     if ancienne_offre:
         retourner_au_pool(partie, [p["id"] for p in ancienne_offre])
-    pokes = piocher_depuis_pool(partie, niveau_joueur)
+    pokes = piocher_depuis_pool(partie, niveau_joueur, niveau_max_pool=niveau_max_pool)
     return [{"id": p["id"], "nom": p["nom"], "types": p["types"], "niveau": p["niveau"]} for p in pokes]
 
 # ── État joueur ───────────────────────────────────────────────────────────────
