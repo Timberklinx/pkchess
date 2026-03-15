@@ -91,12 +91,12 @@ def init_pool(partie):
 
 def piocher_depuis_pool(partie, niveau_joueur, n=5, niveau_max_pool=10):
     """Pioche n Pokémon stade 0 de niveau <= niveau_max_pool, choix aléatoire."""
-    max_niv = min(niveau_joueur, niveau_max_pool)
+    max_niv = niveau_max_pool
     pool = partie.get("pool", [])
     eligibles = [pid for pid in pool
                  if (lambda p: p
                      and p.get("stade", 0) == 0
-                     and p["id"] not in _EXCLUS_POOL
+                     and p["id"] not in _IDS_INTERMEDIAIRES
                      and p["niveau"] <= max_niv)(_get_poke(pid))]
     random.shuffle(eligibles)
     choix = eligibles[:n]
@@ -536,9 +536,9 @@ def appliquer_effets_post_combat(j1, p1, j2, p2, equipe1, equipe2, partie, logs)
         # Insecte : force bonus
         pal_insecte = synergies.get("insecte", 0)
         if pal_insecte:
-            bonus_par_insecte = {3: 1, 6: 2, 9: 3}.get(pal_insecte, 0)
+            bonus_par_insecte = {3: 1, 6: 2, 9: 4}.get(pal_insecte, 0)
             nb_insectes = sum(1 for p in vivants if "insecte" in [_normaliser_type(t) for t in p.get("types", [])])
-            bonus = nb_insectes * bonus_par_insecte
+            bonus = bonus_par_insecte  # Bonus fixe indépendant du nombre d'insectes
             if joueur is j1: bonus_force_j1 += bonus
             else:            bonus_force_j2 += bonus
             if bonus:
