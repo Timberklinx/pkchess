@@ -614,7 +614,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 45,
     "vitesse": 30,
     "degats": 0,
@@ -13253,7 +13253,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 45,
     "vitesse": 15,
     "degats": 0,
@@ -19436,7 +19436,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 45,
     "vitesse": 36,
     "degats": 10,
@@ -19469,7 +19469,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 45,
     "vitesse": 36,
     "degats": 10,
@@ -19502,7 +19502,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 45,
     "vitesse": 36,
     "degats": 10,
