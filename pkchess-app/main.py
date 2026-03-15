@@ -89,9 +89,9 @@ def init_pool(partie):
     random.shuffle(pool)
     partie["pool"] = pool
 
-def piocher_depuis_pool(partie, niveau_joueur, n=5):
-    """Pioche n Pokémon stade 0 de niveau <= niveau_joueur, choix aléatoire."""
-    max_niv = min(niveau_joueur, 10)
+def piocher_depuis_pool(partie, niveau_joueur, n=5, niveau_max_pool=10):
+    """Pioche n Pokémon stade 0 de niveau <= niveau_max_pool, choix aléatoire."""
+    max_niv = niveau_max_pool
     pool = partie.get("pool", [])
     eligibles = [pid for pid in pool
                  if (lambda p: p
