@@ -50,6 +50,21 @@
         .rangee { display: flex; gap: 10px; margin-bottom: 12px; justify-content: center; }
         .sep { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0 12px; }
 
+        /* ── Bouton small dans les labels ── */
+        .btn-small { padding: 4px 10px; font-size: 0.72em; border-radius: 8px; }
+
+        /* ── Point violet inventaire ── */
+        .dot-violet { width: 8px; height: 8px; border-radius: 50%; background: #a855f7; display: inline-block; }
+
+        /* ── Sidebar header info ── */
+        .panel-header-info { padding: 10px 14px !important; }
+        .header-info-row { display: flex; align-items: center; gap: 10px; }
+        .logo-container-small { display: flex; align-items: center; gap: 6px; }
+        .logo-texte-small { height: 22px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255,215,0,0.4)); }
+        .logo-pokeball-small { height: 20px; width: 20px; animation: spin-pokeball 6s linear infinite; }
+        .header-code-small { font-family: 'Press Start 2P', monospace; font-size: 0.7em; color: var(--gold); letter-spacing: 3px; flex: 1; text-align: center; }
+        .header-status-small { display: flex; align-items: center; gap: 5px; font-size: 0.75em; color: rgba(255,255,255,0.6); }
+
         /* ── Cases plateau ── */
         .case { width: 100px; height: 140px; border-radius: 10px; border: 2px dashed rgba(255,255,255,0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s; position: relative; overflow: hidden; flex-shrink: 0; }
         .case.offensive   { border-color: rgba(230,57,70,0.3); }
@@ -345,11 +360,21 @@
             <div class="rangee-label"><span class="dot-bleu"></span> Arène Défensive</div>
             <div class="rangee" id="rangee-def"></div>
             <div class="sep"></div>
-            <div class="rangee-label"><span class="dot-vert"></span> Centre Pokémon</div>
-            <div class="rangee" id="rangee-centre" style="justify-content:flex-start;gap:0"></div>
+            <div class="rangee-label"><span class="dot-violet"></span> Inventaire</div>
+            <div class="rangee" id="rangee-inventaire" style="justify-content:flex-start;gap:8px"></div>
             <div class="sep"></div>
-            <div class="rangee-label"><span class="dot-noir"></span> Boîte</div>
-            <div class="rangee" id="rangee-boite"></div>
+            <div class="rangee-label">
+                <span class="dot-noir"></span> Boîte
+                <button class="btn btn-gold btn-small" onclick="ouvrirBoutique()" style="margin-left:10px">🛒 Boutique</button>
+                <button class="btn btn-blue btn-small" onclick="acheterXp()" style="margin-left:6px">📈 XP (4🪙)</button>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-start">
+                <div class="rangee" id="rangee-boite" style="flex:1"></div>
+                <div style="display:flex;flex-direction:column;gap:4px;min-width:90px;padding-left:8px;border-left:1px solid rgba(255,255,255,0.1)">
+                    <div class="rangee-label" style="margin-bottom:4px"><span class="dot-vert"></span> Centre</div>
+                    <div id="rangee-centre" style="display:flex;flex-direction:column;gap:4px;justify-content:flex-start"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Modal carrousel -->
