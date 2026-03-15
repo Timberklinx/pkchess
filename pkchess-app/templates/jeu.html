@@ -48,32 +48,19 @@
         .dot-vert  { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; }
         .dot-noir  { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; }
         .rangee { display: flex; gap: 10px; margin-bottom: 12px; justify-content: center; }
-        .dot-violet { width: 8px; height: 8px; border-radius: 50%; background: #a855f7; display: inline-block; }
-        .boite-centre-row { display: flex; gap: 12px; align-items: flex-start; }
-        .centre-col { min-width: 110px; padding-left: 12px; border-left: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; }
         .sep { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0 12px; }
 
-        /* ── Bouton small dans les labels ── */
-        .btn-small { padding: 4px 10px; font-size: 0.72em; border-radius: 8px; }
-
-        /* ── Point violet inventaire ── */
-        .dot-violet { width: 8px; height: 8px; border-radius: 50%; background: #a855f7; display: inline-block; }
-
-        /* ── Sidebar header info ── */
-        .panel-header-info { padding: 10px 14px !important; }
-        .header-info-row { display: flex; align-items: center; gap: 10px; }
-        .logo-container-small { display: flex; align-items: center; gap: 6px; }
-        .logo-texte-small { height: 22px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255,215,0,0.4)); }
-        .logo-pokeball-small { height: 20px; width: 20px; animation: spin-pokeball 6s linear infinite; }
-        .header-code-small { font-family: 'Press Start 2P', monospace; font-size: 0.7em; color: var(--gold); letter-spacing: 3px; flex: 1; text-align: center; }
-        .header-status-small { display: flex; align-items: center; gap: 5px; font-size: 0.75em; color: rgba(255,255,255,0.6); }
-
         /* ── Cases plateau ── */
+        .slot-wrapper { display: flex; flex-direction: row; align-items: flex-start; gap: 3px; }
+        .case-objet { width: 22px; height: 28px; border-radius: 6px; border: 2px dashed rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; transition: all 0.2s; background: rgba(0,0,0,0.2); }
+        .case-objet:hover { border-color: rgba(255,215,0,0.5); background: rgba(255,215,0,0.05); }
+        .case-objet-bloquee { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
         .case { width: 100px; height: 140px; border-radius: 10px; border: 2px dashed rgba(255,255,255,0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s; position: relative; overflow: hidden; flex-shrink: 0; }
         .case.offensive   { border-color: rgba(230,57,70,0.3); }
         .case.defensive   { border-color: rgba(74,144,217,0.3); }
         .case.boite       { border-color: rgba(255,255,255,0.1); }
         .case.centre      { border-color: rgba(82,183,136,0.4); }
+        .case.inventaire  { border-color: rgba(168,85,247,0.4); }
         .case.bloquee     { opacity: 0.25; cursor: not-allowed; }
         .case.droppable   { border-color: var(--gold) !important; border-style: solid !important; background: rgba(255,215,0,0.08) !important; }
         .case.occupee.offensive { border-style: solid; border-color: var(--red); }
@@ -320,7 +307,6 @@
 </head>
 <body>
 
-
 <!-- Jeu principal -->
 <div class="game-wrap">
     <div class="main-col">
@@ -329,48 +315,52 @@
         <div class="stats-bar">
             <div class="player-name" id="player-name">🎮 Dresseur</div>
             <div class="stat-pill hp">❤️ <span class="stat-val" id="mes-pv">100</span></div>
-            <div class="pv-bar-bg"><div class="pv-bar" id="pv-bar" style="width:100%"></div></div>
+            <div class="pv-bar-bg" style="min-width:80px;max-width:200px"><div class="pv-bar" id="pv-bar" style="width:100%"></div></div>
             <div class="stat-pill gp"><img src="/static/PokecoinBack.png" class="pokecoin-icon" alt="🪙"> <span class="stat-val" id="mes-pieces">0</span></div>
             <div class="stat-pill lv">⭐ Niv.<span class="stat-val" id="mon-niveau">1</span></div>
-            <div class="stat-pill xp">
-        <div class="xp-joueur-wrap">
-            <div class="xp-joueur-label">📊 XP <span id="mon-exp">0</span>/<span id="mon-xp-max">1</span></div>
-            <div class="xp-joueur-bg"><div class="xp-joueur-bar" id="mon-xp-bar" style="width:0%"></div></div>
-        </div>
-    </div>
+            <div class="stat-pill xp" style="display:flex;align-items:center;gap:8px">
+                <div class="xp-joueur-wrap">
+                    <div class="xp-joueur-label">📊 XP <span id="mon-exp">0</span>/<span id="mon-xp-max">1</span></div>
+                    <div class="xp-joueur-bg"><div class="xp-joueur-bar" id="mon-xp-bar" style="width:0%"></div></div>
+                </div>
+                <button class="btn btn-blue" onclick="acheterXp()" style="padding:4px 10px;font-size:0.72em;white-space:nowrap">📈 XP (4🪙)</button>
+            </div>
             <div style="font-size:0.82em;font-weight:800;color:rgba(255,255,255,0.5)">Tour <span id="tour-num">0</span></div>
         </div>
 
         <!-- Plateau -->
         <div class="plateau-wrap">
-            <!-- Arène Offensive + bouton Combat -->
-            <div class="rangee-label">
+            <div class="rangee-label" style="display:flex;align-items:center">
                 <span class="dot-rouge"></span> Arène Offensive
-                <button class="btn btn-red btn-label" id="btn-fin-tour" onclick="lancerCombat()" style="display:none;margin-left:auto;padding:5px 12px;font-size:0.75em">⚔️ Fin de tour &amp; Combat</button>
+                <button class="btn btn-red" id="btn-fin-tour" onclick="lancerCombat()" style="display:none;margin-left:auto;padding:5px 12px;font-size:0.72em">⚔️ Fin de tour &amp; Combat</button>
             </div>
             <div class="rangee" id="rangee-off"></div>
             <div class="sep"></div>
-            <!-- Arène Défensive -->
             <div class="rangee-label"><span class="dot-bleu"></span> Arène Défensive</div>
             <div class="rangee" id="rangee-def"></div>
             <div class="sep"></div>
-            <!-- Inventaire objets/baies — même hauteur que les cartes -->
-            <div class="rangee-label"><span class="dot-violet"></span> Inventaire</div>
-            <div class="rangee" id="rangee-inventaire" style="justify-content:flex-start;min-height:130px;align-items:flex-start;flex-wrap:wrap;gap:8px"></div>
-            <div class="sep"></div>
-            <!-- Boîte + boutons Boutique/XP -->
-            <div class="rangee-label">
-                <span class="dot-noir"></span> Boîte
-                <button class="btn btn-gold btn-label" onclick="ouvrirBoutique()" style="margin-left:auto;padding:5px 12px;font-size:0.75em">🛒 Boutique</button>
-                <button class="btn btn-blue btn-label" onclick="acheterXp()" style="margin-left:6px;padding:5px 12px;font-size:0.75em">📈 XP (4🪙)</button>
-            </div>
-            <div class="boite-centre-row">
-                <div class="rangee" id="rangee-boite" style="flex:1;justify-content:flex-start;flex-wrap:wrap;margin-bottom:0"></div>
-                <div class="centre-col">
-                    <div class="rangee-label" style="font-size:0.55em;margin-bottom:6px"><span class="dot-vert"></span> Centre Pokémon</div>
-                    <div id="rangee-centre" style="display:flex;flex-direction:column;gap:6px;align-items:center"></div>
+            <div class="rangee-label"><span class="dot-vert"></span> Centre Pokémon &amp; Inventaire</div>
+            <div style="display:flex;gap:0;align-items:flex-start">
+                <!-- Cases Centre Pokémon -->
+                <div class="rangee" id="rangee-centre" style="justify-content:flex-start;gap:0;margin-bottom:0;flex:1"></div>
+                <!-- Séparateur vertical -->
+                <div style="width:2px;background:rgba(255,255,255,0.1);margin:0 12px;align-self:stretch;min-height:140px"></div>
+                <!-- Cases Inventaire (6 cases fixes) -->
+                <div class="rangee" id="rangee-inventaire" style="justify-content:flex-start;gap:8px;margin-bottom:0;flex-shrink:0">
+                    <div class="case inventaire" data-slot="0" title="Objet/Baie 1"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="1" title="Objet/Baie 2"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="2" title="Objet/Baie 3"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="3" title="Objet/Baie 4"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="4" title="Objet/Baie 5"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="5" title="Objet/Baie 6"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
                 </div>
             </div>
+            <div class="sep"></div>
+            <div class="rangee-label" style="display:flex;align-items:center">
+                <span class="dot-noir"></span> Boîte
+                <button class="btn btn-gold" onclick="ouvrirBoutique()" style="margin-left:auto;padding:5px 12px;font-size:0.72em">🛒 Boutique</button>
+            </div>
+            <div class="rangee" id="rangee-boite"></div>
         </div>
 
         <!-- Modal carrousel -->
@@ -401,6 +391,17 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
+        <div class="panel" style="padding:8px 14px">
+            <div style="display:flex;align-items:center;gap:8px">
+                <img src="/static/PKChess.png" style="height:20px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(255,215,0,0.5))">
+                <img src="/static/pokeball.png" style="height:20px;width:20px;animation:pokeball-spin 6s linear infinite">
+                <span id="header-code" style="font-family:'Press Start 2P',monospace;font-size:0.6em;color:var(--gold);letter-spacing:2px;flex:1;text-align:center">----</span>
+                <div style="display:flex;align-items:center;gap:4px">
+                    <div class="dot" id="dot"></div>
+                    <span id="statut-txt" style="font-size:0.7em;color:rgba(255,255,255,0.5)">...</span>
+                </div>
+            </div>
+        </div>
         <div class="panel">
             <div class="panel-title">✨ Synergies actives</div>
             <div class="syn-wrap" id="mes-synergies">
@@ -810,7 +811,20 @@ function renderCentre(containerId) {
                 }
                 drag_pos = drag_slot = null;
             });
-            container.appendChild(el);
+            // Wrapper + mini-case objet
+            var wrapperC = document.createElement('div');
+            wrapperC.className = 'slot-wrapper';
+            wrapperC.appendChild(el);
+
+            var miniCaseC = document.createElement('div');
+            miniCaseC.className = 'case-objet' + (!pokeCentre ? ' case-objet-bloquee' : '');
+            miniCaseC.dataset.pos  = 'centre';
+            miniCaseC.dataset.slot = s;
+            miniCaseC.title = 'Objet équipé';
+            miniCaseC.innerHTML = '<span style="font-size:0.8em;opacity:0.3">📦</span>';
+            wrapperC.appendChild(miniCaseC);
+
+            container.appendChild(wrapperC);
         })(slot);
     }
 }
@@ -904,7 +918,23 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             drag_pos = drag_slot = null;
         });
 
-        container.appendChild(el);
+        // Wrapper case + mini-case objet
+        var wrapper = document.createElement('div');
+        wrapper.className = 'slot-wrapper';
+        wrapper.appendChild(el);
+
+        // Mini-case objet à droite (uniquement pour off, def, banc — pas centre)
+        if (pos !== 'centre') {
+            var miniCase = document.createElement('div');
+            miniCase.className = 'case-objet';
+            miniCase.dataset.pos  = pos;
+            miniCase.dataset.slot = i;
+            miniCase.title = 'Objet équipé';
+            miniCase.innerHTML = '<span style="font-size:0.8em;opacity:0.3">📦</span>';
+            wrapper.appendChild(miniCase);
+        }
+
+        container.appendChild(wrapper);
     }
 }
 
