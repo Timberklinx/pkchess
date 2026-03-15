@@ -17,7 +17,7 @@
         body { background: var(--blue-deep); color: var(--white); font-family: 'Nunito', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
 
         /* ── Header ── */
-        .header { background: linear-gradient(90deg, var(--blue-mid), var(--blue-light)); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+        .header { display: none; }
         .header-logo { font-family: 'Press Start 2P', monospace; font-size: 0.9em; color: var(--gold); }
         .header-code { font-family: 'Press Start 2P', monospace; font-size: 0.75em; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 20px; color: var(--gold); border: 1px solid rgba(255,215,0,0.3); letter-spacing: 4px; }
         .header-status { display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 700; }
@@ -48,6 +48,9 @@
         .dot-vert  { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; }
         .dot-noir  { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; }
         .rangee { display: flex; gap: 10px; margin-bottom: 12px; justify-content: center; }
+        .dot-violet { width: 8px; height: 8px; border-radius: 50%; background: #a855f7; display: inline-block; }
+        .boite-centre-row { display: flex; gap: 12px; align-items: flex-start; }
+        .centre-col { min-width: 110px; padding-left: 12px; border-left: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; }
         .sep { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0 12px; }
 
         /* ── Bouton small dans les labels ── */
@@ -317,20 +320,6 @@
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-    <div class="header-logo">
-        <div class="logo-container">
-            <img src="/static/PKChess.png" alt="PKChess" class="logo-texte">
-            <img src="/static/pokeball.png" alt="Pokeball" class="logo-pokeball">
-        </div>
-    </div>
-    <div class="header-code" id="header-code">----</div>
-    <div class="header-status">
-        <div class="dot" id="dot"></div>
-        <span id="statut-txt">Connexion...</span>
-    </div>
-</div>
 
 <!-- Jeu principal -->
 <div class="game-wrap">
@@ -354,25 +343,32 @@
 
         <!-- Plateau -->
         <div class="plateau-wrap">
-            <div class="rangee-label"><span class="dot-rouge"></span> Arène Offensive</div>
+            <!-- Arène Offensive + bouton Combat -->
+            <div class="rangee-label">
+                <span class="dot-rouge"></span> Arène Offensive
+                <button class="btn btn-red btn-label" id="btn-fin-tour" onclick="lancerCombat()" style="display:none;margin-left:auto;padding:5px 12px;font-size:0.75em">⚔️ Fin de tour &amp; Combat</button>
+            </div>
             <div class="rangee" id="rangee-off"></div>
             <div class="sep"></div>
+            <!-- Arène Défensive -->
             <div class="rangee-label"><span class="dot-bleu"></span> Arène Défensive</div>
             <div class="rangee" id="rangee-def"></div>
             <div class="sep"></div>
+            <!-- Inventaire objets/baies — même hauteur que les cartes -->
             <div class="rangee-label"><span class="dot-violet"></span> Inventaire</div>
-            <div class="rangee" id="rangee-inventaire" style="justify-content:flex-start;gap:8px"></div>
+            <div class="rangee" id="rangee-inventaire" style="justify-content:flex-start;min-height:130px;align-items:flex-start;flex-wrap:wrap;gap:8px"></div>
             <div class="sep"></div>
+            <!-- Boîte + boutons Boutique/XP -->
             <div class="rangee-label">
                 <span class="dot-noir"></span> Boîte
-                <button class="btn btn-gold btn-small" onclick="ouvrirBoutique()" style="margin-left:10px">🛒 Boutique</button>
-                <button class="btn btn-blue btn-small" onclick="acheterXp()" style="margin-left:6px">📈 XP (4🪙)</button>
+                <button class="btn btn-gold btn-label" onclick="ouvrirBoutique()" style="margin-left:auto;padding:5px 12px;font-size:0.75em">🛒 Boutique</button>
+                <button class="btn btn-blue btn-label" onclick="acheterXp()" style="margin-left:6px;padding:5px 12px;font-size:0.75em">📈 XP (4🪙)</button>
             </div>
-            <div style="display:flex;gap:10px;align-items:flex-start">
-                <div class="rangee" id="rangee-boite" style="flex:1"></div>
-                <div style="display:flex;flex-direction:column;gap:4px;min-width:90px;padding-left:8px;border-left:1px solid rgba(255,255,255,0.1)">
-                    <div class="rangee-label" style="margin-bottom:4px"><span class="dot-vert"></span> Centre</div>
-                    <div id="rangee-centre" style="display:flex;flex-direction:column;gap:4px;justify-content:flex-start"></div>
+            <div class="boite-centre-row">
+                <div class="rangee" id="rangee-boite" style="flex:1;justify-content:flex-start;flex-wrap:wrap;margin-bottom:0"></div>
+                <div class="centre-col">
+                    <div class="rangee-label" style="font-size:0.55em;margin-bottom:6px"><span class="dot-vert"></span> Centre Pokémon</div>
+                    <div id="rangee-centre" style="display:flex;flex-direction:column;gap:6px;align-items:center"></div>
                 </div>
             </div>
         </div>
@@ -399,12 +395,7 @@
             </div>
         </div>
 
-        <!-- Actions -->
-        <div class="actions-bar">
-            <button class="btn btn-red"  id="btn-fin-tour" onclick="lancerCombat()" style="display:none">⚔️ Fin de tour &amp; Combat</button>
-            <button class="btn btn-gold" onclick="ouvrirBoutique()">🛒 Boutique</button>
-            <button class="btn btn-blue" onclick="acheterXp()">📈 XP (4🪙)</button>
-        </div>
+
 
     </div>
 
