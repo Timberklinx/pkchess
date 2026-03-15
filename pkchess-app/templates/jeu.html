@@ -1190,7 +1190,7 @@ function afficherBoutique(tour, tour1_gratuit) {
     var pieces  = moi ? moi.pieces : 0;
     var gratuit = (etat && etat.tour === 0) && tour1_gratuit && !(moi && moi.a_achete_tour1);
 
-    document.getElementById('boutique-info').textContent = gratuit
+    document.getElementById('boutique-info').innerHTML = gratuit
         ? '🎁 Capture un Pokémon gratuitement !'
         : '<img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px"> ' + pieces + ' pièces disponibles';
 

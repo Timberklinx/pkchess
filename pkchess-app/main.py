@@ -1263,8 +1263,6 @@ def appliquer_fin_tour(partie):
                                                        niveau_max_pool=j.get("niveau_max_pool", 10))
         j["boutique_locked"] = False
         j["a_achete_tour1"]  = False
-    # Piocher un nouveau climat (global à la partie)
-    piocher_climat(partie)
     return messages
 
 def collecter_evolutions_a_venir(partie):
@@ -1757,6 +1755,8 @@ async def traiter_action(code, pseudo, action):
 
         evolutions_anim = collecter_evolutions_a_venir(partie)
         messages = appliquer_fin_tour(partie)
+        # Piocher le climat du prochain tour (visible sur le plateau avant le combat)
+        piocher_climat(partie)
         await gestionnaire.diffuser(code, {
             "type": "fin_tour", "etat": partie,
             "msg": f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
