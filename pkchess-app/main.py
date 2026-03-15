@@ -1243,6 +1243,8 @@ def lancer_combat(partie):
 def appliquer_fin_tour(partie):
     """Pièces, XP, synergies, Centre Pokémon, nouvelles boutiques."""
     partie["tour"] += 1
+    # Piocher le climat du nouveau tour — visible dès le début du tour
+    piocher_climat(partie)
     messages = []
     for pj, j in partie["joueurs"].items():
         if not j.get("en_vie", True):
@@ -1778,9 +1780,6 @@ async def traiter_action(code, pseudo, action):
             "msg": f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
             "evolutions": evolutions_anim,
         })
-        # Piocher le climat du tour SUIVANT (après diffusion, visible sur plateau avant prochain combat)
-        piocher_climat(partie)
-        await gestionnaire.diffuser(code, {"type": "etat_mis_a_jour", "etat": partie, "msg": ""})
         # Carrousel tous les 4 tours (avant la boutique)
         if est_tour_caroussel(partie):
             preparer_caroussel(partie)
