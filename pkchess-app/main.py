@@ -1212,7 +1212,8 @@ def appliquer_fin_tour(partie):
             messages.append(msg_evol)
         locked = j.get("boutique_locked", False)
         j["boutique_offre"]  = generer_offre_boutique(partie, j["niveau"],
-                                                       ancienne_offre=j["boutique_offre"], locked=locked)
+                                                       ancienne_offre=j["boutique_offre"], locked=locked,
+                                                       niveau_max_pool=j.get("niveau_max_pool", 10))
         j["boutique_locked"] = False
         j["a_achete_tour1"]  = False
     return messages
@@ -1489,6 +1490,11 @@ async def traiter_action(code, pseudo, action):
             "ko":            False,
             "xp_combats":    0,
         })
+        # Déblocage progressif : achat d'un Pokémon au niveau max actuel → débloque le suivant
+        niv_poke = poke_data.get("niveau", 1)
+        nmp = joueur.get("niveau_max_pool", 10)
+        if niv_poke >= nmp and nmp < 15:
+            joueur["niveau_max_pool"] = nmp + 1
         appliquer_bonus_pv_synergies(joueur)
         appliquer_transformations(joueur)
         await gestionnaire.diffuser(code, {
