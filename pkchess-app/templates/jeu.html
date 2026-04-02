@@ -660,7 +660,7 @@ function majInterface() {
     var moi = etat.joueurs[PSEUDO];
     if (!moi) return;
 
-    // Mise à jour du climat
+    // Mise à jour du climat plateau (toujours depuis etat)
     var climatActuel = etat.climat_actuel || "Ensoleillé";
     var CLIMAT_FICHIER = {
         "Ensoleillé": "C-Ensoleille", "Brouillard": "C-Brouillard",
@@ -677,10 +677,13 @@ function majInterface() {
         climatImg.alt = climatActuel;
         climatImg.title = climatActuel;
     }
+    // Climat pendant le combat : utiliser l'état AVANT combat (arenaEtat)
+    var climatCombat = (arenaEtat && arenaEtat.climat_actuel) ? arenaEtat.climat_actuel : climatActuel;
+    var fichierCombat = CLIMAT_FICHIER[climatCombat] || "C-Ensoleille";
     var climatImgCombat = document.getElementById('climat-img-combat');
     if (climatImgCombat) {
-        climatImgCombat.src = IMG_CLIMAT + fichier + ".png";
-        climatImgCombat.alt = climatActuel;
+        climatImgCombat.src = IMG_CLIMAT + fichierCombat + ".png";
+        climatImgCombat.alt = climatCombat;
     }
 
     document.getElementById('mes-pv').textContent     = moi.pv;
