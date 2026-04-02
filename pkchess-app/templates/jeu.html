@@ -17,7 +17,7 @@
         body { background: var(--blue-deep); color: var(--white); font-family: 'Nunito', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
 
         /* ── Header ── */
-        .header { background: linear-gradient(90deg, var(--blue-mid), var(--blue-light)); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--gold); position: sticky; top: 0; z-index: 100; }
+        .header { display: none; }
         .header-logo { font-family: 'Press Start 2P', monospace; font-size: 0.9em; color: var(--gold); }
         .header-code { font-family: 'Press Start 2P', monospace; font-size: 0.75em; background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 20px; color: var(--gold); border: 1px solid rgba(255,215,0,0.3); letter-spacing: 4px; }
         .header-status { display: flex; align-items: center; gap: 8px; font-size: 0.85em; font-weight: 700; }
@@ -51,11 +51,18 @@
         .sep { height: 1px; background: rgba(255,255,255,0.07); margin: 4px 0 12px; }
 
         /* ── Cases plateau ── */
+        .slot-wrapper { display: flex; flex-direction: row; align-items: flex-start; gap: 3px; }
+        .case-objet { width: 22px; height: 28px; border-radius: 6px; border: 2px dashed rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; transition: all 0.2s; background: rgba(0,0,0,0.2); }
+        .case-objet:hover { border-color: rgba(255,215,0,0.5); background: rgba(255,215,0,0.05); }
+        .case-objet-bloquee { opacity: 0.2; cursor: not-allowed; pointer-events: none; }
+        .case-climat-card { width: 100px; height: 140px; border: 2px solid var(--gold); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(255,215,0,0.08); cursor: pointer; flex-shrink: 0; }
+        .case-climat-card:hover { background: rgba(255,215,0,0.15); }
         .case { width: 100px; height: 140px; border-radius: 10px; border: 2px dashed rgba(255,255,255,0.12); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s; position: relative; overflow: hidden; flex-shrink: 0; }
         .case.offensive   { border-color: rgba(230,57,70,0.3); }
         .case.defensive   { border-color: rgba(74,144,217,0.3); }
         .case.boite       { border-color: rgba(255,255,255,0.1); }
         .case.centre      { border-color: rgba(82,183,136,0.4); }
+        .case.inventaire  { border-color: rgba(168,85,247,0.4); }
         .case.bloquee     { opacity: 0.25; cursor: not-allowed; }
         .case.droppable   { border-color: var(--gold) !important; border-style: solid !important; background: rgba(255,215,0,0.08) !important; }
         .case.occupee.offensive { border-style: solid; border-color: var(--red); }
@@ -159,7 +166,11 @@
         .arena-label   { font-size: 0.85em; font-weight: 800; color: rgba(255,255,255,0.5); text-align: center; padding: 4px 0; letter-spacing: 2px; text-transform: uppercase; }
         .arena-rangee  { display: flex; justify-content: center; gap: 16px; }
         #arena-adv-off, #arena-adv-def { flex-direction: row-reverse; }
-        .arena-mid  { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 0; }
+        .arena-mid  { flex: 1; display: flex; align-items: center; justify-content: center; padding: 8px 0; gap: 20px; }
+        .case-climat-combat { width: 100px; height: 140px; flex-shrink: 0; cursor: pointer; border: 2px solid var(--gold); border-radius: 10px; overflow: hidden; background: rgba(255,215,0,0.05); }
+        .case-climat-combat:hover { border-color: rgba(255,215,0,0.8); }
+        .combat-climat-col { width: 160px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .case-climat-combat:hover { border-color: rgba(255,215,0,0.8); }
         .arena-log  { font-size: 1.05em; font-weight: 700; color: #fff; text-align: center; line-height: 1.7; max-width: 800px; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 12px 24px; }
         .arena-card { width: 130px; height: 182px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.15); background: var(--blue-card); position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s, opacity 0.4s; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
         .arena-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px 8px 0 0; }
@@ -302,21 +313,6 @@
 </head>
 <body>
 
-<!-- Header -->
-<div class="header">
-    <div class="header-logo">
-        <div class="logo-container">
-            <img src="/static/PKChess.png" alt="PKChess" class="logo-texte">
-            <img src="/static/pokeball.png" alt="Pokeball" class="logo-pokeball">
-        </div>
-    </div>
-    <div class="header-code" id="header-code">----</div>
-    <div class="header-status">
-        <div class="dot" id="dot"></div>
-        <span id="statut-txt">Connexion...</span>
-    </div>
-</div>
-
 <!-- Jeu principal -->
 <div class="game-wrap">
     <div class="main-col">
@@ -325,30 +321,59 @@
         <div class="stats-bar">
             <div class="player-name" id="player-name">🎮 Dresseur</div>
             <div class="stat-pill hp">❤️ <span class="stat-val" id="mes-pv">100</span></div>
-            <div class="pv-bar-bg"><div class="pv-bar" id="pv-bar" style="width:100%"></div></div>
+            <div class="pv-bar-bg" style="min-width:80px;max-width:200px"><div class="pv-bar" id="pv-bar" style="width:100%"></div></div>
             <div class="stat-pill gp"><img src="/static/PokecoinBack.png" class="pokecoin-icon" alt="🪙"> <span class="stat-val" id="mes-pieces">0</span></div>
             <div class="stat-pill lv">⭐ Niv.<span class="stat-val" id="mon-niveau">1</span></div>
-            <div class="stat-pill xp">
-        <div class="xp-joueur-wrap">
-            <div class="xp-joueur-label">📊 XP <span id="mon-exp">0</span>/<span id="mon-xp-max">1</span></div>
-            <div class="xp-joueur-bg"><div class="xp-joueur-bar" id="mon-xp-bar" style="width:0%"></div></div>
-        </div>
-    </div>
+            <div class="stat-pill xp" style="display:flex;align-items:center;gap:8px">
+                <div class="xp-joueur-wrap">
+                    <div class="xp-joueur-label">📊 XP <span id="mon-exp">0</span>/<span id="mon-xp-max">1</span></div>
+                    <div class="xp-joueur-bg"><div class="xp-joueur-bar" id="mon-xp-bar" style="width:0%"></div></div>
+                </div>
+                <button class="btn btn-blue" onclick="acheterXp()" style="padding:4px 10px;font-size:0.72em;white-space:nowrap">📈 XP (4<img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin-left:1px">)</button>
+            </div>
             <div style="font-size:0.82em;font-weight:800;color:rgba(255,255,255,0.5)">Tour <span id="tour-num">0</span></div>
         </div>
 
         <!-- Plateau -->
         <div class="plateau-wrap">
-            <div class="rangee-label"><span class="dot-rouge"></span> Arène Offensive</div>
-            <div class="rangee" id="rangee-off"></div>
+            <div class="rangee-label" style="display:flex;align-items:center">
+                <span class="dot-rouge"></span> Arène Offensive
+                <button class="btn btn-red" id="btn-fin-tour" onclick="lancerCombat()" style="display:none;margin-left:auto;padding:5px 12px;font-size:0.72em">⚔️ Fin de tour &amp; Combat</button>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px">
+                <div class="rangee" id="rangee-off" style="flex:1;margin-bottom:0"></div>
+                <div class="case case-climat-card" id="case-climat" title="Climat actif" onclick="ouvrirZoomClimat()">
+                    <img id="climat-img" src="" alt="Climat" style="width:85%;height:auto;object-fit:contain">
+                </div>
+            </div>
             <div class="sep"></div>
             <div class="rangee-label"><span class="dot-bleu"></span> Arène Défensive</div>
-            <div class="rangee" id="rangee-def"></div>
+            <div style="display:flex;align-items:flex-start;gap:10px">
+                <div class="rangee" id="rangee-def" style="flex:1;margin-bottom:0"></div>
+                <div style="width:100px;flex-shrink:0"></div>
+            </div>
             <div class="sep"></div>
-            <div class="rangee-label"><span class="dot-vert"></span> Centre Pokémon</div>
-            <div class="rangee" id="rangee-centre" style="justify-content:flex-start;gap:0"></div>
+            <div class="rangee-label"><span class="dot-vert"></span> Centre Pokémon &amp; Inventaire</div>
+            <div style="display:flex;gap:0;align-items:flex-start">
+                <!-- Cases Centre Pokémon -->
+                <div class="rangee" id="rangee-centre" style="justify-content:flex-start;gap:0;margin-bottom:0;flex:1"></div>
+                <!-- Séparateur vertical -->
+                <div style="width:2px;background:rgba(255,255,255,0.1);margin:0 12px;align-self:stretch;min-height:140px"></div>
+                <!-- Cases Inventaire (6 cases fixes) -->
+                <div class="rangee" id="rangee-inventaire" style="justify-content:flex-start;gap:8px;margin-bottom:0;flex-shrink:0">
+                    <div class="case inventaire" data-slot="0" title="Objet/Baie 1"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="1" title="Objet/Baie 2"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="2" title="Objet/Baie 3"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="3" title="Objet/Baie 4"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="4" title="Objet/Baie 5"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                    <div class="case inventaire" data-slot="5" title="Objet/Baie 6"><span style="font-size:1.4em;opacity:0.3">🎒</span></div>
+                </div>
+            </div>
             <div class="sep"></div>
-            <div class="rangee-label"><span class="dot-noir"></span> Boîte</div>
+            <div class="rangee-label" style="display:flex;align-items:center">
+                <span class="dot-noir"></span> Boîte
+                <button class="btn btn-gold" onclick="ouvrirBoutique()" style="margin-left:auto;padding:7px 16px;font-size:0.85em">🛒 Boutique</button>
+            </div>
             <div class="rangee" id="rangee-boite"></div>
         </div>
 
@@ -374,17 +399,23 @@
             </div>
         </div>
 
-        <!-- Actions -->
-        <div class="actions-bar">
-            <button class="btn btn-red"  id="btn-fin-tour" onclick="lancerCombat()" style="display:none">⚔️ Fin de tour &amp; Combat</button>
-            <button class="btn btn-gold" onclick="ouvrirBoutique()">🛒 Boutique</button>
-            <button class="btn btn-blue" onclick="acheterXp()">📈 XP (4🪙)</button>
-        </div>
+
 
     </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
+        <div class="panel" style="padding:8px 14px">
+            <div style="display:flex;align-items:center;gap:8px">
+                <img src="/static/PKChess.png" style="height:20px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(255,215,0,0.5))">
+                <img src="/static/pokeball.png" style="height:20px;width:20px;animation:pokeball-spin 6s linear infinite">
+                <span id="header-code" style="font-family:'Press Start 2P',monospace;font-size:0.6em;color:var(--gold);letter-spacing:2px;flex:1;text-align:center">----</span>
+                <div style="display:flex;align-items:center;gap:4px">
+                    <div class="dot" id="dot"></div>
+                    <span id="statut-txt" style="font-size:0.7em;color:rgba(255,255,255,0.5)">...</span>
+                </div>
+            </div>
+        </div>
         <div class="panel">
             <div class="panel-title">✨ Synergies actives</div>
             <div class="syn-wrap" id="mes-synergies">
@@ -414,7 +445,7 @@
         </div>
         <div class="modal-actions">
             <div style="display:flex;gap:10px;">
-                <button class="btn btn-blue" onclick="roll()">🎲 Roll (2🪙)</button>
+                <button class="btn btn-blue" onclick="roll()">🎲 Roll (2<img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin-left:1px">)</button>
                 <button class="btn btn-lock" id="btn-lock" onclick="toggleLock()">🔓 Garder</button>
             </div>
             <div style="display:flex;gap:10px;">
@@ -440,6 +471,11 @@
 
 <!-- Arène combat animée -->
 <div class="combat-bg" id="combat-bg">
+    <div class="combat-climat-col">
+        <div class="case-climat-combat" id="case-climat-combat" onclick="ouvrirZoomClimat()" title="Climat actif">
+            <img id="climat-img-combat" src="" alt="Climat" style="width:100%;height:100%;object-fit:contain;border-radius:8px">
+        </div>
+    </div>
     <div class="combat-arena">
         <div class="arena-header">
             <span id="arena-title">⚔️ Combat !</span>
@@ -473,7 +509,8 @@
 // ── Config ────────────────────────────────────────────────────────────────────
 var CODE   = "{{ code }}";
 var PSEUDO = new URLSearchParams(window.location.search).get('pseudo') || 'Dresseur';
-var IMG    = "https://raw.githubusercontent.com/Timberklinx/pkchess-assets/main/cartes/cartes_pokemon/";
+var IMG        = "https://raw.githubusercontent.com/Timberklinx/pkchess-assets/main/cartes/cartes_pokemon/";
+    var IMG_CLIMAT = "https://raw.githubusercontent.com/Timberklinx/pkchess-assets/main/cartes/cartes_climat/";
 
 document.getElementById('header-code').textContent = CODE;
 document.getElementById('player-name').textContent  = '🎮 ' + PSEUDO;
@@ -623,6 +660,29 @@ function majInterface() {
     var moi = etat.joueurs[PSEUDO];
     if (!moi) return;
 
+    // Mise à jour du climat
+    var climatActuel = etat.climat_actuel || "Ensoleillé";
+    var CLIMAT_FICHIER = {
+        "Ensoleillé": "C-Ensoleille", "Brouillard": "C-Brouillard",
+        "Canicule":   "C-Canicule",   "Distorsion": "C-Distorsion",
+        "Grêle":      "C-Grele",      "Nuageux":    "C-Nuageux",
+        "Nuit":       "C-Nuit",       "Nuée":       "C-Nuee",
+        "Orage":      "C-Orage",      "Pluie":      "C-Pluie",
+        "Smog":"C-Smog","Tempête":"C-Tempete","Tempête de Sable":"C-Tempete_de_Sable","Vent":"C-Vent"
+    };
+    var fichier = CLIMAT_FICHIER[climatActuel] || "C-Ensoleille";
+    var climatImg = document.getElementById('climat-img');
+    if (climatImg) {
+        climatImg.src = IMG_CLIMAT + fichier + ".png";
+        climatImg.alt = climatActuel;
+        climatImg.title = climatActuel;
+    }
+    var climatImgCombat = document.getElementById('climat-img-combat');
+    if (climatImgCombat) {
+        climatImgCombat.src = IMG_CLIMAT + fichier + ".png";
+        climatImgCombat.alt = climatActuel;
+    }
+
     document.getElementById('mes-pv').textContent     = moi.pv;
     document.getElementById('mes-pieces').textContent = moi.pieces;
     document.getElementById('mon-niveau').textContent = moi.niveau;
@@ -658,7 +718,7 @@ function majInterface() {
             "fee":      ["Palier 3 : +1 piece par combat", "Palier 6 : +2 pieces", "Palier 9 : +4 pieces"],
             "feu":      ["Palier 3 : 1/3 chance de Brulure", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
             "glace":    ["Palier 3 : 1/3 chance de Gel", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
-            "insecte":  ["Palier 3 : +1 pt de Force par Insecte vivant", "Palier 6 : +2 pts", "Palier 9 : +3 pts"],
+            "insecte":  ["Palier 3 : +1 pt de Force", "Palier 6 : +2 pts de Force", "Palier 9 : +4 pts de Force"],
             "normal":   ["Palier 3 : +10 PV MAX", "Palier 6 : +20 PV MAX", "Palier 9 : +40 PV MAX"],
             "plante":   ["Palier 3 : +10 PV soignes post-combat", "Palier 6 : +20 PV", "Palier 9 : +40 PV"],
             "poison":   ["Palier 3 : 1/3 chance d'Empoisonnement", "Palier 6 : 2/3 chance", "Palier 9 : 3/3 chance"],
@@ -718,7 +778,7 @@ function majInterface() {
                  + '<div class="adv-info">'
                  + '<div class="adv-nom">' + p + '</div>'
                  + '<div class="adv-stats"><span class="adv-hp">❤️' + j.pv + '</span>'
-                 + '<span class="adv-gp">🪙' + j.pieces + '</span>'
+                 + '<span class="adv-gp"><img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">' + j.pieces + '</span>'
                  + '<span class="adv-lv">⭐' + j.niveau + '</span></div>'
                  + '</div></div>';
         }).join('');
@@ -755,6 +815,7 @@ function renderCentre(containerId) {
     if (!container) return;
     container.innerHTML = '';
     var niveau_j = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO].niveau : 1;
+    var moi = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO] : null;
     var nbMax    = nbEmplacementsCentre(niveau_j);
     var pokemons = etat && etat.joueurs && etat.joueurs[PSEUDO]
         ? (etat.joueurs[PSEUDO].pokemon || []).filter(function(p) { return p.position === 'centre'; })
@@ -771,8 +832,11 @@ function renderCentre(containerId) {
             if (pokeCentre) {
                 var id4  = String(pokeCentre.id).padStart(4, '0');
                 var tours = pokeCentre.soin_tours_restants || 0;
-                el.innerHTML = '<img src="' + IMG + id4 + '.png" alt="' + pokeCentre.nom
-                    + '" onclick="ouvrirZoom(\'' + IMG + id4 + '.png\',\'centre\',' + s + ')">'
+                var evoliFormeCentre = moi ? moi.evoli_forme : null;
+                var isEvoliCentre = (pokeCentre.id === '0133');
+                var displayId4C = (isEvoliCentre && evoliFormeCentre) ? String(evoliFormeCentre).padStart(4,'0') : id4;
+                el.innerHTML = '<img src="' + IMG + displayId4C + '.png" alt="' + pokeCentre.nom
+                    + '" onclick="ouvrirZoom(\'' + IMG + displayId4C + '.png\',\'centre\',' + s + ')">'
                     + '<div class="poke-nom">⏳' + tours + ' tour' + (tours > 1 ? 's' : '') + '</div>';
                 el.draggable = true;
                 el.addEventListener('dragstart', function(e) {
@@ -794,7 +858,20 @@ function renderCentre(containerId) {
                 }
                 drag_pos = drag_slot = null;
             });
-            container.appendChild(el);
+            // Wrapper + mini-case objet
+            var wrapperC = document.createElement('div');
+            wrapperC.className = 'slot-wrapper';
+            wrapperC.appendChild(el);
+
+            var miniCaseC = document.createElement('div');
+            miniCaseC.className = 'case-objet' + (!pokeCentre ? ' case-objet-bloquee' : '');
+            miniCaseC.dataset.pos  = 'centre';
+            miniCaseC.dataset.slot = s;
+            miniCaseC.title = 'Objet équipé';
+            miniCaseC.innerHTML = '<span style="font-size:0.8em;opacity:0.3">📦</span>';
+            wrapperC.appendChild(miniCaseC);
+
+            container.appendChild(wrapperC);
         })(slot);
     }
 }
@@ -832,7 +909,13 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             var pvCls  = pvPct > 50 ? '' : (pvPct > 25 ? ' medium' : ' low');
             var xpPct  = poke.evolution_ko > 0 ? Math.min(100, Math.round((poke.xp_combats || 0) / poke.evolution_ko * 100)) : 100;
             var evolOk = poke.evolution_id && (poke.xp_combats || 0) >= poke.evolution_ko;
-            var imgSrc = IMG + id4 + '.png';
+            // Évoli : afficher la forme selon synergie active
+            var moi = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO] : null;
+            var evoliForme = moi ? moi.evoli_forme : null;
+            var isEvoli = (poke.id === '0133');
+            var displayId4 = (isEvoli && evoliForme) ? String(evoliForme).padStart(4,'0') : id4;
+            var displayNom  = (isEvoli && evoliForme && etat.joueurs[PSEUDO]) ? (evoliForme) : poke.nom;
+            var imgSrc = IMG + displayId4 + '.png';
             el.innerHTML = '<img src="' + imgSrc + '" alt="' + poke.nom
                 + '" onclick="ouvrirZoom(\'' + imgSrc + '\',\'' + pos + '\',' + i + ')">'
                 + (poke.ko   ? '<div class="ko-badge">KO</div>' : '')
@@ -888,7 +971,23 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             drag_pos = drag_slot = null;
         });
 
-        container.appendChild(el);
+        // Wrapper case + mini-case objet
+        var wrapper = document.createElement('div');
+        wrapper.className = 'slot-wrapper';
+        wrapper.appendChild(el);
+
+        // Mini-case objet à droite (uniquement pour off, def, banc — pas centre)
+        if (pos !== 'centre') {
+            var miniCase = document.createElement('div');
+            miniCase.className = 'case-objet';
+            miniCase.dataset.pos  = pos;
+            miniCase.dataset.slot = i;
+            miniCase.title = 'Objet équipé';
+            miniCase.innerHTML = '<span style="font-size:0.8em;opacity:0.3">📦</span>';
+            wrapper.appendChild(miniCase);
+        }
+
+        container.appendChild(wrapper);
     }
 }
 
@@ -1097,9 +1196,9 @@ function afficherBoutique(tour, tour1_gratuit) {
     var pieces  = moi ? moi.pieces : 0;
     var gratuit = (etat && etat.tour === 0) && tour1_gratuit && !(moi && moi.a_achete_tour1);
 
-    document.getElementById('boutique-info').textContent = gratuit
+    document.getElementById('boutique-info').innerHTML = gratuit
         ? '🎁 Capture un Pokémon gratuitement !'
-        : '🪙 ' + pieces + ' pièces disponibles';
+        : '<img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px"> ' + pieces + ' pièces disponibles';
 
     var container = document.getElementById('boutique-cartes');
     if (!boutique_offre || boutique_offre.length === 0) {
@@ -1112,7 +1211,7 @@ function afficherBoutique(tour, tour1_gratuit) {
         var cout    = poke.niveau;
         var peux    = gratuit || pieces >= cout;
         var types   = Array.isArray(poke.types) ? poke.types.join(', ') : (poke.types || '');
-        var coutTxt = gratuit ? '🎁 Gratuit' : (cout + ' 🪙');
+        var coutTxt = gratuit ? '🎁 Gratuit' : (cout + ' <img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">');
         return '<div class="boutique-carte' + (peux ? '' : ' bloquee') + '" '
              + (peux ? 'onclick="selectionnerPoke(' + i + ')"' : '') + '>'
              + '<img src="' + IMG + id4 + '.png" alt="' + poke.nom
@@ -1171,6 +1270,19 @@ function acheterXp() {
 }
 
 // ── Zoom / Actions carte ──────────────────────────────────────────────────────
+
+function ouvrirZoomClimat() {
+    var climatActuel = etat && etat.climat_actuel ? etat.climat_actuel : "Ensoleillé";
+    var CLIMAT_FICHIER = {
+        "Ensoleillé":"C-Ensoleille","Brouillard":"C-Brouillard","Canicule":"C-Canicule",
+        "Distorsion":"C-Distorsion","Grêle":"C-Grele","Nuageux":"C-Nuageux",
+        "Nuit":"C-Nuit","Nuée":"C-Nuee","Orage":"C-Orage","Pluie":"C-Pluie",
+        "Smog":"C-Smog","Tempête":"C-Tempete","Tempête de Sable":"C-Tempete_de_Sable","Vent":"C-Vent"
+    };
+    var fichier = CLIMAT_FICHIER[climatActuel] || "C-Ensoleille";
+    ouvrirZoom(IMG_CLIMAT + fichier + ".png", null, null);
+}
+
 function ouvrirZoom(src, pos, slot) {
     document.getElementById('zoom-img').src = src;
     document.getElementById('zoom-bg').classList.add('open');
@@ -1184,10 +1296,10 @@ function ouvrirZoom(src, pos, slot) {
         var poke = getPoke(pos, slot);
         if (poke) {
             btnV.style.display = 'inline-block';
-            btnV.textContent   = '💸 Vendre (' + poke.niveau + ' 🪙)';
+            btnV.innerHTML     = '💸 Vendre (' + poke.niveau + ' <img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">)';
             if (poke.ko) {
                 btnR.style.display = 'inline-block';
-                btnR.textContent   = '💊 Racheter (' + poke.niveau + ' 🪙)';
+                btnR.innerHTML     = '💊 Racheter (' + poke.niveau + ' <img src="/static/PokecoinBack.png" style="height:14px;vertical-align:middle;margin:0 1px">)';
             }
         }
     }
