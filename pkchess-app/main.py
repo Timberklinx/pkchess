@@ -1372,11 +1372,11 @@ def generer_code():
 # ── Routes HTTP ───────────────────────────────────────────────────────────────
 @app.get("/", response_class=HTMLResponse)
 async def accueil(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 @app.get("/jeu/{code}", response_class=HTMLResponse)
 async def jeu(request: Request, code: str):
-    return templates.TemplateResponse("jeu.html", {"request": request, "code": code})
+    return templates.TemplateResponse(request, "jeu.html", {"code": code})
 
 @app.post("/creer")
 async def creer_partie(data: dict):
