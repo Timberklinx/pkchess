@@ -648,7 +648,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 65,
     "vitesse": 70,
     "degats": 40,
@@ -761,7 +761,7 @@
       "poison"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 40,
     "vitesse": 35,
     "degats": 0,
@@ -1283,7 +1283,7 @@
       "electrik"
     ],
     "niveau": 3,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 40,
     "vitesse": 90,
     "degats": 20,
@@ -4456,7 +4456,7 @@
     ],
     "immunites": [],
     "evolution": "Canarticho Galar: Mettre K.O. trois Pokémon + avoir une synergie Combat 3 active.",
-    "evolution_id": "0083b",
+    "evolution_id": null,
     "evolution_nom": "Canarticho Galar",
     "evolution_ko": 3,
     "att_off_type": "ténèbre",
@@ -9697,7 +9697,7 @@
       "fée"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 55,
     "vitesse": 40,
     "degats": 10,
@@ -13287,7 +13287,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 55,
     "vitesse": 65,
     "degats": 50,
@@ -13324,7 +13324,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 45,
     "vitesse": 15,
     "degats": 0,
@@ -13800,7 +13800,7 @@
       "fée"
     ],
     "niveau": 2,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 45,
     "vitesse": 50,
     "degats": 30,
@@ -19651,7 +19651,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 55,
     "vitesse": 66,
     "degats": 40,
@@ -20071,7 +20071,7 @@
       "roche"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 60,
     "vitesse": 34,
     "degats": 10,
@@ -31013,7 +31013,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 45,
     "vitesse": 29,
     "degats": 0,
@@ -35557,7 +35557,7 @@
       "plante"
     ],
     "niveau": 2,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 50,
     "vitesse": 62,
     "degats": 20,
