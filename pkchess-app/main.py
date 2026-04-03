@@ -152,6 +152,7 @@ def piocher_depuis_pool(partie, niveau_joueur, n=5, niveau_max_pool=10):
                  if (lambda p: p
                      and p.get("stade", 0) == 0
                      and p["id"] not in _EXCLUS_POOL
+                     and p["id"] not in _IDS_INTERMEDIAIRES
                      and p["niveau"] <= max_niv)(_get_poke(pid))]
     random.shuffle(eligibles)
     choix = eligibles[:n]
@@ -1765,6 +1766,7 @@ async def traiter_action(code, pseudo, action):
         etat_avant_combat = {
             "joueurs": {pj: snapshot_joueur(j) for pj, j in partie["joueurs"].items()},
             "tour": partie.get("tour", 0),
+            "climat_actuel": partie.get("climat_actuel", "Ensoleillé"),
         }
         resultats = lancer_combat(partie)
         partie["phase"] = "preparation"
