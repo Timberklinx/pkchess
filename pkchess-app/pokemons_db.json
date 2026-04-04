@@ -118,7 +118,7 @@
       "poison"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 80,
     "degats": 60,
@@ -155,7 +155,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 180,
     "vitesse": 80,
     "degats": 60,
@@ -303,7 +303,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 60,
@@ -339,7 +339,7 @@
       "vol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 70,
@@ -378,7 +378,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 160,
     "vitesse": 100,
     "degats": 60,
@@ -515,7 +515,7 @@
       "eau"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 78,
     "degats": 60,
@@ -548,7 +548,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 190,
     "vitesse": 78,
     "degats": 50,
@@ -686,7 +686,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 130,
     "vitesse": 70,
     "degats": 50,
@@ -798,7 +798,7 @@
       "poison"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 60,
     "vitesse": 75,
     "degats": 40,
@@ -835,7 +835,7 @@
       "poison"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 145,
     "degats": 70,
@@ -980,7 +980,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 121,
     "degats": 60,
@@ -1180,7 +1180,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 100,
     "degats": 40,
@@ -1249,7 +1249,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 80,
     "degats": 40,
@@ -1301,8 +1301,8 @@
     ],
     "immunites": [],
     "evolution": "Pikachu Gigamax: Étoile Vœu. Raichu: Mettre K.O. deux Pokémon + avoir une synergie Électrik 3 active. Raichu Alola: Mettre K.O. deux Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": "0026b",
-    "evolution_nom": "Raichu Alola",
+    "evolution_id": "0026",
+    "evolution_nom": "Raichu",
     "evolution_ko": 2,
     "att_off_type": "électrik",
     "att_def_type": "normal"
@@ -1444,7 +1444,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 110,
     "degats": 60,
@@ -1475,7 +1475,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 130,
     "degats": 80,
@@ -1581,7 +1581,7 @@
       "sol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 65,
     "degats": 50,
@@ -1616,7 +1616,7 @@
       "acier"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 65,
     "degats": 50,
@@ -1870,7 +1870,7 @@
       "fée"
     ],
     "niveau": 3,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 60,
     "vitesse": 35,
     "degats": 30,
@@ -1939,7 +1939,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 70,
     "degats": 60,
@@ -2046,7 +2046,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 100,
     "degats": 40,
@@ -2083,7 +2083,7 @@
       "fée"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 109,
     "degats": 30,
@@ -2120,7 +2120,7 @@
       "fée"
     ],
     "niveau": 2,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 55,
     "vitesse": 20,
     "degats": 20,
@@ -2229,7 +2229,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 40,
@@ -2342,7 +2342,7 @@
       "poison"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 50,
     "degats": 40,
@@ -2494,7 +2494,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 90,
     "degats": 40,
@@ -2818,7 +2818,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 115,
     "degats": 30,
@@ -2847,7 +2847,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 115,
     "degats": 30,
@@ -2914,7 +2914,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 85,
     "degats": 40,
@@ -2980,7 +2980,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 95,
     "degats": 50,
@@ -3013,7 +3013,7 @@
       "feu"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 60,
     "degats": 30,
@@ -3050,7 +3050,7 @@
       "roche"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 55,
     "degats": 30,
@@ -3088,7 +3088,7 @@
       "feu"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 95,
     "degats": 50,
@@ -3125,7 +3125,7 @@
       "roche"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 90,
     "degats": 50,
@@ -3230,7 +3230,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 70,
     "degats": 40,
@@ -3365,7 +3365,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 71,
     "vitesse": 150,
     "degats": 80,
@@ -3496,7 +3496,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 55,
     "degats": 70,
@@ -3641,7 +3641,7 @@
       "poison"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 60,
@@ -3678,7 +3678,7 @@
       "poison"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 70,
     "degats": 20,
@@ -3717,7 +3717,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 30,
@@ -3989,7 +3989,7 @@
       "feu"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 90,
     "degats": 40,
@@ -4025,7 +4025,7 @@
       "psy"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 90,
     "degats": 40,
@@ -4057,7 +4057,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 105,
     "degats": 50,
@@ -4094,7 +4094,7 @@
       "fée"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 105,
     "degats": 50,
@@ -4200,7 +4200,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 30,
     "degats": 40,
@@ -4239,7 +4239,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 120,
     "vitesse": 30,
     "degats": 50,
@@ -4278,7 +4278,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 30,
     "degats": 50,
@@ -4313,7 +4313,7 @@
       "acier"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 45,
     "degats": 40,
@@ -4357,7 +4357,7 @@
       "acier"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 70,
     "degats": 50,
@@ -4401,7 +4401,7 @@
       "vol"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 60,
     "degats": 40,
@@ -4436,7 +4436,7 @@
       "combat"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 60,
     "degats": 30,
@@ -4506,7 +4506,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 110,
     "degats": 40,
@@ -4541,7 +4541,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 45,
     "degats": 20,
@@ -4575,7 +4575,7 @@
       "glace"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 70,
     "degats": 30,
@@ -4608,7 +4608,7 @@
       "poison"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 25,
     "degats": 30,
@@ -4643,7 +4643,7 @@
       "ténèbre"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 25,
     "degats": 40,
@@ -4677,7 +4677,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 50,
     "degats": 50,
@@ -4712,7 +4712,7 @@
       "ténèbre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 50,
     "degats": 50,
@@ -4780,7 +4780,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 70,
     "degats": 40,
@@ -4931,7 +4931,7 @@
       "poison"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 130,
     "degats": 80,
@@ -4970,7 +4970,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 130,
     "vitesse": 110,
     "degats": 70,
@@ -5009,7 +5009,7 @@
       "sol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 70,
     "degats": 20,
@@ -5050,7 +5050,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 90,
     "degats": 30,
@@ -5087,7 +5087,7 @@
       "psy"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 42,
     "degats": 20,
@@ -5119,7 +5119,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 67,
     "degats": 30,
@@ -5151,7 +5151,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 50,
     "degats": 50,
@@ -5184,7 +5184,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 75,
     "degats": 60,
@@ -5217,7 +5217,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 150,
     "vitesse": 75,
     "degats": 70,
@@ -5250,7 +5250,7 @@
       "electrik"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 100,
     "degats": 20,
@@ -5282,7 +5282,7 @@
       "plante"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 100,
     "degats": 20,
@@ -5317,7 +5317,7 @@
       "electrik"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 150,
     "degats": 40,
@@ -5349,7 +5349,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 150,
     "degats": 40,
@@ -5385,7 +5385,7 @@
       "psy"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 40,
     "degats": 20,
@@ -5426,7 +5426,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 55,
     "degats": 60,
@@ -5467,7 +5467,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 55,
     "degats": 60,
@@ -5538,7 +5538,7 @@
       "sol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 45,
     "degats": 30,
@@ -5614,7 +5614,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 87,
     "degats": 60,
@@ -5647,7 +5647,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 76,
     "degats": 50,
@@ -5680,7 +5680,7 @@
       "normal"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 30,
     "degats": 30,
@@ -5709,7 +5709,7 @@
       "poison"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 35,
     "degats": 20,
@@ -5743,7 +5743,7 @@
       "poison"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 30,
@@ -5778,7 +5778,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 40,
@@ -5816,7 +5816,7 @@
       "roche"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 25,
     "degats": 40,
@@ -5857,7 +5857,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 40,
     "degats": 60,
@@ -5897,7 +5897,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 120,
     "vitesse": 50,
     "degats": 10,
@@ -5926,7 +5926,7 @@
       "plante"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 60,
     "degats": 50,
@@ -5962,7 +5962,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 90,
     "degats": 40,
@@ -5991,7 +5991,7 @@
       "normal"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 100,
     "degats": 60,
@@ -6053,7 +6053,7 @@
       "eau"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 85,
     "degats": 30,
@@ -6119,7 +6119,7 @@
       "eau"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 68,
     "degats": 40,
@@ -6152,7 +6152,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 85,
     "degats": 30,
@@ -6186,7 +6186,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 115,
     "degats": 50,
@@ -6225,7 +6225,7 @@
       "psy"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 120,
     "degats": 70,
@@ -6264,7 +6264,7 @@
       "fée"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 50,
@@ -6299,7 +6299,7 @@
       "psy"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 40,
@@ -6335,7 +6335,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 105,
     "degats": 50,
@@ -6373,7 +6373,7 @@
       "psy"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 95,
     "degats": 50,
@@ -6408,7 +6408,7 @@
       "electrik"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 105,
     "degats": 40,
@@ -6439,7 +6439,7 @@
       "feu"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 93,
     "degats": 50,
@@ -6475,7 +6475,7 @@
       "insecte"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 85,
     "degats": 60,
@@ -6509,7 +6509,7 @@
       "vol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 105,
     "degats": 70,
@@ -6546,7 +6546,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 110,
     "degats": 50,
@@ -6575,7 +6575,7 @@
       "combat"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 110,
     "degats": 50,
@@ -6609,7 +6609,7 @@
       "feu"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 110,
     "degats": 50,
@@ -6647,7 +6647,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 110,
     "degats": 50,
@@ -6753,7 +6753,7 @@
       "vol"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 81,
     "degats": 60,
@@ -6790,7 +6790,7 @@
       "ténèbre"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 81,
     "degats": 70,
@@ -6831,7 +6831,7 @@
       "vol"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 81,
     "degats": 60,
@@ -6868,7 +6868,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 60,
     "degats": 30,
@@ -6902,7 +6902,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 200,
     "vitesse": 60,
     "degats": 50,
@@ -6993,7 +6993,7 @@
       "normal"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 55,
     "degats": 30,
@@ -7023,7 +7023,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 65,
     "degats": 60,
@@ -7061,7 +7061,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 65,
     "degats": 50,
@@ -7095,7 +7095,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 130,
     "degats": 50,
@@ -7130,7 +7130,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 60,
     "degats": 40,
@@ -7172,7 +7172,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 110,
     "degats": 30,
@@ -7201,7 +7201,7 @@
       "nucleaire"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 90,
     "degats": 50,
@@ -7230,7 +7230,7 @@
       "roche"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 65,
     "degats": 50,
@@ -7266,7 +7266,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 95,
     "degats": 50,
@@ -7300,7 +7300,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 130,
     "degats": 50,
@@ -7331,7 +7331,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 65,
     "degats": 40,
@@ -7365,7 +7365,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 110,
     "degats": 60,
@@ -7398,7 +7398,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 65,
     "degats": 50,
@@ -7431,7 +7431,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 130,
     "degats": 50,
@@ -7462,7 +7462,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 65,
     "degats": 50,
@@ -7498,7 +7498,7 @@
       "normal"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 40,
     "degats": 40,
@@ -7528,7 +7528,7 @@
       "eau"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 35,
     "degats": 40,
@@ -7565,7 +7565,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 55,
     "degats": 50,
@@ -7602,7 +7602,7 @@
       "eau"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 55,
     "degats": 40,
@@ -7639,7 +7639,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 80,
     "degats": 50,
@@ -7676,7 +7676,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 130,
     "degats": 50,
@@ -7716,7 +7716,7 @@
       "vol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 150,
     "degats": 60,
@@ -7755,7 +7755,7 @@
       "normal"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 30,
     "degats": 50,
@@ -7784,7 +7784,7 @@
       "normal"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 220,
     "vitesse": 30,
     "degats": 60,
@@ -7814,7 +7814,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 85,
     "degats": 40,
@@ -7850,7 +7850,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 85,
     "degats": 40,
@@ -7888,7 +7888,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 60,
@@ -7925,7 +7925,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 60,
@@ -7964,7 +7964,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 90,
     "degats": 60,
@@ -8003,7 +8003,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 90,
     "degats": 60,
@@ -8148,7 +8148,7 @@
       "vol"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 100,
     "degats": 70,
@@ -8186,7 +8186,7 @@
       "psy"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 130,
     "degats": 70,
@@ -8218,7 +8218,7 @@
       "ténèbre"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 130,
     "degats": 70,
@@ -8253,7 +8253,7 @@
       "combat"
     ],
     "niveau": 15,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 130,
     "degats": 90,
@@ -8285,7 +8285,7 @@
       "psy"
     ],
     "niveau": 15,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 140,
     "degats": 90,
@@ -8318,7 +8318,7 @@
       "ténèbre"
     ],
     "niveau": 15,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 130,
     "degats": 90,
@@ -8354,7 +8354,7 @@
       "acier"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 100,
     "degats": 70,
@@ -8396,7 +8396,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 100,
     "degats": 50,
@@ -8537,7 +8537,7 @@
       "fée"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 80,
     "degats": 60,
@@ -8649,7 +8649,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 100,
     "degats": 50,
@@ -8827,7 +8827,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 78,
     "degats": 80,
@@ -8954,7 +8954,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 70,
     "degats": 40,
@@ -9179,7 +9179,7 @@
       "electrik"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 67,
     "degats": 20,
@@ -9214,7 +9214,7 @@
       "electrik"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 67,
     "degats": 30,
@@ -9331,8 +9331,8 @@
       "dragon"
     ],
     "evolution": "Mélodelfe: Mettre K.O. un Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0036",
-    "evolution_nom": "Mélodelfe",
+    "evolution_id": "0035",
+    "evolution_nom": "Mélofée",
     "evolution_ko": 1,
     "att_off_type": "normal",
     "att_def_type": "fée"
@@ -9366,8 +9366,8 @@
       "spectre"
     ],
     "evolution": "Grodoudou: Mettre K.O. un Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0040",
-    "evolution_nom": "Grodoudou",
+    "evolution_id": "0039",
+    "evolution_nom": "Rondoudou",
     "evolution_ko": 1,
     "att_off_type": "normal",
     "att_def_type": "normal"
@@ -9492,7 +9492,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 95,
     "degats": 40,
@@ -9623,7 +9623,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 45,
     "degats": 80,
@@ -9736,7 +9736,7 @@
       "fée"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 85,
     "vitesse": 50,
     "degats": 30,
@@ -9957,7 +9957,7 @@
       "normal"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 85,
     "degats": 30,
@@ -10059,7 +10059,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 95,
     "degats": 30,
@@ -10171,7 +10171,7 @@
       "sol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 35,
     "degats": 30,
@@ -10205,7 +10205,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 110,
     "degats": 60,
@@ -10237,7 +10237,7 @@
       "ténèbre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 65,
     "degats": 20,
@@ -10272,7 +10272,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 91,
     "degats": 40,
@@ -10310,7 +10310,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 30,
     "degats": 50,
@@ -10349,7 +10349,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 30,
     "degats": 50,
@@ -10383,7 +10383,7 @@
       "spectre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 85,
     "degats": 40,
@@ -10414,7 +10414,7 @@
       "psy"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 48,
     "degats": 30,
@@ -10479,7 +10479,7 @@
       "psy"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 85,
     "degats": 40,
@@ -10545,7 +10545,7 @@
       "acier"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 40,
     "degats": 40,
@@ -10583,7 +10583,7 @@
       "normal"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 45,
     "degats": 30,
@@ -10613,7 +10613,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 85,
     "degats": 30,
@@ -10649,7 +10649,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 115,
     "vitesse": 30,
     "degats": 40,
@@ -10692,7 +10692,7 @@
       "sol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 135,
     "vitesse": 30,
     "degats": 60,
@@ -10768,7 +10768,7 @@
       "fée"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 45,
     "degats": 60,
@@ -10803,7 +10803,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 85,
     "degats": 40,
@@ -10842,7 +10842,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 85,
     "degats": 40,
@@ -10877,7 +10877,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 65,
     "degats": 60,
@@ -10916,7 +10916,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 75,
     "degats": 70,
@@ -10955,7 +10955,7 @@
       "roche"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 160,
     "vitesse": 5,
     "degats": 10,
@@ -10988,7 +10988,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 85,
     "degats": 60,
@@ -11025,7 +11025,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 75,
     "degats": 90,
@@ -11062,7 +11062,7 @@
       "glace"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 115,
     "degats": 40,
@@ -11101,7 +11101,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 115,
     "degats": 40,
@@ -11137,7 +11137,7 @@
       "normal"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 40,
     "degats": 40,
@@ -11166,7 +11166,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 55,
     "degats": 60,
@@ -11232,7 +11232,7 @@
       "roche"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 30,
     "degats": 30,
@@ -11307,7 +11307,7 @@
       "sol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 50,
     "degats": 50,
@@ -11343,7 +11343,7 @@
       "roche"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 35,
     "degats": 30,
@@ -11379,7 +11379,7 @@
       "spectre"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 35,
     "degats": 30,
@@ -11443,7 +11443,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 45,
     "degats": 50,
@@ -11477,7 +11477,7 @@
       "vol"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 75,
     "degats": 30,
@@ -11513,7 +11513,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 70,
     "degats": 40,
@@ -11550,7 +11550,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 70,
     "degats": 40,
@@ -11591,7 +11591,7 @@
       "vol"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 110,
     "degats": 70,
@@ -11632,7 +11632,7 @@
       "feu"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 40,
     "vitesse": 65,
     "degats": 40,
@@ -11672,7 +11672,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 95,
     "degats": 50,
@@ -11712,7 +11712,7 @@
       "feu"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 115,
     "degats": 70,
@@ -11784,7 +11784,7 @@
       "sol"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 40,
     "degats": 30,
@@ -11818,7 +11818,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 50,
     "degats": 60,
@@ -11852,7 +11852,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 60,
     "degats": 50,
@@ -11881,7 +11881,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 85,
     "degats": 40,
@@ -11958,12 +11958,32 @@
       "ténèbre"
     ],
     "immunites": [],
-    "evolution": "Tygnon: Mettre K.O. deux Pokémon + boost défense 5. Kapoera: Mettre K.O. deux Pokémon + boost vitesse.",
-    "evolution_id": "0237",
-    "evolution_nom": "Kapoera",
-    "evolution_ko": 2,
+    "evolution": "Kicklee: Mettre K.O. deux Pokémon + boost attaque. Tygnon: Mettre K.O. deux Pokémon + boost défense. Kapoera: Mettre K.O. deux Pokémon + boost vitesse.",
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0106",
+        "nom": "Kicklee",
+        "condition": "boost_attaque",
+        "evolution_ko": 2
+      },
+      {
+        "id": "0107",
+        "nom": "Tygnon",
+        "condition": "boost_defense",
+        "evolution_ko": 2
+      },
+      {
+        "id": "0237",
+        "nom": "Kapoera",
+        "condition": "boost_vitesse",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0237",
@@ -11972,7 +11992,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 30,
@@ -12041,7 +12061,7 @@
       "electrik"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 95,
     "degats": 30,
@@ -12072,7 +12092,7 @@
       "feu"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 83,
     "degats": 20,
@@ -12108,7 +12128,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 40,
@@ -12166,7 +12186,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 115,
     "degats": 50,
@@ -12197,7 +12217,7 @@
       "feu"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 50,
@@ -12233,7 +12253,7 @@
       "eau"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 85,
     "degats": 30,
@@ -12392,7 +12412,7 @@
       "ténèbre"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 71,
     "degats": 70,
@@ -12435,7 +12455,7 @@
       "vol"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 130,
     "vitesse": 110,
     "degats": 40,
@@ -12473,7 +12493,7 @@
       "vol"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 130,
     "vitesse": 110,
     "degats": 40,
@@ -12511,7 +12531,7 @@
       "vol"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 90,
     "degats": 60,
@@ -12550,7 +12570,7 @@
       "plante"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 100,
     "degats": 40,
@@ -12699,7 +12719,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 145,
     "degats": 70,
@@ -12849,7 +12869,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 100,
     "degats": 80,
@@ -12990,7 +13010,7 @@
       "sol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 70,
     "degats": 70,
@@ -13253,7 +13273,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 15,
     "degats": 0,
@@ -13287,7 +13307,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 55,
     "vitesse": 65,
     "degats": 50,
@@ -13358,7 +13378,7 @@
       "poison"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 75,
     "vitesse": 65,
     "degats": 20,
@@ -13655,7 +13675,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 55,
     "vitesse": 125,
     "degats": 40,
@@ -13728,7 +13748,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 65,
     "degats": 30,
@@ -13835,7 +13855,7 @@
       "fée"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 50,
@@ -13870,7 +13890,7 @@
       "fée"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 70,
@@ -13941,7 +13961,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 80,
     "degats": 50,
@@ -14015,7 +14035,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 70,
     "degats": 60,
@@ -14083,7 +14103,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 90,
     "degats": 40,
@@ -14179,7 +14199,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 50,
     "vitesse": 160,
     "degats": 40,
@@ -14374,7 +14394,7 @@
       "combat"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 50,
     "degats": 60,
@@ -14442,7 +14462,7 @@
       "roche"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 30,
     "degats": 20,
@@ -14537,7 +14557,7 @@
       "spectre"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 50,
     "degats": 30,
@@ -14570,7 +14590,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 20,
     "degats": 40,
@@ -14603,7 +14623,7 @@
       "fée"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 50,
     "degats": 40,
@@ -14645,7 +14665,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 50,
     "degats": 50,
@@ -14687,7 +14707,7 @@
       "roche"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 30,
     "degats": 30,
@@ -14728,7 +14748,7 @@
       "roche"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 40,
     "degats": 40,
@@ -14809,7 +14829,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 50,
     "degats": 70,
@@ -14918,7 +14938,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 100,
     "degats": 50,
@@ -14981,7 +15001,7 @@
       "electrik"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 105,
     "degats": 50,
@@ -15012,7 +15032,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 135,
     "degats": 60,
@@ -15043,7 +15063,7 @@
       "electrik"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 95,
     "degats": 30,
@@ -15074,7 +15094,7 @@
       "electrik"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 95,
     "degats": 20,
@@ -15105,7 +15125,7 @@
       "insecte"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 85,
     "degats": 30,
@@ -15138,7 +15158,7 @@
       "insecte"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 85,
     "degats": 30,
@@ -15242,7 +15262,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 55,
     "degats": 30,
@@ -15318,7 +15338,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 50,
     "vitesse": 95,
     "degats": 60,
@@ -15359,7 +15379,7 @@
       "ténèbre"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 105,
     "degats": 70,
@@ -15399,7 +15419,7 @@
       "eau"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 60,
     "degats": 20,
@@ -15432,7 +15452,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 30,
@@ -15503,7 +15523,7 @@
       "sol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 40,
     "degats": 40,
@@ -15540,7 +15560,7 @@
       "sol"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 20,
     "degats": 60,
@@ -15576,7 +15596,7 @@
       "feu"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 20,
     "degats": 30,
@@ -15612,7 +15632,7 @@
       "psy"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 60,
     "degats": 30,
@@ -15644,7 +15664,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 40,
@@ -15676,7 +15696,7 @@
       "normal"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 60,
     "degats": 30,
@@ -15811,7 +15831,7 @@
       "plante"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 35,
     "degats": 40,
@@ -15848,7 +15868,7 @@
       "ténèbre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 55,
     "degats": 50,
@@ -15927,7 +15947,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 80,
     "degats": 30,
@@ -15966,7 +15986,7 @@
       "fée"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 80,
     "degats": 50,
@@ -16006,7 +16026,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 90,
     "degats": 50,
@@ -16035,7 +16055,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 65,
     "degats": 50,
@@ -16070,7 +16090,7 @@
       "psy"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 70,
     "degats": 40,
@@ -16110,7 +16130,7 @@
       "psy"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 70,
     "degats": 30,
@@ -16185,7 +16205,7 @@
       "sol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 20,
@@ -16253,7 +16273,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 55,
     "degats": 60,
@@ -16334,7 +16354,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 75,
     "degats": 30,
@@ -16374,7 +16394,7 @@
       "plante"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 23,
     "degats": 30,
@@ -16408,7 +16428,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 43,
     "degats": 40,
@@ -16442,7 +16462,7 @@
       "insecte"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 75,
     "degats": 40,
@@ -16475,7 +16495,7 @@
       "insecte"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 45,
     "degats": 60,
@@ -16540,7 +16560,7 @@
       "eau"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 81,
     "degats": 50,
@@ -16573,7 +16593,7 @@
       "normal"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 70,
     "degats": 30,
@@ -16602,7 +16622,7 @@
       "glace"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 70,
     "degats": 30,
@@ -16634,7 +16654,7 @@
       "eau"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 70,
     "degats": 30,
@@ -16667,7 +16687,7 @@
       "feu"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 70,
     "degats": 30,
@@ -16703,7 +16723,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 40,
     "degats": 40,
@@ -16763,7 +16783,7 @@
       "spectre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 65,
     "degats": 50,
@@ -16794,7 +16814,7 @@
       "spectre"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 75,
     "degats": 80,
@@ -16856,7 +16876,7 @@
       "spectre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 25,
     "degats": 30,
@@ -16888,7 +16908,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 51,
     "degats": 30,
@@ -16925,7 +16945,7 @@
       "psy"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 65,
     "degats": 40,
@@ -16958,7 +16978,7 @@
       "acier"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 65,
     "degats": 60,
@@ -17000,7 +17020,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 75,
     "degats": 60,
@@ -17034,7 +17054,7 @@
       "ténèbre"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 115,
     "degats": 70,
@@ -17069,7 +17089,7 @@
       "spectre"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 151,
     "degats": 70,
@@ -17165,7 +17185,7 @@
       "glace"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 80,
     "degats": 40,
@@ -17197,7 +17217,7 @@
       "glace"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 100,
     "degats": 60,
@@ -17331,7 +17351,7 @@
       "eau"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 32,
     "degats": 30,
@@ -17364,7 +17384,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 52,
     "degats": 50,
@@ -17397,7 +17417,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 52,
     "degats": 50,
@@ -17431,7 +17451,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 55,
     "degats": 40,
@@ -17467,7 +17487,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 97,
     "degats": 20,
@@ -17608,7 +17628,7 @@
       "vol"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 120,
     "degats": 70,
@@ -17733,7 +17753,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 70,
     "degats": 60,
@@ -17776,7 +17796,7 @@
       "psy"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 110,
     "degats": 70,
@@ -17818,7 +17838,7 @@
       "roche"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 50,
     "degats": 50,
@@ -17854,7 +17874,7 @@
       "glace"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 50,
     "degats": 50,
@@ -17886,7 +17906,7 @@
       "acier"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 50,
     "degats": 30,
@@ -17929,7 +17949,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 110,
     "degats": 50,
@@ -17969,7 +17989,7 @@
       "psy"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 110,
     "degats": 70,
@@ -18009,7 +18029,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 110,
     "degats": 60,
@@ -18049,7 +18069,7 @@
       "psy"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 110,
     "degats": 80,
@@ -18088,7 +18108,7 @@
       "eau"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 90,
     "degats": 60,
@@ -18121,7 +18141,7 @@
       "eau"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 115,
     "vitesse": 90,
     "degats": 80,
@@ -18154,7 +18174,7 @@
       "sol"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 90,
     "degats": 60,
@@ -18189,7 +18209,7 @@
       "feu"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 115,
     "vitesse": 90,
     "degats": 80,
@@ -18226,7 +18246,7 @@
       "vol"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 95,
     "degats": 70,
@@ -18265,7 +18285,7 @@
       "vol"
     ],
     "niveau": 15,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 115,
     "degats": 90,
@@ -18304,7 +18324,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 100,
     "degats": 50,
@@ -18346,7 +18366,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 150,
     "degats": 70,
@@ -18378,7 +18398,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 30,
     "vitesse": 180,
     "degats": 90,
@@ -18410,7 +18430,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 90,
     "degats": 30,
@@ -18442,7 +18462,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 180,
     "degats": 40,
@@ -18912,7 +18932,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 110,
     "degats": 70,
@@ -19249,7 +19269,7 @@
       "roche"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 58,
     "degats": 60,
@@ -19285,7 +19305,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 58,
     "degats": 80,
@@ -19322,7 +19342,7 @@
       "acier"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 30,
     "degats": 20,
@@ -19363,7 +19383,7 @@
       "acier"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 120,
     "vitesse": 30,
     "degats": 20,
@@ -19436,7 +19456,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 36,
     "degats": 10,
@@ -19469,7 +19489,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 36,
     "degats": 10,
@@ -19502,7 +19522,7 @@
       "insecte"
     ],
     "niveau": 1,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 45,
     "vitesse": 36,
     "degats": 10,
@@ -19536,7 +19556,7 @@
       "acier"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 36,
     "degats": 30,
@@ -19575,7 +19595,7 @@
       "sol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 36,
     "degats": 30,
@@ -19612,7 +19632,7 @@
       "plante"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 36,
     "degats": 20,
@@ -19651,7 +19671,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 55,
     "vitesse": 66,
     "degats": 40,
@@ -19727,7 +19747,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 40,
     "degats": 40,
@@ -19764,7 +19784,7 @@
       "electrik"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 20,
@@ -19795,7 +19815,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 40,
     "vitesse": 85,
     "degats": 30,
@@ -19828,7 +19848,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 115,
     "degats": 50,
@@ -19897,7 +19917,7 @@
       "plante"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 85,
     "degats": 40,
@@ -19933,7 +19953,7 @@
       "plante"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 85,
     "degats": 40,
@@ -19969,7 +19989,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 34,
     "degats": 20,
@@ -20002,7 +20022,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 34,
     "degats": 10,
@@ -20036,7 +20056,7 @@
       "sol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 39,
     "degats": 40,
@@ -20071,7 +20091,7 @@
       "roche"
     ],
     "niveau": 4,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 60,
     "vitesse": 34,
     "degats": 10,
@@ -20107,7 +20127,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 115,
     "degats": 50,
@@ -20137,7 +20157,7 @@
       "vol"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 70,
     "degats": 20,
@@ -20176,7 +20196,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 30,
@@ -20214,7 +20234,7 @@
       "normal"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 85,
     "degats": 30,
@@ -20243,7 +20263,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 105,
     "degats": 30,
@@ -20273,7 +20293,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 135,
     "degats": 60,
@@ -20309,7 +20329,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 105,
     "degats": 50,
@@ -20341,7 +20361,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 71,
     "degats": 60,
@@ -20407,7 +20427,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 112,
     "degats": 40,
@@ -20455,7 +20475,7 @@
     ],
     "immunites": [],
     "evolution": "Coco: Mettre K.O. deux Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": null,
+    "evolution_id": "0358",
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "normal",
@@ -20469,7 +20489,7 @@
       "ténèbre"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 74,
     "degats": 30,
@@ -20504,7 +20524,7 @@
       "ténèbre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 84,
     "degats": 40,
@@ -20582,7 +20602,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 33,
     "degats": 40,
@@ -20682,8 +20702,8 @@
       "dragon"
     ],
     "evolution": "MMime: Mettre K.O. trois Pokémon. MMime Galar: Mettre K.O. trois Pokémon + avoir une synergie Glace 3 active.",
-    "evolution_id": "0122b",
-    "evolution_nom": "MMime Galar",
+    "evolution_id": "0122",
+    "evolution_nom": "M. Mime",
     "evolution_ko": 3,
     "att_off_type": "normal",
     "att_def_type": "normal"
@@ -20725,7 +20745,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 91,
     "degats": 40,
@@ -20761,7 +20781,7 @@
       "ténèbre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 35,
     "degats": 40,
@@ -20902,7 +20922,7 @@
       "sol"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 92,
     "degats": 70,
@@ -20937,7 +20957,7 @@
       "dragon"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 151,
     "degats": 70,
@@ -20972,7 +20992,7 @@
       "normal"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 5,
     "degats": 40,
@@ -21035,7 +21055,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 90,
     "degats": 50,
@@ -21076,7 +21096,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 112,
     "degats": 70,
@@ -21117,7 +21137,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 151,
     "degats": 80,
@@ -21157,7 +21177,7 @@
       "sol"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 32,
     "degats": 30,
@@ -21191,7 +21211,7 @@
       "sol"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 32,
     "degats": 30,
@@ -21225,7 +21245,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 47,
     "degats": 50,
@@ -21259,7 +21279,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 47,
     "degats": 40,
@@ -21294,7 +21314,7 @@
       "insecte"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 65,
     "degats": 20,
@@ -21331,7 +21351,7 @@
       "ténèbre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 95,
     "degats": 40,
@@ -21403,7 +21423,7 @@
       "combat"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 85,
     "degats": 50,
@@ -21439,7 +21459,7 @@
       "plante"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 46,
     "degats": 50,
@@ -21475,7 +21495,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 66,
     "degats": 10,
@@ -21508,7 +21528,7 @@
       "eau"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 91,
     "degats": 30,
@@ -21542,7 +21562,7 @@
       "vol"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 50,
     "degats": 30,
@@ -21579,7 +21599,7 @@
       "glace"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 40,
     "degats": 30,
@@ -21618,7 +21638,7 @@
       "glace"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 30,
@@ -21657,7 +21677,7 @@
       "glace"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 30,
     "degats": 50,
@@ -21696,7 +21716,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 125,
     "degats": 60,
@@ -21778,7 +21798,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 50,
     "degats": 40,
@@ -21848,7 +21868,7 @@
       "plante"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 50,
     "degats": 50,
@@ -21884,7 +21904,7 @@
       "electrik"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 60,
@@ -21992,7 +22012,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -22029,7 +22049,7 @@
       "plante"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 95,
     "degats": 50,
@@ -22065,7 +22085,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 65,
     "degats": 60,
@@ -22098,7 +22118,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 95,
     "degats": 40,
@@ -22169,7 +22189,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 60,
@@ -22232,7 +22252,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 110,
     "degats": 80,
@@ -22265,7 +22285,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 120,
     "vitesse": 40,
     "degats": 30,
@@ -22337,7 +22357,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 110,
     "degats": 30,
@@ -22374,7 +22394,7 @@
       "spectre"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 120,
     "degats": 60,
@@ -22411,7 +22431,7 @@
       "spectre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 91,
     "degats": 30,
@@ -22448,7 +22468,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 50,
@@ -22487,7 +22507,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 40,
@@ -22522,7 +22542,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 50,
@@ -22559,7 +22579,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 50,
@@ -22594,7 +22614,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 40,
@@ -22629,7 +22649,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 95,
     "degats": 30,
@@ -22661,7 +22681,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 80,
     "degats": 50,
@@ -22693,7 +22713,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 115,
     "degats": 60,
@@ -22726,7 +22746,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 90,
     "degats": 70,
@@ -22767,7 +22787,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 90,
     "degats": 70,
@@ -22808,7 +22828,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 100,
     "degats": 70,
@@ -22841,7 +22861,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 120,
     "degats": 70,
@@ -22874,7 +22894,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 77,
     "degats": 60,
@@ -22916,7 +22936,7 @@
       "acier"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 67,
     "degats": 80,
@@ -22957,7 +22977,7 @@
       "normal"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 100,
     "degats": 80,
@@ -22987,7 +23007,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 130,
     "vitesse": 90,
     "degats": 50,
@@ -23027,7 +23047,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 90,
     "degats": 60,
@@ -23066,7 +23086,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 85,
     "degats": 30,
@@ -23098,7 +23118,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 80,
     "degats": 40,
@@ -23131,7 +23151,7 @@
       "eau"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 100,
     "degats": 50,
@@ -23164,7 +23184,7 @@
       "ténèbre"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 125,
     "degats": 60,
@@ -23198,7 +23218,7 @@
       "ténèbre"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 85,
     "degats": 80,
@@ -23232,7 +23252,7 @@
       "plante"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 100,
     "degats": 50,
@@ -23269,7 +23289,7 @@
       "vol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 127,
     "degats": 60,
@@ -23306,7 +23326,7 @@
       "normal"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 120,
     "vitesse": 120,
     "degats": 60,
@@ -23336,7 +23356,7 @@
       "feu"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 100,
     "degats": 50,
@@ -23596,7 +23616,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 75,
     "degats": 70,
@@ -23699,7 +23719,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 50,
@@ -23952,7 +23972,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 55,
     "vitesse": 106,
     "degats": 40,
@@ -24022,7 +24042,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 101,
     "degats": 30,
@@ -24094,7 +24114,7 @@
       "feu"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 101,
     "degats": 30,
@@ -24163,7 +24183,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 101,
     "degats": 40,
@@ -24228,7 +24248,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 29,
     "degats": 50,
@@ -24333,7 +24353,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 93,
     "degats": 50,
@@ -24435,7 +24455,7 @@
       "electrik"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 116,
     "degats": 50,
@@ -24613,7 +24633,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 114,
     "degats": 30,
@@ -24650,7 +24670,7 @@
       "sol"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 68,
     "degats": 40,
@@ -24685,7 +24705,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 88,
     "degats": 60,
@@ -24728,7 +24748,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 103,
     "degats": 80,
@@ -24770,7 +24790,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 50,
     "degats": 30,
@@ -24800,7 +24820,7 @@
       "fée"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 120,
     "vitesse": 50,
     "degats": 40,
@@ -25036,7 +25056,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 45,
     "degats": 50,
@@ -25069,7 +25089,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 85,
     "degats": 60,
@@ -25331,7 +25351,7 @@
       "poison"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 62,
     "degats": 70,
@@ -25409,7 +25429,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 116,
     "degats": 20,
@@ -25485,7 +25505,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 50,
@@ -25522,7 +25542,7 @@
       "combat"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 105,
     "degats": 50,
@@ -25561,7 +25581,7 @@
       "eau"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 98,
     "degats": 40,
@@ -25594,7 +25614,7 @@
       "eau"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 98,
     "degats": 40,
@@ -25627,7 +25647,7 @@
       "eau"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 98,
     "degats": 40,
@@ -25851,7 +25871,7 @@
       "feu"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 95,
     "degats": 70,
@@ -25887,7 +25907,7 @@
       "feu"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 55,
     "degats": 70,
@@ -25923,7 +25943,7 @@
       "glace"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 95,
     "degats": 70,
@@ -25956,7 +25976,7 @@
       "feu"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 135,
     "degats": 70,
@@ -25991,7 +26011,7 @@
       "plante"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 60,
     "degats": 50,
@@ -26028,7 +26048,7 @@
       "roche"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 55,
     "degats": 20,
@@ -26061,7 +26081,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 45,
     "degats": 50,
@@ -26094,7 +26114,7 @@
       "combat"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 48,
     "degats": 30,
@@ -26130,7 +26150,7 @@
       "combat"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 58,
     "degats": 40,
@@ -26166,7 +26186,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 68,
     "degats": 60,
@@ -26202,7 +26222,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 97,
     "degats": 50,
@@ -26309,7 +26329,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 30,
     "degats": 40,
@@ -26341,7 +26361,7 @@
       "roche"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 22,
     "degats": 30,
@@ -26378,7 +26398,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 32,
     "degats": 50,
@@ -26415,7 +26435,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 70,
     "degats": 50,
@@ -26455,7 +26475,7 @@
       "vol"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 110,
     "degats": 70,
@@ -26494,7 +26514,7 @@
       "poison"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 65,
     "degats": 20,
@@ -26528,7 +26548,7 @@
       "poison"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 75,
     "degats": 40,
@@ -26562,7 +26582,7 @@
       "poison"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 160,
     "vitesse": 75,
     "degats": 50,
@@ -26596,7 +26616,7 @@
       "ténèbre"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 40,
     "vitesse": 65,
     "degats": 40,
@@ -26631,7 +26651,7 @@
       "spectre"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 40,
     "vitesse": 70,
     "degats": 30,
@@ -26662,7 +26682,7 @@
       "ténèbre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 60,
     "vitesse": 105,
     "degats": 50,
@@ -26697,7 +26717,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 60,
     "vitesse": 110,
     "degats": 60,
@@ -26757,7 +26777,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 115,
     "degats": 40,
@@ -27016,7 +27036,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 98,
     "degats": 40,
@@ -27149,7 +27169,7 @@
       "plante"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 75,
     "degats": 30,
@@ -27189,7 +27209,7 @@
       "plante"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 75,
     "degats": 30,
@@ -27229,7 +27249,7 @@
       "glace"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 75,
     "degats": 30,
@@ -27264,7 +27284,7 @@
       "plante"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 75,
     "degats": 30,
@@ -27304,7 +27324,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -27344,7 +27364,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -27384,7 +27404,7 @@
       "glace"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -27419,7 +27439,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -27459,7 +27479,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 103,
     "degats": 30,
@@ -27529,7 +27549,7 @@
       "acier"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 20,
     "degats": 60,
@@ -27605,7 +27625,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 30,
     "degats": 30,
@@ -27642,7 +27662,7 @@
       "spectre"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 40,
     "degats": 30,
@@ -27681,7 +27701,7 @@
       "spectre"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 40,
     "degats": 30,
@@ -27720,7 +27740,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 60,
     "degats": 40,
@@ -27759,7 +27779,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 60,
     "degats": 30,
@@ -27797,7 +27817,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 65,
     "degats": 30,
@@ -27865,7 +27885,7 @@
       "electrik"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 108,
     "degats": 40,
@@ -27940,7 +27960,7 @@
       "acier"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 20,
     "degats": 40,
@@ -28022,7 +28042,7 @@
       "acier"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 50,
     "degats": 40,
@@ -28199,7 +28219,7 @@
       "electrik"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 70,
@@ -28230,7 +28250,7 @@
       "psy"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 30,
     "degats": 40,
@@ -28262,7 +28282,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 40,
     "degats": 60,
@@ -28379,7 +28399,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 80,
     "degats": 70,
@@ -28421,7 +28441,7 @@
       "feu"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 90,
     "degats": 80,
@@ -28596,7 +28616,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 50,
     "degats": 60,
@@ -28628,7 +28648,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 105,
     "degats": 40,
@@ -28693,7 +28713,7 @@
       "insecte"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 60,
     "vitesse": 145,
     "degats": 50,
@@ -28727,7 +28747,7 @@
       "electrik"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 32,
     "degats": 30,
@@ -28765,7 +28785,7 @@
       "acier"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 32,
     "degats": 40,
@@ -28807,7 +28827,7 @@
       "combat"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 65,
     "degats": 40,
@@ -28840,7 +28860,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 60,
     "vitesse": 105,
     "degats": 60,
@@ -28873,7 +28893,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 48,
     "degats": 60,
@@ -28947,7 +28967,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 55,
     "degats": 60,
@@ -28986,7 +29006,7 @@
       "spectre"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 55,
     "degats": 70,
@@ -29025,7 +29045,7 @@
       "acier"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 60,
     "degats": 40,
@@ -29068,7 +29088,7 @@
       "acier"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 70,
     "degats": 60,
@@ -29110,7 +29130,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 55,
     "degats": 40,
@@ -29140,7 +29160,7 @@
       "vol"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 60,
     "degats": 40,
@@ -29176,7 +29196,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 60,
@@ -29212,7 +29232,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 65,
     "degats": 50,
@@ -29250,7 +29270,7 @@
       "vol"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 60,
     "degats": 20,
@@ -29288,7 +29308,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 80,
     "degats": 30,
@@ -29325,7 +29345,7 @@
       "feu"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 65,
     "degats": 50,
@@ -29362,7 +29382,7 @@
       "acier"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 109,
     "degats": 50,
@@ -29524,7 +29544,7 @@
       "feu"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 60,
     "degats": 40,
@@ -29561,7 +29581,7 @@
       "feu"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 100,
     "degats": 60,
@@ -29598,7 +29618,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 108,
     "degats": 40,
@@ -29639,7 +29659,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 108,
     "degats": 60,
@@ -29680,7 +29700,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 108,
     "degats": 40,
@@ -29719,7 +29739,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 111,
     "degats": 60,
@@ -29754,7 +29774,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 121,
     "degats": 40,
@@ -29790,7 +29810,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 111,
     "degats": 60,
@@ -29827,7 +29847,7 @@
       "sol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 101,
     "degats": 70,
@@ -29865,7 +29885,7 @@
       "feu"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 90,
     "degats": 70,
@@ -29901,7 +29921,7 @@
       "electrik"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 90,
     "degats": 70,
@@ -29939,7 +29959,7 @@
       "vol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 101,
     "degats": 60,
@@ -29975,7 +29995,7 @@
       "vol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 91,
     "degats": 60,
@@ -30011,7 +30031,7 @@
       "glace"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 95,
     "degats": 50,
@@ -30047,7 +30067,7 @@
       "glace"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 95,
     "degats": 80,
@@ -30083,7 +30103,7 @@
       "glace"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 95,
     "degats": 80,
@@ -30119,7 +30139,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 108,
     "degats": 60,
@@ -30159,7 +30179,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 108,
     "degats": 60,
@@ -30199,7 +30219,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 90,
     "degats": 50,
@@ -30232,7 +30252,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 128,
     "degats": 60,
@@ -30269,7 +30289,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 99,
     "degats": 60,
@@ -30420,7 +30440,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 44,
     "degats": 60,
@@ -30572,7 +30592,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 134,
     "degats": 70,
@@ -30719,7 +30739,7 @@
       "ténèbre"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 3,
     "pv_max": 70,
     "vitesse": 132,
     "degats": 70,
@@ -30760,7 +30780,7 @@
       "ténèbre"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 142,
     "degats": 60,
@@ -31047,7 +31067,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 60,
     "vitesse": 89,
     "degats": 40,
@@ -31085,7 +31105,7 @@
       "normal"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 72,
     "degats": 30,
@@ -31125,7 +31145,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 106,
     "degats": 50,
@@ -31165,7 +31185,7 @@
       "normal"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 72,
     "degats": 30,
@@ -31205,7 +31225,7 @@
       "normal"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 126,
     "degats": 60,
@@ -31312,7 +31332,7 @@
       "fée"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 92,
     "degats": 60,
@@ -31346,7 +31366,7 @@
       "fée"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 102,
     "degats": 70,
@@ -31414,7 +31434,7 @@
       "plante"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 52,
     "degats": 20,
@@ -31450,7 +31470,7 @@
       "plante"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 68,
     "degats": 40,
@@ -31486,7 +31506,7 @@
       "combat"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 43,
     "degats": 40,
@@ -31520,7 +31540,7 @@
       "ténèbre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 58,
     "degats": 60,
@@ -31555,7 +31575,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 102,
     "degats": 40,
@@ -31584,7 +31604,7 @@
       "psy"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 68,
     "degats": 30,
@@ -31616,7 +31636,7 @@
       "psy"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 104,
     "degats": 40,
@@ -31648,7 +31668,7 @@
       "psy"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 68,
     "degats": 30,
@@ -31680,7 +31700,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 124,
     "degats": 70,
@@ -31713,7 +31733,7 @@
       "spectre"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 28,
     "degats": 40,
@@ -31758,7 +31778,7 @@
       "spectre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 35,
     "degats": 50,
@@ -31803,7 +31823,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 60,
     "degats": 20,
@@ -31848,7 +31868,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 60,
     "degats": 70,
@@ -31892,7 +31912,7 @@
       "fée"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 23,
     "degats": 30,
@@ -31926,7 +31946,7 @@
       "fée"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 29,
     "degats": 40,
@@ -31960,7 +31980,7 @@
       "fée"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 49,
     "degats": 20,
@@ -31994,7 +32014,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 72,
     "degats": 40,
@@ -32060,7 +32080,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 73,
     "degats": 40,
@@ -32091,7 +32111,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 88,
     "degats": 50,
@@ -32159,7 +32179,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 68,
     "degats": 50,
@@ -32196,7 +32216,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 88,
     "degats": 70,
@@ -32276,7 +32296,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 44,
     "degats": 40,
@@ -32315,7 +32335,7 @@
       "dragon"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 44,
     "degats": 60,
@@ -32353,7 +32373,7 @@
       "eau"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 44,
     "degats": 20,
@@ -32386,7 +32406,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 59,
     "degats": 60,
@@ -32455,7 +32475,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 109,
     "degats": 50,
@@ -32490,7 +32510,7 @@
       "dragon"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 48,
     "degats": 40,
@@ -32529,7 +32549,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 71,
     "degats": 60,
@@ -32568,7 +32588,7 @@
       "glace"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 46,
     "degats": 20,
@@ -32606,7 +32626,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 58,
     "degats": 30,
@@ -32643,7 +32663,7 @@
       "fée"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 60,
     "degats": 50,
@@ -32678,7 +32698,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 118,
     "degats": 40,
@@ -32717,7 +32737,7 @@
       "vol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 118,
     "degats": 60,
@@ -32756,7 +32776,7 @@
       "fée"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 101,
     "degats": 40,
@@ -32793,7 +32813,7 @@
       "fée"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 50,
     "degats": 20,
@@ -32865,7 +32885,7 @@
       "dragon"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 60,
     "degats": 40,
@@ -32900,7 +32920,7 @@
       "poison"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 40,
     "degats": 40,
@@ -32938,7 +32958,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 80,
     "degats": 50,
@@ -33012,7 +33032,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 75,
     "degats": 40,
@@ -33096,7 +33116,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 56,
     "degats": 50,
@@ -33138,7 +33158,7 @@
       "plante"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 51,
     "degats": 20,
@@ -33180,7 +33200,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 84,
     "degats": 30,
@@ -33253,7 +33273,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 28,
     "degats": 50,
@@ -33286,7 +33306,7 @@
       "roche"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 38,
     "degats": 50,
@@ -33363,7 +33383,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 123,
     "degats": 30,
@@ -33401,7 +33421,7 @@
       "fée"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 99,
     "degats": 60,
@@ -33436,7 +33456,7 @@
       "vol"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 99,
     "degats": 60,
@@ -33474,7 +33494,7 @@
       "sol"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 95,
     "degats": 50,
@@ -33546,7 +33566,7 @@
       "sol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 115,
     "degats": 40,
@@ -33582,7 +33602,7 @@
       "sol"
     ],
     "niveau": 15,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 130,
     "vitesse": 100,
     "degats": 100,
@@ -33618,7 +33638,7 @@
       "fée"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 50,
     "degats": 50,
@@ -33657,7 +33677,7 @@
       "fée"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 110,
     "degats": 80,
@@ -33696,7 +33716,7 @@
       "spectre"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 70,
     "degats": 70,
@@ -33731,7 +33751,7 @@
       "spectre"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 80,
     "degats": 80,
@@ -33766,7 +33786,7 @@
       "eau"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 70,
     "degats": 60,
@@ -33878,7 +33898,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 50,
@@ -34313,7 +34333,7 @@
       "normal"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 45,
     "degats": 50,
@@ -34443,7 +34463,7 @@
       "combat"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 63,
     "degats": 40,
@@ -34477,7 +34497,7 @@
       "glace"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 43,
     "degats": 60,
@@ -34514,7 +34534,7 @@
       "glace"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 33,
     "degats": 70,
@@ -34551,7 +34571,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 93,
     "degats": 40,
@@ -34588,7 +34608,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 93,
     "degats": 40,
@@ -34627,7 +34647,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 93,
     "degats": 40,
@@ -34664,7 +34684,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 93,
     "degats": 40,
@@ -34742,7 +34762,7 @@
       "fée"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 124,
     "degats": 40,
@@ -34817,7 +34837,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 112,
     "degats": 50,
@@ -34853,7 +34873,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 82,
     "degats": 50,
@@ -34890,7 +34910,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 110,
     "degats": 50,
@@ -34962,7 +34982,7 @@
       "eau"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 30,
     "degats": 70,
@@ -35035,7 +35055,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 115,
     "vitesse": 35,
     "degats": 30,
@@ -35073,7 +35093,7 @@
       "sol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 45,
     "degats": 50,
@@ -35107,7 +35127,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 35,
     "degats": 60,
@@ -35178,7 +35198,7 @@
       "insecte"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 42,
     "degats": 30,
@@ -35249,7 +35269,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 45,
     "degats": 50,
@@ -35408,7 +35428,7 @@
       "feu"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 117,
     "degats": 50,
@@ -35448,7 +35468,7 @@
       "combat"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 50,
     "degats": 20,
@@ -35485,7 +35505,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 50,
@@ -35629,7 +35649,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 100,
     "degats": 40,
@@ -35664,7 +35684,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 60,
     "degats": 40,
@@ -35696,7 +35716,7 @@
       "combat"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 60,
@@ -35766,7 +35786,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 40,
     "degats": 60,
@@ -35802,7 +35822,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 40,
     "degats": 70,
@@ -35880,7 +35900,7 @@
       "sol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 35,
     "degats": 50,
@@ -35918,7 +35938,7 @@
       "eau"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 5,
     "degats": 30,
@@ -35951,7 +35971,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 59,
     "degats": 40,
@@ -35980,7 +36000,7 @@
       "normal"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 95,
     "degats": 40,
@@ -36010,7 +36030,7 @@
       "vol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 30,
@@ -36050,7 +36070,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 120,
     "degats": 50,
@@ -36089,7 +36109,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 65,
     "degats": 40,
@@ -36119,7 +36139,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 36,
     "degats": 40,
@@ -36155,7 +36175,7 @@
       "acier"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 96,
     "degats": 40,
@@ -36199,7 +36219,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 96,
     "degats": 40,
@@ -36235,7 +36255,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 92,
     "degats": 50,
@@ -36274,7 +36294,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 36,
     "degats": 60,
@@ -36312,7 +36332,7 @@
       "dragon"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 36,
     "degats": 80,
@@ -36350,7 +36370,7 @@
       "plante"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 40,
     "degats": 60,
@@ -36506,7 +36526,7 @@
       "fée"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 130,
     "degats": 50,
@@ -36543,7 +36563,7 @@
       "fée"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 95,
     "degats": 60,
@@ -36578,7 +36598,7 @@
       "fée"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 75,
     "degats": 60,
@@ -36619,7 +36639,7 @@
       "fée"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 85,
     "degats": 40,
@@ -36722,7 +36742,7 @@
       "acier"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 97,
     "degats": 60,
@@ -36800,7 +36820,7 @@
       "poison"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 103,
     "degats": 60,
@@ -36838,7 +36858,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 79,
     "degats": 60,
@@ -36875,7 +36895,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 151,
     "degats": 50,
@@ -36911,7 +36931,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 83,
     "degats": 70,
@@ -36943,7 +36963,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 61,
     "degats": 50,
@@ -36984,7 +37004,7 @@
       "acier"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 109,
     "degats": 90,
@@ -37025,7 +37045,7 @@
       "dragon"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 43,
     "degats": 50,
@@ -37065,7 +37085,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 79,
     "degats": 60,
@@ -37098,7 +37118,7 @@
       "spectre"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 77,
     "degats": 70,
@@ -37133,7 +37153,7 @@
       "acier"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 77,
     "degats": 70,
@@ -37176,7 +37196,7 @@
       "dragon"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 129,
     "degats": 80,
@@ -37216,7 +37236,7 @@
       "fée"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 65,
     "degats": 60,
@@ -37258,7 +37278,7 @@
       "fée"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 65,
     "degats": 60,
@@ -37300,7 +37320,7 @@
       "fée"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 95,
     "degats": 80,
@@ -37342,7 +37362,7 @@
       "spectre"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 125,
     "degats": 60,
@@ -37378,7 +37398,7 @@
       "poison"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 73,
     "degats": 30,
@@ -37413,7 +37433,7 @@
       "dragon"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 121,
     "degats": 50,
@@ -37452,7 +37472,7 @@
       "acier"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 13,
     "degats": 50,
@@ -37493,7 +37513,7 @@
       "spectre"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 107,
     "degats": 70,
@@ -37534,7 +37554,7 @@
       "electrik"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 143,
     "degats": 50,
@@ -37565,7 +37585,7 @@
       "electrik"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 153,
     "degats": 70,
@@ -37638,7 +37658,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 115,
     "vitesse": 34,
     "degats": 60,
@@ -37680,7 +37700,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 230,
     "vitesse": 34,
     "degats": 80,
@@ -37830,7 +37850,7 @@
       "plante"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 85,
     "degats": 70,
@@ -37974,7 +37994,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 150,
     "vitesse": 119,
     "degats": 60,
@@ -38109,7 +38129,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 130,
     "vitesse": 120,
     "degats": 70,
@@ -38171,7 +38191,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 20,
     "degats": 40,
@@ -38312,7 +38332,7 @@
       "acier"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 190,
     "vitesse": 67,
     "degats": 50,
@@ -38462,7 +38482,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 190,
     "vitesse": 90,
     "degats": 50,
@@ -38533,7 +38553,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 40,
@@ -38603,7 +38623,7 @@
       "plante"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 60,
     "degats": 40,
@@ -38668,7 +38688,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 88,
     "degats": 40,
@@ -38731,7 +38751,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 74,
     "degats": 50,
@@ -38768,7 +38788,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 74,
     "degats": 60,
@@ -38835,7 +38855,7 @@
       "electrik"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 121,
     "degats": 40,
@@ -38981,7 +39001,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 210,
     "vitesse": 30,
     "degats": 50,
@@ -39058,7 +39078,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 70,
     "degats": 50,
@@ -39096,7 +39116,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 140,
     "vitesse": 70,
     "degats": 60,
@@ -39134,7 +39154,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 30,
     "degats": 50,
@@ -39172,7 +39192,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 180,
     "vitesse": 30,
     "degats": 60,
@@ -39243,7 +39263,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 71,
     "degats": 50,
@@ -39277,7 +39297,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 180,
     "vitesse": 71,
     "degats": 60,
@@ -39312,7 +39332,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 85,
     "degats": 40,
@@ -39381,7 +39401,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 55,
     "vitesse": 136,
     "degats": 60,
@@ -39453,7 +39473,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 75,
     "degats": 40,
@@ -39491,7 +39511,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 75,
     "degats": 50,
@@ -39529,7 +39549,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 140,
     "vitesse": 75,
     "degats": 60,
@@ -39604,7 +39624,7 @@
       "insecte"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 65,
     "degats": 50,
@@ -39641,7 +39661,7 @@
       "insecte"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 65,
     "degats": 60,
@@ -39710,7 +39730,7 @@
       "combat"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 42,
     "degats": 50,
@@ -39774,7 +39794,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 70,
     "degats": 60,
@@ -39905,7 +39925,7 @@
       "fée"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 29,
     "degats": 70,
@@ -40048,7 +40068,7 @@
       "fée"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 160,
     "vitesse": 60,
     "degats": 70,
@@ -40118,7 +40138,7 @@
       "acier"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 50,
     "degats": 50,
@@ -40160,7 +40180,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 30,
     "degats": 70,
@@ -40191,7 +40211,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 65,
     "degats": 60,
@@ -40225,7 +40245,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 50,
@@ -40261,7 +40281,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 30,
     "degats": 40,
@@ -40333,7 +40353,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 64,
     "degats": 40,
@@ -40367,7 +40387,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 64,
     "degats": 60,
@@ -40401,7 +40421,7 @@
       "combat"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 75,
     "degats": 50,
@@ -40434,7 +40454,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 70,
@@ -40467,7 +40487,7 @@
       "electrik"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 15,
     "degats": 50,
@@ -40534,7 +40554,7 @@
       "insecte"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 65,
     "degats": 50,
@@ -40568,7 +40588,7 @@
       "roche"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 60,
@@ -40604,7 +40624,7 @@
       "glace"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 50,
     "degats": 30,
@@ -40636,7 +40656,7 @@
       "glace"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 130,
     "degats": 30,
@@ -40669,7 +40689,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 85,
     "degats": 50,
@@ -40702,7 +40722,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 70,
     "vitesse": 95,
     "degats": 50,
@@ -40735,7 +40755,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 97,
     "degats": 40,
@@ -40774,7 +40794,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 97,
     "degats": 40,
@@ -40812,7 +40832,7 @@
       "acier"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 40,
     "degats": 30,
@@ -40854,7 +40874,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 30,
     "degats": 60,
@@ -40896,7 +40916,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 30,
     "degats": 70,
@@ -40939,7 +40959,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 75,
     "degats": 50,
@@ -40977,7 +40997,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 55,
     "degats": 50,
@@ -41012,7 +41032,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 75,
     "degats": 40,
@@ -41045,7 +41065,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 55,
     "degats": 40,
@@ -41079,7 +41099,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 85,
     "degats": 60,
@@ -41120,7 +41140,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 160,
     "vitesse": 85,
     "degats": 70,
@@ -41280,7 +41300,7 @@
       "fée"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 138,
     "degats": 60,
@@ -41315,7 +41335,7 @@
       "acier"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 148,
     "degats": 80,
@@ -41356,7 +41376,7 @@
       "combat"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 138,
     "degats": 60,
@@ -41390,7 +41410,7 @@
       "acier"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 125,
     "vitesse": 128,
     "degats": 60,
@@ -41431,7 +41451,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 130,
     "degats": 70,
@@ -41470,7 +41490,7 @@
       "dragon"
     ],
     "niveau": 15,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 250,
     "vitesse": 130,
     "degats": 70,
@@ -41508,7 +41528,7 @@
       "combat"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 72,
     "degats": 40,
@@ -41542,7 +41562,7 @@
       "ténèbre"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 97,
     "degats": 50,
@@ -41578,7 +41598,7 @@
       "eau"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 97,
     "degats": 60,
@@ -41618,7 +41638,7 @@
       "combat"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 97,
     "degats": 70,
@@ -41654,7 +41674,7 @@
       "combat"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 170,
     "vitesse": 97,
     "degats": 70,
@@ -41694,7 +41714,7 @@
       "plante"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 105,
     "degats": 60,
@@ -41736,7 +41756,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 200,
     "degats": 50,
@@ -41767,7 +41787,7 @@
       "dragon"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 80,
     "degats": 50,
@@ -41801,7 +41821,7 @@
       "glace"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 115,
     "vitesse": 30,
     "degats": 70,
@@ -41833,7 +41853,7 @@
       "spectre"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 130,
     "degats": 70,
@@ -41865,7 +41885,7 @@
       "plante"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 40,
@@ -41906,7 +41926,7 @@
       "spectre"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 150,
     "degats": 80,
@@ -41941,7 +41961,7 @@
       "glace"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 125,
     "vitesse": 50,
     "degats": 80,
@@ -41977,7 +41997,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 65,
     "degats": 50,
@@ -42010,7 +42030,7 @@
       "roche"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 85,
     "degats": 60,
@@ -42080,7 +42100,7 @@
       "normal"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 50,
     "degats": 50,
@@ -42117,7 +42137,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 78,
     "degats": 50,
@@ -42156,7 +42176,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 78,
     "degats": 50,
@@ -42195,7 +42215,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 120,
     "degats": 60,
@@ -42232,7 +42252,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 85,
     "degats": 50,
@@ -42267,7 +42287,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 106,
     "degats": 60,
@@ -42307,7 +42327,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 46,
     "degats": 60,
@@ -42709,7 +42729,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 65,
     "degats": 50,
@@ -42738,7 +42758,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 65,
     "degats": 40,
@@ -42867,7 +42887,7 @@
       "ténèbre"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 92,
     "degats": 50,
@@ -43037,7 +43057,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 111,
     "degats": 20,
@@ -43100,7 +43120,7 @@
       "fée"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 95,
     "degats": 40,
@@ -43255,7 +43275,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 92,
     "degats": 40,
@@ -43435,7 +43455,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 75,
     "degats": 60,
@@ -43475,7 +43495,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 85,
     "degats": 60,
@@ -43547,7 +43567,7 @@
       "electrik"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 45,
     "degats": 50,
@@ -43616,7 +43636,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 125,
     "degats": 50,
@@ -43652,7 +43672,7 @@
       "ténèbre"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 55,
     "vitesse": 51,
     "degats": 30,
@@ -43686,7 +43706,7 @@
       "ténèbre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 85,
     "degats": 60,
@@ -43757,7 +43777,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 110,
     "degats": 40,
@@ -43835,7 +43855,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 90,
     "degats": 50,
@@ -43877,7 +43897,7 @@
       "plante"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 60,
     "vitesse": 70,
     "degats": 20,
@@ -43913,7 +43933,7 @@
       "plante"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 40,
@@ -43948,7 +43968,7 @@
       "roche"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 75,
     "degats": 50,
@@ -44021,7 +44041,7 @@
       "feu"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 75,
     "degats": 50,
@@ -44056,7 +44076,7 @@
       "feu"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 75,
     "degats": 60,
@@ -44124,7 +44144,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 45,
     "degats": 50,
@@ -44193,7 +44213,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 105,
     "degats": 50,
@@ -44418,7 +44438,7 @@
       "ténèbre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 82,
     "degats": 40,
@@ -44488,7 +44508,7 @@
       "eau"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 100,
     "degats": 30,
@@ -44521,7 +44541,7 @@
       "eau"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 100,
     "degats": 70,
@@ -44596,7 +44616,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 90,
     "degats": 50,
@@ -44637,7 +44657,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 121,
     "degats": 40,
@@ -44674,7 +44694,7 @@
       "acier"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 65,
     "degats": 40,
@@ -44717,7 +44737,7 @@
       "poison"
     ],
     "niveau": 5,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 50,
     "vitesse": 60,
     "degats": 50,
@@ -44755,7 +44775,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 86,
     "degats": 60,
@@ -44793,7 +44813,7 @@
       "poison"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 101,
     "degats": 70,
@@ -44861,7 +44881,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 68,
     "degats": 50,
@@ -44893,7 +44913,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 50,
@@ -44931,7 +44951,7 @@
       "glace"
     ],
     "niveau": 4,
-    "stade": 1,
+    "stade": 0,
     "pv_max": 65,
     "vitesse": 43,
     "degats": 30,
@@ -44963,7 +44983,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 73,
     "degats": 50,
@@ -44996,7 +45016,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 70,
     "degats": 50,
@@ -45034,7 +45054,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 35,
     "degats": 50,
@@ -45068,7 +45088,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 82,
     "degats": 50,
@@ -45101,7 +45121,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 82,
     "degats": 60,
@@ -45134,7 +45154,7 @@
       "eau"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 82,
     "degats": 60,
@@ -45167,7 +45187,7 @@
       "eau"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 92,
     "degats": 50,
@@ -45237,7 +45257,7 @@
       "sol"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 20,
     "degats": 30,
@@ -45276,7 +45296,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 50,
@@ -45308,7 +45328,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 55,
     "degats": 50,
@@ -45381,7 +45401,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 87,
     "degats": 60,
@@ -45421,7 +45441,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 111,
     "degats": 30,
@@ -45456,7 +45476,7 @@
       "ténèbre"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 55,
     "degats": 60,
@@ -45499,7 +45519,7 @@
       "fée"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 135,
     "degats": 60,
@@ -45535,7 +45555,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 81,
     "degats": 60,
@@ -45572,7 +45592,7 @@
       "sol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 101,
     "degats": 60,
@@ -45610,7 +45630,7 @@
       "acier"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 106,
     "degats": 50,
@@ -45653,7 +45673,7 @@
       "eau"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 136,
     "degats": 60,
@@ -45687,7 +45707,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 50,
     "degats": 70,
@@ -45723,7 +45743,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 108,
     "degats": 60,
@@ -45761,7 +45781,7 @@
       "poison"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 110,
     "degats": 70,
@@ -45801,7 +45821,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 72,
     "degats": 60,
@@ -45946,7 +45966,7 @@
       "glace"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 87,
     "degats": 80,
@@ -46044,7 +46064,7 @@
       "spectre"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 84,
     "degats": 60,
@@ -46089,7 +46109,7 @@
       "plante"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 70,
     "degats": 40,
@@ -46132,7 +46152,7 @@
       "glace"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 135,
     "degats": 60,
@@ -46171,7 +46191,7 @@
       "sol"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 120,
     "vitesse": 45,
     "degats": 40,
@@ -46212,7 +46232,7 @@
       "feu"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 100,
     "degats": 60,
@@ -46252,7 +46272,7 @@
       "ténèbre"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 119,
     "degats": 60,
@@ -46293,7 +46313,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 75,
     "vitesse": 116,
     "degats": 60,
@@ -46332,7 +46352,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 135,
     "degats": 60,
@@ -46372,7 +46392,7 @@
       "dragon"
     ],
     "niveau": 13,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 135,
     "degats": 60,
@@ -46410,7 +46430,7 @@
       "dragon"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 109,
     "degats": 60,
@@ -46443,7 +46463,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 104,
     "degats": 60,
@@ -46484,7 +46504,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 90,
     "vitesse": 40,
     "degats": 40,
@@ -46564,7 +46584,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 50,
@@ -46606,7 +46626,7 @@
       "combat"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 80,
     "degats": 60,
@@ -46643,7 +46663,7 @@
       "psy"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 80,
     "vitesse": 106,
     "degats": 50,
@@ -46678,7 +46698,7 @@
       "fée"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 99,
     "degats": 40,
@@ -46715,7 +46735,7 @@
       "plante"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 110,
     "degats": 60,
@@ -46752,7 +46772,7 @@
       "roche"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 110,
     "degats": 60,
@@ -46786,7 +46806,7 @@
       "feu"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 110,
     "degats": 60,
@@ -46821,7 +46841,7 @@
       "eau"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 110,
     "degats": 60,
@@ -46855,7 +46875,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 85,
     "degats": 60,
@@ -46896,7 +46916,7 @@
       "dragon"
     ],
     "niveau": 10,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 44,
     "degats": 60,
@@ -46934,7 +46954,7 @@
       "dragon"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 105,
     "vitesse": 91,
     "degats": 50,
@@ -46970,7 +46990,7 @@
       "dragon"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 75,
     "degats": 60,
@@ -47008,7 +47028,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 95,
     "vitesse": 124,
     "degats": 60,
@@ -47048,7 +47068,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 100,
     "vitesse": 98,
     "degats": 60,
@@ -47090,7 +47110,7 @@
       "normal"
     ],
     "niveau": 7,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 85,
     "vitesse": 60,
     "degats": 30,
@@ -47119,7 +47139,7 @@
       "normal"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 85,
     "degats": 40,
@@ -47148,7 +47168,7 @@
       "stellaire"
     ],
     "niveau": 14,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 125,
     "vitesse": 85,
     "degats": 50,
@@ -47178,7 +47198,7 @@
       "spectre"
     ],
     "niveau": 12,
-    "stade": 2,
+    "stade": 0,
     "pv_max": 110,
     "vitesse": 88,
     "degats": 40,
