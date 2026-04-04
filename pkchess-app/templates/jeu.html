@@ -373,7 +373,6 @@
             <div class="rangee-label" style="display:flex;align-items:center">
                 <span class="dot-noir"></span> Boîte
                 <button class="btn btn-gold" onclick="ouvrirBoutique()" style="margin-left:auto;padding:7px 16px;font-size:0.85em">🛒 Boutique</button>
-                <button class="btn" onclick="debugCaptureEvoli()" style="padding:5px 10px;font-size:0.7em;background:rgba(255,50,50,0.3);border:1px dashed red;color:#fff" title="DEBUG">🧪 Évoli</button>
             </div>
             <div class="rangee" id="rangee-boite"></div>
         </div>
@@ -838,7 +837,8 @@ function renderCentre(containerId) {
                 var tours = pokeCentre.soin_tours_restants || 0;
                 var evoliFormeCentre = moi ? moi.evoli_forme : null;
                 var isEvoliCentre = (pokeCentre.id === '0133');
-                var displayId4C = (isEvoliCentre && evoliFormeCentre) ? String(evoliFormeCentre).padStart(4,'0') : id4;
+                var evoliXpOkC = (pokeCentre.xp_combats || 0) >= 3;
+                var displayId4C = (isEvoliCentre && evoliFormeCentre && evoliXpOkC) ? String(evoliFormeCentre).padStart(4,'0') : id4;
                 el.innerHTML = '<img src="' + IMG + displayId4C + '.png" alt="' + pokeCentre.nom
                     + '" onclick="ouvrirZoom(\'' + IMG + displayId4C + '.png\',\'centre\',' + s + ')">'
                     + '<div class="poke-nom">⏳' + tours + ' tour' + (tours > 1 ? 's' : '') + '</div>';
@@ -917,8 +917,9 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             var moi = etat && etat.joueurs && etat.joueurs[PSEUDO] ? etat.joueurs[PSEUDO] : null;
             var evoliForme = moi ? moi.evoli_forme : null;
             var isEvoli = (poke.id === '0133');
-            var displayId4 = (isEvoli && evoliForme) ? String(evoliForme).padStart(4,'0') : id4;
-            var displayNom  = (isEvoli && evoliForme && etat.joueurs[PSEUDO]) ? (evoliForme) : poke.nom;
+            var evoliXpOk = (poke.xp_combats || 0) >= 3;
+            var displayId4 = (isEvoli && evoliForme && evoliXpOk) ? String(evoliForme).padStart(4,'0') : id4;
+            var displayNom  = (isEvoli && evoliForme && evoliXpOk && etat.joueurs[PSEUDO]) ? (evoliForme) : poke.nom;
             var imgSrc = IMG + displayId4 + '.png';
             el.innerHTML = '<img src="' + imgSrc + '" alt="' + poke.nom
                 + '" onclick="ouvrirZoom(\'' + imgSrc + '\',\'' + pos + '\',' + i + ')">'
@@ -1357,12 +1358,6 @@ function deplacerPokemon(fp, fs, tp, ts) {
 }
 
 // ── Combat / Arène ────────────────────────────────────────────────────────────
-function debugCaptureEvoli() {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({type: 'debug_capturer_evoli'}));
-    }
-}
-
 function lancerCombat() {
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'lancer_combat'}));

@@ -3230,7 +3230,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 90,
     "vitesse": 70,
     "degats": 40,
@@ -5426,7 +5426,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 55,
     "degats": 60,
@@ -5467,7 +5467,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 55,
     "degats": 60,
@@ -5538,7 +5538,7 @@
       "sol"
     ],
     "niveau": 6,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 45,
     "degats": 30,
@@ -5913,11 +5913,19 @@
       "spectre"
     ],
     "evolution": "Leuphorie: Mettre K.O. quatre Pokémon + avoir une synergie Normal 9 active.",
-    "evolution_id": "0242",
-    "evolution_nom": "Leuphorie",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0242",
+        "nom": "Leuphorie",
+        "condition": "synergie_normal_9",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0114",
@@ -19556,7 +19564,7 @@
       "acier"
     ],
     "niveau": 6,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 36,
     "degats": 30,
@@ -19595,7 +19603,7 @@
       "sol"
     ],
     "niveau": 6,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 36,
     "degats": 30,
@@ -19632,7 +19640,7 @@
       "plante"
     ],
     "niveau": 6,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 36,
     "degats": 20,
@@ -21716,7 +21724,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 125,
     "degats": 60,
@@ -22468,7 +22476,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 50,
@@ -22507,7 +22515,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 40,
@@ -22542,7 +22550,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 50,
@@ -22579,7 +22587,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 50,
@@ -22614,7 +22622,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 86,
     "degats": 40,
@@ -25505,7 +25513,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 50,
@@ -27246,7 +27254,7 @@
     "nom": "VivaldaimHiver",
     "types": [
       "normal",
-      "glace"
+      "plante"
     ],
     "niveau": 4,
     "stade": 0,
@@ -27258,10 +27266,12 @@
     "att_def_nom": "Charme",
     "att_def_desc": "Réduit de 20 les dégats du Pokemon adverse.",
     "faiblesses": [
-      "acier",
       "combat",
       "feu",
-      "roche"
+      "glace",
+      "insecte",
+      "poison",
+      "vol"
     ],
     "resistances": [
       "glace"
@@ -27324,7 +27334,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -27364,7 +27374,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -27401,10 +27411,10 @@
     "nom": "HaydaimHiver",
     "types": [
       "normal",
-      "glace"
+      "plante"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -27413,10 +27423,12 @@
     "att_def_nom": "Charme",
     "att_def_desc": "Réduit de 30 les dégats du Pokemon adverse.",
     "faiblesses": [
-      "acier",
       "combat",
       "feu",
-      "roche"
+      "glace",
+      "insecte",
+      "poison",
+      "vol"
     ],
     "resistances": [
       "glace"
@@ -27439,7 +27451,7 @@
       "plante"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 50,
@@ -27740,7 +27752,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 60,
     "degats": 40,
@@ -27779,7 +27791,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 60,
     "degats": 30,
@@ -29196,7 +29208,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 60,
@@ -31145,7 +31157,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 106,
     "degats": 50,
@@ -31185,7 +31197,7 @@
       "normal"
     ],
     "niveau": 5,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 60,
     "vitesse": 72,
     "degats": 30,
@@ -31700,7 +31712,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 124,
     "degats": 70,
@@ -31868,7 +31880,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 55,
     "vitesse": 60,
     "degats": 70,
@@ -40245,7 +40257,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 50,
@@ -42718,9 +42730,23 @@
     "evolution": "Fragrouïn: Mettre K.O. deux Pokémon.",
     "evolution_id": null,
     "evolution_nom": null,
-    "evolution_ko": null,
+    "evolution_ko": 2,
     "att_off_type": "sol",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0916",
+        "nom": "FragroinM",
+        "condition": "position_offensive",
+        "evolution_ko": 2
+      },
+      {
+        "id": "0916b",
+        "nom": "FragroinF",
+        "condition": "position_defensive",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0916",
@@ -42729,7 +42755,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 65,
     "degats": 50,
@@ -42758,7 +42784,7 @@
       "normal"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 65,
     "degats": 40,
@@ -46504,7 +46530,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 40,
     "degats": 40,

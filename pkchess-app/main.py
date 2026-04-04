@@ -51,6 +51,9 @@ _EXCLUS_POOL = {
     "0412b",  # Cheniti Déchet (forme conditionnelle)
     "0412c",  # Cheniti Sable (forme conditionnelle)
     "0412d",  # Cheniti Plante (forme conditionnelle)
+    "0351b",  # Morpheo Blizzard (forme climat uniquement)
+    "0351c",  # Morpheo Pluie (forme climat uniquement)
+    "0351d",  # Morpheo Solaire (forme climat uniquement)
 }
 
 # Mapping synergie → évolition d'Évoli (palier 6 requis)
@@ -1230,6 +1233,65 @@ def faire_evoluer(partie, joueur, poke):
 
     # Cas standard
     if not evol_id or evol_ko is None:
+        # Vérifier evolutions_conditionnelles (ex: Leuphorie, Gourmelet)
+        evols_cond = poke.get("evolutions_conditionnelles", [])
+        if evols_cond:
+            xp = poke.get("xp_combats", 0)
+            synergies = calculer_synergies(joueur)
+            for ec in evols_cond:
+                if xp < ec.get("evolution_ko", 99):
+                    continue
+                cond = ec.get("condition", "")
+                ok = False
+                # synergie_TYPE_N
+                if cond.startswith("synergie_"):
+                    parts = cond.split("_")
+                    # format: synergie_TYPE_N
+                    if len(parts) >= 3:
+                        try:
+                            palier_requis = int(parts[-1])
+                            type_requis = "_".join(parts[1:-1])
+                            ok = synergies.get(type_requis, 0) >= palier_requis
+                        except ValueError:
+                            pass
+                elif cond == "position_offensive":
+                    ok = poke.get("position") == "off"
+                elif cond == "position_defensive":
+                    ok = poke.get("position") == "def"
+                if ok:
+                    evol_data = _get_poke(ec["id"])
+                    if evol_data:
+                        ancien_nom    = poke["nom"]
+                        ancien_pv_max = poke.get("pv_max", 100)
+                        nouveau_pv_max = evol_data.get("pv_max", 100)
+                        diff_pv = max(0, nouveau_pv_max - ancien_pv_max)
+                        poke.update({
+                            "id":           evol_data["id"],
+                            "nom":          evol_data["nom"],
+                            "types":        evol_data.get("types", poke["types"]),
+                            "niveau":       evol_data.get("niveau", poke["niveau"]),
+                            "stade":        evol_data.get("stade", poke["stade"]),
+                            "pv_max":       nouveau_pv_max,
+                            "pv":           min(poke.get("pv", nouveau_pv_max) + diff_pv, nouveau_pv_max),
+                            "vitesse":      evol_data.get("vitesse", poke.get("vitesse", 50)),
+                            "degats":       evol_data.get("degats", poke.get("degats", 20)),
+                            "faiblesses":   evol_data.get("faiblesses", []),
+                            "resistances":  evol_data.get("resistances", []),
+                            "immunites":    evol_data.get("immunites", []),
+                            "att_off_nom":  evol_data.get("att_off_nom", ""),
+                            "att_off_desc": evol_data.get("att_off_desc", ""),
+                            "att_def_nom":  evol_data.get("att_def_nom", ""),
+                            "att_def_desc": evol_data.get("att_def_desc", ""),
+                            "att_off_type": evol_data.get("att_off_type"),
+                            "att_def_type": evol_data.get("att_def_type"),
+                            "evolution_id":  evol_data.get("evolution_id"),
+                            "evolution_nom": evol_data.get("evolution_nom"),
+                            "evolution_ko":  evol_data.get("evolution_ko"),
+                            "xp_combats":   0,
+                        })
+                        appliquer_bonus_pv_synergies(joueur)
+                        appliquer_transformations(joueur)
+                        return True, f"🌟 {ancien_nom} évolue en {ec['nom']} ! (+{diff_pv} PV → {poke['pv']}/{nouveau_pv_max})"
         return False, ""
     if poke.get("xp_combats", 0) < evol_ko:
         return False, ""
