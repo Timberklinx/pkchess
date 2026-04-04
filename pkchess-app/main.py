@@ -1243,17 +1243,40 @@ def faire_evoluer(partie, joueur, poke):
                     continue
                 cond = ec.get("condition", "")
                 ok = False
+                # Pas de condition → juste les KO suffisent
+                if not cond:
+                    ok = True
                 # synergie_TYPE_N
-                if cond.startswith("synergie_"):
+                elif cond.startswith("synergie_") and "_ou_" not in cond and not cond.startswith("synergie_any_") and cond != "synergies_differentes_6":
                     parts = cond.split("_")
-                    # format: synergie_TYPE_N
-                    if len(parts) >= 3:
-                        try:
-                            palier_requis = int(parts[-1])
-                            type_requis = "_".join(parts[1:-1])
-                            ok = synergies.get(type_requis, 0) >= palier_requis
-                        except ValueError:
-                            pass
+                    try:
+                        palier_requis = int(parts[-1])
+                        type_requis = "_".join(parts[1:-1])
+                        ok = synergies.get(type_requis, 0) >= palier_requis
+                    except ValueError:
+                        pass
+                # synergie_TYPE1_N_ou_TYPE2_N (double condition)
+                elif "_ou_" in cond:
+                    parts = cond.split("_ou_")
+                    def check_syn(s):
+                        p = s.replace("synergie_", "").rsplit("_", 1)
+                        if len(p) == 2:
+                            try:
+                                return synergies.get(p[0], 0) >= int(p[1])
+                            except ValueError:
+                                pass
+                        return False
+                    ok = check_syn(parts[0]) or check_syn(parts[1])
+                # synergie_any_N : n'importe quel type au palier N
+                elif cond.startswith("synergie_any_"):
+                    try:
+                        palier = int(cond.split("_")[-1])
+                        ok = any(v >= palier for v in synergies.values())
+                    except ValueError:
+                        pass
+                # synergies_differentes_6 : au moins 6 types différents actifs
+                elif cond == "synergies_differentes_6":
+                    ok = len([v for v in synergies.values() if v >= 3]) >= 6
                 elif cond == "position_offensive":
                     ok = poke.get("position") == "off"
                 elif cond == "position_defensive":

@@ -1301,11 +1301,25 @@
     ],
     "immunites": [],
     "evolution": "Pikachu Gigamax: Étoile Vœu. Raichu: Mettre K.O. deux Pokémon + avoir une synergie Électrik 3 active. Raichu Alola: Mettre K.O. deux Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": "0026",
-    "evolution_nom": "Raichu",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0026",
+        "nom": "Raichu",
+        "condition": "synergie_electrik_3",
+        "evolution_ko": 2
+      },
+      {
+        "id": "0026b",
+        "nom": "Raichu Alola",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0025b",
@@ -1711,11 +1725,19 @@
     ],
     "immunites": [],
     "evolution": "Nidoqueen: Mettre K.O. trois Pokémon + avoir une synergie Sol 3 active.",
-    "evolution_id": "0031",
-    "evolution_nom": "Nidoqueen",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0031",
+        "nom": "Nidoqueen",
+        "condition": "synergie_sol_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0031",
@@ -1818,11 +1840,19 @@
     ],
     "immunites": [],
     "evolution": "Nidoking: Mettre K.O. trois Pokémon + avoir une synergie Sol 3 active.",
-    "evolution_id": "0034",
-    "evolution_nom": "Nidoking",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "poison",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0034",
+        "nom": "Nidoking",
+        "condition": "synergie_sol_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0034",
@@ -1891,11 +1921,19 @@
       "dragon"
     ],
     "evolution": "Mélodelfe: Mettre K.O. trois Pokémon + avoir une synergie Fée 6 active.",
-    "evolution_id": "0036",
-    "evolution_nom": "Mélodelfe",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0036",
+        "nom": "Mélodelfe",
+        "condition": "synergie_fee_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0036",
@@ -2001,11 +2039,19 @@
     ],
     "immunites": [],
     "evolution": "Feunard: Mettre K.O. trois Pokémon + avoir une synergie Feu 3 active.",
-    "evolution_id": "0038",
-    "evolution_nom": "Feunard",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "feu",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0038",
+        "nom": "Feunard",
+        "condition": "synergie_feu_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0037b",
@@ -2033,11 +2079,19 @@
     ],
     "immunites": [],
     "evolution": "Feunard Alola: Mettre K.O. trois Pokémon + avoir une synergie Glace 3 active.",
-    "evolution_id": "0038b",
-    "evolution_nom": "Feunard Alola",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "glace",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0038b",
+        "nom": "Feunard Alola",
+        "condition": "synergie_glace_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0038",
@@ -2141,11 +2195,19 @@
       "spectre"
     ],
     "evolution": "Grodoudou: Mettre K.O. deux Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0040",
-    "evolution_nom": "Grodoudou",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "fée",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0040",
+        "nom": "Grodoudou",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0040",
@@ -2254,11 +2316,19 @@
       "sol"
     ],
     "evolution": "Nostenfer: Mettre K.O. quatre Pokémon + avoir une synergie Poison 6 active.",
-    "evolution_id": "0169",
-    "evolution_nom": "Nostenfer",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "insecte",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0169",
+        "nom": "Nostenfer",
+        "condition": "synergie_poison_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0043",
@@ -2328,11 +2398,25 @@
     ],
     "immunites": [],
     "evolution": "Rafflesia: Mettre K.O. trois Pokémon + avoir une synergie Poison 6 active. Joliflor: Mettre K.O. trois Pokémon + avoir une synergie Plante 6 active.",
-    "evolution_id": "0182",
-    "evolution_nom": "Joliflor",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0045",
+        "nom": "Rafflesia",
+        "condition": "synergie_poison_6",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0182",
+        "nom": "Joliflor",
+        "condition": "synergie_plante_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0045",
@@ -2734,11 +2818,19 @@
       "psy"
     ],
     "evolution": "Persian Alola: Mettre K.O. deux Pokémon + avoir une synergie Ténèbre 3 active.",
-    "evolution_id": "0053b",
-    "evolution_nom": "Persian Alola",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0053b",
+        "nom": "Persian Alola",
+        "condition": "synergie_tenebres_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0052c",
@@ -3000,11 +3092,19 @@
     ],
     "immunites": [],
     "evolution": "Courrousinge: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active.",
-    "evolution_id": "0979",
-    "evolution_nom": "Courrousinge",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "dragon",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0979",
+        "nom": "Courrousinge",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0058",
@@ -3036,11 +3136,19 @@
     ],
     "immunites": [],
     "evolution": "Arcanin: Mettre K.O. quatre Pokémon + avoir une synergie Feu 3 active.",
-    "evolution_id": "0059",
-    "evolution_nom": "Arcanin",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "fée",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0059",
+        "nom": "Arcanin",
+        "condition": "synergie_feu_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0058b",
@@ -3075,11 +3183,19 @@
     ],
     "immunites": [],
     "evolution": "Arcanin Hisui: Mettre K.O. quatre Pokémon + avoir une synergie Feu 3 active.",
-    "evolution_id": "0059b",
-    "evolution_nom": "Arcanin Hisui",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "feu",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0059b",
+        "nom": "Arcanin Hisui",
+        "condition": "synergie_feu_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0059",
@@ -3216,11 +3332,25 @@
     ],
     "immunites": [],
     "evolution": "Tartard: Mettre K.O. trois Pokémon + avoir une synergie Combat 3 active. Tarpaud: Mettre K.O. trois Pokémon + avoir une synergie Eau 6 active.",
-    "evolution_id": "0186",
-    "evolution_nom": "Tarpaud",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0186",
+        "nom": "Tarpaud",
+        "condition": "synergie_eau_6",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0062",
+        "nom": "Tartard",
+        "condition": "synergie_combat_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0062",
@@ -3320,11 +3450,19 @@
     ],
     "immunites": [],
     "evolution": "Alakazam: Mettre K.O. quatre Pokémon + avoir une synergie Psy 6 active.",
-    "evolution_id": "0065",
-    "evolution_nom": "Alakazam",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "psy",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0065",
+        "nom": "Alakazam",
+        "condition": "synergie_psy_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0065",
@@ -3450,11 +3588,19 @@
     ],
     "immunites": [],
     "evolution": "Mackogneur: Mettre K.O. quatre Pokémon + avoir une synergie Combat 6 active.",
-    "evolution_id": "0068",
-    "evolution_nom": "Mackogneur",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "combat"
+    "att_def_type": "combat",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0068",
+        "nom": "Mackogneur",
+        "condition": "synergie_combat_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0068",
@@ -3590,11 +3736,19 @@
     ],
     "immunites": [],
     "evolution": "Empiflor: Mettre K.O. trois Pokémon + avoir une synergie Plante 6 active.",
-    "evolution_id": "0071",
-    "evolution_nom": "Empiflor",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "poison"
+    "att_def_type": "poison",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0071",
+        "nom": "Empiflor",
+        "condition": "synergie_plante_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0071",
@@ -3861,11 +4015,19 @@
       "electrik"
     ],
     "evolution": "Grolem: Mettre K.O. quatre Pokémon + avoir une synergie Roche 6 active.",
-    "evolution_id": "0076",
-    "evolution_nom": "Grolem",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "roche",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0076",
+        "nom": "Grolem",
+        "condition": "synergie_roche_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0075b",
@@ -3898,11 +4060,19 @@
     ],
     "immunites": [],
     "evolution": "Grolem Alola: Mettre K.O. quatre Pokémon + avoir une synergie Roche 6 active.",
-    "evolution_id": "0076b",
-    "evolution_nom": "Grolem Alola",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0076b",
+        "nom": "Grolem Alola",
+        "condition": "synergie_roche_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0076",
@@ -4186,11 +4356,25 @@
     ],
     "immunites": [],
     "evolution": "Waal: Mettre K.O. quatre Pokémon + avoir une synergie Poison 3 active. Roigada Galar: Mettre K.O. quatre Pokémon + avoir une synergie Ténèbre 3 active.",
-    "evolution_id": "0199b",
-    "evolution_nom": "Roigada Galar",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "psy",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0199b",
+        "nom": "Roigada Galar",
+        "condition": "synergie_tenebres_3",
+        "evolution_ko": 4
+      },
+      {
+        "id": "0080c",
+        "nom": "Waal",
+        "condition": "synergie_poison_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0080",
@@ -4387,11 +4571,19 @@
       "poison"
     ],
     "evolution": "Magnezone: Mettre K.O. quatre Pokémon + avoir une synergie Électrik 6 ou Acier 6 active.",
-    "evolution_id": "0462",
-    "evolution_nom": "Magnezone",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "électrik"
+    "att_def_type": "électrik",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0462",
+        "nom": "Magnezone",
+        "condition": "synergie_electrik_6_ou_acier_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0083",
@@ -4766,11 +4958,19 @@
     ],
     "immunites": [],
     "evolution": "Crustabri: Mettre K.O. trois Pokémon + avoir une synergie Eau 3 active.",
-    "evolution_id": "0091",
-    "evolution_nom": "Crustabri",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "eau",
-    "att_def_type": "eau"
+    "att_def_type": "eau",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0091",
+        "nom": "Crustabri",
+        "condition": "synergie_eau_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0091",
@@ -4878,11 +5078,19 @@
       "normal"
     ],
     "evolution": "Ectoplasma: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 6 active.",
-    "evolution_id": "0094",
-    "evolution_nom": "Ectoplasma",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "spectre",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0094",
+        "nom": "Ectoplasma",
+        "condition": "synergie_spectre_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0094",
@@ -5036,11 +5244,19 @@
       "electrik"
     ],
     "evolution": "Steelix: Mettre K.O. quatre Pokémon + avoir une synergie Acier 3 active.",
-    "evolution_id": "0208",
-    "evolution_nom": "Steelix",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "roche",
-    "att_def_type": "roche"
+    "att_def_type": "roche",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0208",
+        "nom": "Steelix",
+        "condition": "synergie_acier_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0095b",
@@ -5304,11 +5520,19 @@
     ],
     "immunites": [],
     "evolution": "Electrode Hisui: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 active.",
-    "evolution_id": "0101b",
-    "evolution_nom": "Electrode Hisui",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "électrik"
+    "att_def_type": "électrik",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0101b",
+        "nom": "Electrode Hisui",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0101",
@@ -5525,11 +5749,25 @@
       "electrik"
     ],
     "evolution": "Voodtueur: Mettre K.O. trois Pokémon. Ossatueur Alola: Mettre K.O. trois Pokémon + avoir une synergie Spectre 3 active.",
-    "evolution_id": "0105b",
-    "evolution_nom": "Ossatueur Alola",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "sol",
-    "att_def_type": "combat"
+    "att_def_type": "combat",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0105",
+        "nom": "Ossatueur",
+        "condition": null,
+        "evolution_ko": 3
+      },
+      {
+        "id": "0105b",
+        "nom": "Ossatueur Alola",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0105",
@@ -5730,11 +5968,25 @@
     ],
     "immunites": [],
     "evolution": "Smogogo: Mettre K.O. quatre Pokémon. Smogogo Galar: Mettre K.O. quatre Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0110b",
-    "evolution_nom": "Smogogo Galar",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "poison",
-    "att_def_type": "poison"
+    "att_def_type": "poison",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0110",
+        "nom": "Smogogo",
+        "condition": null,
+        "evolution_ko": 4
+      },
+      {
+        "id": "0110b",
+        "nom": "Smogogo Galar",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0110",
@@ -5884,11 +6136,19 @@
       "electrik"
     ],
     "evolution": "Rhinastoc: Mettre K.O. quatre Pokémon + avoir une synergie Roche 6 active.",
-    "evolution_id": "0464",
-    "evolution_nom": "Rhinastoc",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "insecte",
-    "att_def_type": "sol"
+    "att_def_type": "sol",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0464",
+        "nom": "Rhinastoc",
+        "condition": "synergie_roche_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0113",
@@ -6081,11 +6341,19 @@
     ],
     "immunites": [],
     "evolution": "Hyporoi: Mettre K.O. quatre Pokémon + avoir une synergie Dragon 3 active.",
-    "evolution_id": "0230",
-    "evolution_nom": "Hyporoi",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "dragon",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0230",
+        "nom": "Hyporoi",
+        "condition": "synergie_dragon_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0118",
@@ -6180,11 +6448,19 @@
     ],
     "immunites": [],
     "evolution": "Staross: Mettre K.O. trois Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": "0121",
-    "evolution_nom": "Staross",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "roche",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0121",
+        "nom": "Staross",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0121",
@@ -6367,11 +6643,25 @@
       "sol"
     ],
     "evolution": "Scizor: Mettre K.O. trois Pokémon + avoir une synergie Acier 3 active. Hachécateur: Mettre K.O. trois Pokémon + avoir une synergie Roche 3 active.",
-    "evolution_id": "0900",
-    "evolution_nom": "Hachécateur",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "insecte",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0212",
+        "nom": "Cizayox",
+        "condition": "synergie_acier_3",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0900",
+        "nom": "Hachécateur",
+        "condition": "synergie_roche_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0124",
@@ -6470,11 +6760,19 @@
     ],
     "immunites": [],
     "evolution": "Maganon: Mettre K.O. quatre Pokémon + avoir une synergie Feu 6 active.",
-    "evolution_id": "0467",
-    "evolution_nom": "Maganon",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "feu",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0467",
+        "nom": "Maganon",
+        "condition": "synergie_feu_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0127",
@@ -8644,11 +8942,25 @@
     ],
     "immunites": [],
     "evolution": "Typhlosion: Mettre K.O. quatre Pokémon. Typhlosion Hisui: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active.",
-    "evolution_id": "0157b",
-    "evolution_nom": "Typhlosion Hisui",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "feu",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0157",
+        "nom": "Typhlosion",
+        "condition": null,
+        "evolution_ko": 4
+      },
+      {
+        "id": "0157b",
+        "nom": "Typhlosion Hisui",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0157",
@@ -9274,11 +9586,19 @@
     ],
     "immunites": [],
     "evolution": "Pikachu: Mettre K.O. un Pokémon + avoir une synergie Électrik 3 active.",
-    "evolution_id": "0025",
-    "evolution_nom": "Pikachu",
-    "evolution_ko": 1,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
-    "att_def_type": "fée"
+    "att_def_type": "fée",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0025",
+        "nom": "Pikachu",
+        "condition": "synergie_electrik_3",
+        "evolution_ko": 1
+      }
+    ]
   },
   {
     "id": "0172b",
@@ -9339,11 +9659,19 @@
       "dragon"
     ],
     "evolution": "Mélodelfe: Mettre K.O. un Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0035",
-    "evolution_nom": "Mélofée",
-    "evolution_ko": 1,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "fée"
+    "att_def_type": "fée",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0035",
+        "nom": "Mélofée",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 1
+      }
+    ]
   },
   {
     "id": "0174",
@@ -9374,11 +9702,19 @@
       "spectre"
     ],
     "evolution": "Grodoudou: Mettre K.O. un Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0039",
-    "evolution_nom": "Rondoudou",
-    "evolution_ko": 1,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0039",
+        "nom": "Rondoudou",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 1
+      }
+    ]
   },
   {
     "id": "0175",
@@ -9408,11 +9744,19 @@
       "dragon"
     ],
     "evolution": "Togetic: Mettre K.O. deux Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0176",
-    "evolution_nom": "Togetic",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0176",
+        "nom": "Togetic",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0176",
@@ -9448,11 +9792,19 @@
       "sol"
     ],
     "evolution": "Togekiss: Mettre K.O. quatre Pokémon + avoir une synergie Fée 6 active.",
-    "evolution_id": "0468",
-    "evolution_nom": "Togekiss",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "fée",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0468",
+        "nom": "Togekiss",
+        "condition": "synergie_fee_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0177",
@@ -9981,11 +10333,19 @@
       "spectre"
     ],
     "evolution": "Capidextre: Mettre K.O. trois Pokémon + avoir une synergie Normal 3 active.",
-    "evolution_id": "0424",
-    "evolution_nom": "Capidextre",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0424",
+        "nom": "Capidextre",
+        "condition": "synergie_normal_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0191",
@@ -10017,11 +10377,19 @@
     ],
     "immunites": [],
     "evolution": "Heliatronc: Mettre K.O. deux Pokémon + avoir une synergie Plante 3 active.",
-    "evolution_id": "0192",
-    "evolution_nom": "Heliatronc",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0192",
+        "nom": "Heliatronc",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0192",
@@ -10409,11 +10777,19 @@
       "normal"
     ],
     "evolution": "Magirêve: Mettre K.O. trois Pokémon + avoir une synergie Spectre 6 active.",
-    "evolution_id": "0429",
-    "evolution_nom": "Magirêve",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "spectre",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0429",
+        "nom": "Magirêve",
+        "condition": "synergie_spectre_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0201",
@@ -10643,11 +11019,19 @@
       "sol"
     ],
     "evolution": "Scorvol: Mettre K.O. quatre Pokémon + avoir une synergie Poison 3 active.",
-    "evolution_id": "0472",
-    "evolution_nom": "Scorvol",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "insecte",
-    "att_def_type": "sol"
+    "att_def_type": "sol",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0472",
+        "nom": "Scorvol",
+        "condition": "synergie_poison_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0208",
@@ -10871,11 +11255,19 @@
       "psy"
     ],
     "evolution": "Qwilpik: Mettre K.O. quatre Pokémon + avoir une synergie Poison 3 active.",
-    "evolution_id": "0904",
-    "evolution_nom": "Qwilpik",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "poison",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0904",
+        "nom": "Qwilpik",
+        "condition": "synergie_poison_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0212",
@@ -11190,11 +11582,19 @@
       "spectre"
     ],
     "evolution": "Ursaking: Mettre K.O. cinq Pokémon + avoir une synergie Sol 3 active.",
-    "evolution_id": "0901",
-    "evolution_nom": "Ursaking",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0901",
+        "nom": "Ursaking",
+        "condition": "synergie_sol_3",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0218",
@@ -11876,11 +12276,19 @@
       "spectre"
     ],
     "evolution": "Porygon-Z: Mettre K.O. trois Pokémon + avoir une synergie Normal 6 active.",
-    "evolution_id": "0474",
-    "evolution_nom": "Porygon-Z",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0474",
+        "nom": "Porygon-Z",
+        "condition": "synergie_normal_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0234",
@@ -13477,11 +13885,19 @@
     ],
     "immunites": [],
     "evolution": "Ludicolo: Mettre K.O. trois Pokémon + avoir une synergie Eau 6 active.",
-    "evolution_id": "0272",
-    "evolution_nom": "Ludicolo",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "glace"
+    "att_def_type": "glace",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0272",
+        "nom": "Ludicolo",
+        "condition": "synergie_eau_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0272",
@@ -13590,11 +14006,19 @@
       "psy"
     ],
     "evolution": "Tengalice: Mettre K.O. trois Pokémon + avoir une synergie Plante 6 active.",
-    "evolution_id": "0275",
-    "evolution_nom": "Tengalice",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0275",
+        "nom": "Tengalice",
+        "condition": "synergie_plante_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0275",
@@ -13849,11 +14273,25 @@
       "dragon"
     ],
     "evolution": "Gardevoir: Mettre K.O. trois Pokémon. Gallame: Mettre K.O. trois Pokémon + avoir une synergie Combat 3 active.",
-    "evolution_id": "0475",
-    "evolution_nom": "Gallame",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0282",
+        "nom": "Gardevoir",
+        "condition": null,
+        "evolution_ko": 3
+      },
+      {
+        "id": "0475",
+        "nom": "Gallame",
+        "condition": "synergie_combat_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0282",
@@ -14457,11 +14895,19 @@
       "spectre"
     ],
     "evolution": "Marill: Mettre K.O. un Pokémon + avoir une synergie Eau 3 active.",
-    "evolution_id": "0183",
-    "evolution_nom": "Marill",
-    "evolution_ko": 1,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "eau",
-    "att_def_type": "eau"
+    "att_def_type": "eau",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0183",
+        "nom": "Marill",
+        "condition": "synergie_eau_3",
+        "evolution_ko": 1
+      }
+    ]
   },
   {
     "id": "0299",
@@ -14493,11 +14939,19 @@
     ],
     "immunites": [],
     "evolution": "Tarinorme: Mettre K.O. trois Pokémon + avoir une synergie Acier 3 active.",
-    "evolution_id": "0476",
-    "evolution_nom": "Tarinorme",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
-    "att_def_type": "combat"
+    "att_def_type": "combat",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0476",
+        "nom": "Tarinorme",
+        "condition": "synergie_acier_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0300",
@@ -14522,11 +14976,19 @@
       "spectre"
     ],
     "evolution": "Delcatty: Mettre K.O. deux Pokémon + avoir une synergie Normal 3 active.",
-    "evolution_id": "0301",
-    "evolution_nom": "Delcatty",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "fée",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0301",
+        "nom": "Delcatty",
+        "condition": "synergie_normal_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0301",
@@ -15223,11 +15685,19 @@
     ],
     "immunites": [],
     "evolution": "Roserade: Mettre K.O. quatre Pokémon + avoir une synergie Plante 6 active.",
-    "evolution_id": "0407",
-    "evolution_nom": "Roserade",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0407",
+        "nom": "Roserade",
+        "condition": "synergie_plante_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0316",
@@ -16555,11 +17025,19 @@
     ],
     "immunites": [],
     "evolution": "Milobellus: Mettre K.O. trois Pokémon + avoir une synergie Eau 6 active.",
-    "evolution_id": "0350",
-    "evolution_nom": "Milobellus",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0350",
+        "nom": "Milobellus",
+        "condition": "synergie_eau_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0350",
@@ -16902,11 +17380,19 @@
       "normal"
     ],
     "evolution": "Noctunoir: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 6 active.",
-    "evolution_id": "0477",
-    "evolution_nom": "Noctunoir",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "spectre",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0477",
+        "nom": "Noctunoir",
+        "condition": "synergie_spectre_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0357",
@@ -17180,11 +17666,25 @@
     ],
     "immunites": [],
     "evolution": "Staltikal: Mettre K.O. quatre Pokémon. Momartik: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active.",
-    "evolution_id": "0478",
-    "evolution_nom": "Momartik",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "glace",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0362b",
+        "nom": "Staltikal",
+        "condition": null,
+        "evolution_ko": 4
+      },
+      {
+        "id": "0478",
+        "nom": "Momartik",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0362",
@@ -18136,11 +18636,19 @@
     ],
     "immunites": [],
     "evolution": "Primo Kyogre: Mettre K.O. cinq Pokémon + avoir une synergie Eau 9 active.",
-    "evolution_id": "0382b",
-    "evolution_nom": "Primo Kyogre",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "eau",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0382b",
+        "nom": "Primo Kyogre",
+        "condition": "synergie_eau_9",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0382b",
@@ -18203,11 +18711,19 @@
       "electrik"
     ],
     "evolution": "Primo Groudon: Mettre K.O. cinq Pokémon + avoir une synergie Feu 9 active.",
-    "evolution_id": "0383b",
-    "evolution_nom": "Primo Groudon",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "feu",
-    "att_def_type": "combat"
+    "att_def_type": "combat",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0383b",
+        "nom": "Primo Groudon",
+        "condition": "synergie_feu_9",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0383b",
@@ -19227,11 +19743,19 @@
     ],
     "immunites": [],
     "evolution": "Rosélia: Mettre K.O. deux Pokémon + avoir une synergie Plante 3 active.",
-    "evolution_id": "0315",
-    "evolution_nom": "Rosélia",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "eau"
+    "att_def_type": "eau",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0315",
+        "nom": "Rosélia",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0407",
@@ -19484,11 +20008,25 @@
     ],
     "immunites": [],
     "evolution": "Cheniselle Déchet: Mettre K.O. un Pokémon + synergie Acier 3. Papilord: Mettre K.O. deux Pokémon.",
-    "evolution_id": "0414",
-    "evolution_nom": "Papilord",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0413b",
+        "nom": "Cheniselle Déchet",
+        "condition": "synergie_acier_3",
+        "evolution_ko": 1
+      },
+      {
+        "id": "0414",
+        "nom": "Papilord",
+        "condition": null,
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0412c",
@@ -19517,11 +20055,25 @@
     ],
     "immunites": [],
     "evolution": "Cheniselle Sable: Mettre K.O. un Pokémon + synergie Sol 3. Papilord: Mettre K.O. deux Pokémon.",
-    "evolution_id": "0414",
-    "evolution_nom": "Papilord",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0413d",
+        "nom": "Cheniselle Sable",
+        "condition": "synergie_sol_3",
+        "evolution_ko": 1
+      },
+      {
+        "id": "0414",
+        "nom": "Papilord",
+        "condition": null,
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0412d",
@@ -19550,11 +20102,25 @@
     ],
     "immunites": [],
     "evolution": "Cheniselle Plante: Mettre K.O. un Pokémon + synergie Plante 3. Papilord: Mettre K.O. deux Pokémon.",
-    "evolution_id": "0414",
-    "evolution_nom": "Papilord",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0413c",
+        "nom": "Cheniselle Plante",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 1
+      },
+      {
+        "id": "0414",
+        "nom": "Papilord",
+        "condition": null,
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0413b",
@@ -20258,11 +20824,19 @@
       "spectre"
     ],
     "evolution": "Lockpin: Mettre K.O. trois Pokémon + avoir une synergie Normal 3 active.",
-    "evolution_id": "0428",
-    "evolution_nom": "Lockpin",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0428",
+        "nom": "Lockpin",
+        "condition": "synergie_normal_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0428",
@@ -20675,11 +21249,19 @@
     ],
     "immunites": [],
     "evolution": "Simularbre: Mettre K.O. deux Pokémon + avoir une synergie Plante 3 active.",
-    "evolution_id": "0185",
-    "evolution_nom": "Simularbre",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0185",
+        "nom": "Simularbre",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0439",
@@ -20710,11 +21292,25 @@
       "dragon"
     ],
     "evolution": "MMime: Mettre K.O. trois Pokémon. MMime Galar: Mettre K.O. trois Pokémon + avoir une synergie Glace 3 active.",
-    "evolution_id": "0122",
-    "evolution_nom": "M. Mime",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0122",
+        "nom": "M. Mime",
+        "condition": null,
+        "evolution_ko": 3
+      },
+      {
+        "id": "0122b",
+        "nom": "MMime Galar",
+        "condition": "synergie_glace_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0440",
@@ -20739,11 +21335,19 @@
       "spectre"
     ],
     "evolution": "Leveinard: Mettre K.O. quatre Pokémon + avoir une synergie Normal 6 active.",
-    "evolution_id": "0113",
-    "evolution_nom": "Leveinard",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0113",
+        "nom": "Leveinard",
+        "condition": "synergie_normal_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0441",
@@ -21016,11 +21620,19 @@
       "spectre"
     ],
     "evolution": "Ronflex: Mettre K.O. quatre Pokémon + avoir une synergie Normal 3 active.",
-    "evolution_id": "0143",
-    "evolution_nom": "Ronflex",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0143",
+        "nom": "Ronflex",
+        "condition": "synergie_normal_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0447",
@@ -21049,11 +21661,19 @@
     ],
     "immunites": [],
     "evolution": "Lucario: Mettre K.O. trois Pokémon + avoir une synergie Acier 3 active.",
-    "evolution_id": "0448",
-    "evolution_nom": "Lucario",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0448",
+        "nom": "Lucario",
+        "condition": "synergie_acier_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0448",
@@ -21593,11 +22213,19 @@
       "sol"
     ],
     "evolution": "Démanta: Mettre K.O. quatre Pokémon + avoir une synergie Eau 3 ou Vol 3 active.",
-    "evolution_id": "0226",
-    "evolution_nom": "Démanta",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "vol",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0226",
+        "nom": "Démanta",
+        "condition": "synergie_eau_3_ou_vol_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0459",
@@ -23283,11 +23911,19 @@
     ],
     "immunites": [],
     "evolution": "Shaymin Céleste: Mettre K.O. trois Pokémon + avoir une synergie Vol 9 active.",
-    "evolution_id": "0492b",
-    "evolution_nom": "Shaymin Céleste",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0492b",
+        "nom": "Shaymin Céleste",
+        "condition": "synergie_vol_9",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0492b",
@@ -23714,11 +24350,25 @@
     ],
     "immunites": [],
     "evolution": "Clamiral: Mettre K.O. quatre Pokémon. Clamiral Hisui: Mettre K.O. quatre Pokémon + avoir une synergie Ténèbre 3 active.",
-    "evolution_id": "0503b",
-    "evolution_nom": "Clamiral Hisui",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "combat"
+    "att_def_type": "combat",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0503",
+        "nom": "Clamiral",
+        "condition": null,
+        "evolution_ko": 4
+      },
+      {
+        "id": "0503b",
+        "nom": "Clamiral Hisui",
+        "condition": "synergie_tenebres_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0503",
@@ -24109,11 +24759,19 @@
     ],
     "immunites": [],
     "evolution": "Flamoutan: Mettre K.O. deux Pokémon + avoir une synergie Feu 3 active.",
-    "evolution_id": "0514",
-    "evolution_nom": "Flamoutan",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "vol",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0514",
+        "nom": "Flamoutan",
+        "condition": "synergie_feu_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0514",
@@ -24178,11 +24836,19 @@
     ],
     "immunites": [],
     "evolution": "Flotoutan: Mettre K.O. deux Pokémon + avoir une synergie Eau 3 active.",
-    "evolution_id": "0516",
-    "evolution_nom": "Flotoutan",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "vol",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0516",
+        "nom": "Flotoutan",
+        "condition": "synergie_eau_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0516",
@@ -24243,11 +24909,19 @@
     ],
     "immunites": [],
     "evolution": "Mushana: Mettre K.O. trois Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": "0518",
-    "evolution_nom": "Mushana",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "psy",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0518",
+        "nom": "Mushana",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0518",
@@ -24553,11 +25227,19 @@
     ],
     "immunites": [],
     "evolution": "Gigalithe: Mettre K.O. quatre Pokémon + avoir une synergie Roche 6 active.",
-    "evolution_id": "0526",
-    "evolution_nom": "Gigalithe",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "roche",
-    "att_def_type": "sol"
+    "att_def_type": "sol",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0526",
+        "nom": "Gigalithe",
+        "condition": "synergie_roche_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0526",
@@ -24627,11 +25309,19 @@
       "sol"
     ],
     "evolution": "Oniglali: Mettre K.O. trois Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": "0362",
-    "evolution_nom": "Oniglali",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "psy",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0362",
+        "nom": "Oniglali",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0528",
@@ -24915,11 +25605,19 @@
     ],
     "immunites": [],
     "evolution": "Betochef: Mettre K.O. quatre Pokémon + avoir une synergie Combat 6 active.",
-    "evolution_id": "0534",
-    "evolution_nom": "Betochef",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "roche",
-    "att_def_type": "combat"
+    "att_def_type": "combat",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0534",
+        "nom": "Betochef",
+        "condition": "synergie_combat_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0534",
@@ -25195,11 +25893,19 @@
     ],
     "immunites": [],
     "evolution": "Manternel: Mettre K.O. trois Pokémon + avoir une synergie Insecte 6 active.",
-    "evolution_id": "0542",
-    "evolution_nom": "Manternel",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "insecte",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0542",
+        "nom": "Manternel",
+        "condition": "synergie_insecte_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0542",
@@ -25423,11 +26129,19 @@
       "dragon"
     ],
     "evolution": "Farfaduvet: Mettre K.O. deux Pokémon + avoir une synergie Plante 3 active.",
-    "evolution_id": "0547",
-    "evolution_nom": "Farfaduvet",
-    "evolution_ko": 2,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "fée",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0547",
+        "nom": "Farfaduvet",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0547",
@@ -25500,11 +26214,25 @@
     ],
     "immunites": [],
     "evolution": "Fragilady: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 active. Fragilady Hisui: Mettre K.O. trois Pokémon + avoir une synergie Combat 3 active.",
-    "evolution_id": "0549b",
-    "evolution_nom": "Fragilady Hisui",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0549",
+        "nom": "Fragilady",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0549b",
+        "nom": "Fragilady Hisui",
+        "condition": "synergie_combat_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0549",
@@ -25866,11 +26594,19 @@
     ],
     "immunites": [],
     "evolution": "Darumacho Galar: Mettre K.O. quatre Pokémon + avoir une synergie Glace 3 active.",
-    "evolution_id": "0555c",
-    "evolution_nom": "Darumacho Galar",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "feu",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0555c",
+        "nom": "Darumacho Galar",
+        "condition": "synergie_glace_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0555",
@@ -27547,11 +28283,19 @@
     ],
     "immunites": [],
     "evolution": "Lancargot: Mettre K.O. trois Pokémon + avoir une synergie Acier 3 active.",
-    "evolution_id": "0589",
-    "evolution_nom": "Lancargot",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0589",
+        "nom": "Lancargot",
+        "condition": "synergie_acier_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0589",
@@ -28187,11 +28931,19 @@
     ],
     "immunites": [],
     "evolution": "Ohmassacre: Mettre K.O. cinq Pokémon + avoir une synergie Électrik 6 active.",
-    "evolution_id": "0604",
-    "evolution_nom": "Ohmassacre",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "poison",
-    "att_def_type": "poison"
+    "att_def_type": "poison",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0604",
+        "nom": "Ohmassacre",
+        "condition": "synergie_electrik_6",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0604",
@@ -28712,11 +29464,19 @@
     ],
     "immunites": [],
     "evolution": "Limaspeed: Mettre K.O. trois Pokémon + avoir une synergie Insecte 3 active.",
-    "evolution_id": "0617",
-    "evolution_nom": "Limaspeed",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0617",
+        "nom": "Limaspeed",
+        "condition": "synergie_insecte_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0617",
@@ -29194,11 +29954,25 @@
       "spectre"
     ],
     "evolution": "Guériaigle: Mettre K.O. cinq Pokémon. Guériaigle Hisui: Mettre K.O. cinq Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": "0628b",
-    "evolution_nom": "Guériaigle Hisui",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "vol",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0628",
+        "nom": "Guériaigle",
+        "condition": null,
+        "evolution_ko": 5
+      },
+      {
+        "id": "0628b",
+        "nom": "Guériaigle Hisui",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0628",
@@ -30737,11 +31511,19 @@
       "psy"
     ],
     "evolution": "Sachanobi: Mettre K.O. quatre Pokémon + avoir une synergie Eau 9 active. Méga Amphinobi: Méga Gemme",
-    "evolution_id": "0658c",
-    "evolution_nom": "Sachanobi",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "spectre",
-    "att_def_type": "glace"
+    "att_def_type": "glace",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0658c",
+        "nom": "Sachanobi",
+        "condition": "synergie_eau_9",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0658c",
@@ -31331,11 +32113,19 @@
       "dragon"
     ],
     "evolution": "Florges: Mettre K.O. quatre Pokémon + avoir une synergie Fée 6 active.",
-    "evolution_id": "0671",
-    "evolution_nom": "Florges",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0671",
+        "nom": "Florges",
+        "condition": "synergie_fee_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0670c",
@@ -31538,11 +32328,19 @@
     ],
     "immunites": [],
     "evolution": "Pandarbare: Mettre K.O. trois Pokémon + avoir une synergie Ténèbre 3 active.",
-    "evolution_id": "0675",
-    "evolution_nom": "Pandarbare",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0675",
+        "nom": "Pandarbare",
+        "condition": "synergie_tenebres_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0675",
@@ -31945,11 +32743,19 @@
       "dragon"
     ],
     "evolution": "Cocotine: Mettre K.O. quatre Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0683",
-    "evolution_nom": "Cocotine",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "psy",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0683",
+        "nom": "Cocotine",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0683",
@@ -32013,11 +32819,19 @@
       "dragon"
     ],
     "evolution": "Cupcanaille: Mettre K.O. quatre Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0685",
-    "evolution_nom": "Cupcanaille",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0685",
+        "nom": "Cupcanaille",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0685",
@@ -32473,11 +33287,19 @@
       "spectre"
     ],
     "evolution": "Iguolta: Mettre K.O. trois Pokémon + avoir une synergie Eau 3 active.",
-    "evolution_id": "0695",
-    "evolution_nom": "Iguolta",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_def_type": "électrik",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0695",
+        "nom": "Iguolta",
+        "condition": "synergie_eau_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0695",
@@ -32884,11 +33706,25 @@
     ],
     "immunites": [],
     "evolution": "Colimucus: Mettre K.O. quatre Pokémon. Colimucus Hisui: Mettre K.O. quatre Pokémon + avoir une synergie Acier 3 active.",
-    "evolution_id": "0705b",
-    "evolution_nom": "Colimucus Hisui",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "eau",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0705",
+        "nom": "Colimucus",
+        "condition": null,
+        "evolution_ko": 4
+      },
+      {
+        "id": "0705b",
+        "nom": "Colimucus Hisui",
+        "condition": "synergie_acier_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0705",
@@ -32957,11 +33793,19 @@
     ],
     "immunites": [],
     "evolution": "Muplodocus Hisui: Mettre K.O. cinq Pokémon + avoir une synergie Acier 6 active.",
-    "evolution_id": "0706b",
-    "evolution_nom": "Muplodocus Hisui",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "poison",
-    "att_def_type": "acier"
+    "att_def_type": "acier",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0706b",
+        "nom": "Muplodocus Hisui",
+        "condition": "synergie_acier_6",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0706",
@@ -33114,11 +33958,19 @@
       "normal"
     ],
     "evolution": "Desseliande: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 ou Spectre 3 active.",
-    "evolution_id": "0709",
-    "evolution_nom": "Desseliande",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "spectre",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0709",
+        "nom": "Desseliande",
+        "condition": "synergie_plante_3_ou_spectre_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0709",
@@ -33198,11 +34050,19 @@
       "normal"
     ],
     "evolution": "Banshitrouye: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 ou Spectre 3 active.",
-    "evolution_id": "0711",
-    "evolution_nom": "Banshitrouye",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "spectre"
+    "att_def_type": "spectre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0711",
+        "nom": "Banshitrouye",
+        "condition": "synergie_plante_3_ou_spectre_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0711",
@@ -33272,11 +34132,25 @@
     ],
     "immunites": [],
     "evolution": "Seracrawl: Mettre K.O. quatre Pokémon. Seracrawl Hisui: Mettre K.O. quatre Pokémon + avoir une synergie Roche 3 active.",
-    "evolution_id": "0713b",
-    "evolution_nom": "Seracrawl Hisui",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0713",
+        "nom": "Séracrawl",
+        "condition": null,
+        "evolution_ko": 4
+      },
+      {
+        "id": "0713b",
+        "nom": "Seracrawl Hisui",
+        "condition": "synergie_roche_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0713",
@@ -33528,11 +34402,19 @@
       "electrik"
     ],
     "evolution": "Zygarde Parfait: Mettre K.O. cinq Pokémon + avoir une synergie Dragon 9 active.",
-    "evolution_id": "0718d",
-    "evolution_nom": "Zygarde Parfait",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "sol",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0718d",
+        "nom": "Zygarde Parfait",
+        "condition": "synergie_dragon_9",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0718d",
@@ -33600,11 +34482,19 @@
       "electrik"
     ],
     "evolution": "Zygarde: Mettre K.O. cinq Pokémon + avoir une synergie Dragon 6 active.",
-    "evolution_id": "0718",
-    "evolution_nom": "Zygarde",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "sol",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0718",
+        "nom": "Zygarde",
+        "condition": "synergie_dragon_6",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0718b",
@@ -33896,11 +34786,25 @@
       "sol"
     ],
     "evolution": "Archéduc: Mettre K.O. trois Pokémon. Archéduc Hisui: Mettre K.O. trois Pokémon + avoir une synergie Combat 3 active.",
-    "evolution_id": "0724b",
-    "evolution_nom": "Archéduc Hisui",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "spectre",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0724",
+        "nom": "Archéduc",
+        "condition": null,
+        "evolution_ko": 3
+      },
+      {
+        "id": "0724b",
+        "nom": "Archéduc Hisui",
+        "condition": "synergie_combat_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0724",
@@ -34428,11 +35332,19 @@
     ],
     "immunites": [],
     "evolution": "Lucanon: Mettre K.O. trois Pokémon + avoir une synergie Électrik 3 active.",
-    "evolution_id": "0738",
-    "evolution_nom": "Lucanon",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "sol",
-    "att_def_type": "électrik"
+    "att_def_type": "électrik",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0738",
+        "nom": "Lucanon",
+        "condition": "synergie_electrik_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0738",
@@ -34495,11 +35407,19 @@
     ],
     "immunites": [],
     "evolution": "Crabominable: Mettre K.O. trois Pokémon + avoir une synergie Glace 3 active.",
-    "evolution_id": "0740",
-    "evolution_nom": "Crabominable",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "acier"
+    "att_def_type": "acier",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0740",
+        "nom": "Crabominable",
+        "condition": "synergie_glace_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0740",
@@ -34836,11 +35756,31 @@
     ],
     "immunites": [],
     "evolution": "Lougaroc: Mettre K.O. trois Pokémon. Lougaroc Nocturne: Mettre K.O. trois Pokémon + avoir une synergie Ténèbre 3 active. Lougaroc Crépusculaire: Mettre K.O. trois Pokémon + avoir une synergie Roche 3 active.",
-    "evolution_id": "0745b",
-    "evolution_nom": "Lougaroc Crépusculaire",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "ténèbre",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0745",
+        "nom": "Lougaroc Diurne",
+        "condition": null,
+        "evolution_ko": 3
+      },
+      {
+        "id": "0745c",
+        "nom": "Lougaroc Nocturne",
+        "condition": "synergie_tenebres_3",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0745b",
+        "nom": "Lougaroc Crépusculaire",
+        "condition": "synergie_roche_6",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0745",
@@ -35268,11 +36208,19 @@
     ],
     "immunites": [],
     "evolution": "Floramantis: Mettre K.O. quatre Pokémon + avoir une synergie Plante 3 active.",
-    "evolution_id": "0754",
-    "evolution_nom": "Floramantis",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "insecte",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0754",
+        "nom": "Floramantis",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0754",
@@ -35999,11 +36947,19 @@
       "spectre"
     ],
     "evolution": "Silvallie: Mettre K.O. trois Pokémon + avoir une synergie 9 active de n'importe quel type.",
-    "evolution_id": "0773",
-    "evolution_nom": "Silvallie",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "acier",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0773",
+        "nom": "Silvallie",
+        "condition": "synergie_any_9",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0773",
@@ -36708,11 +37664,19 @@
     ],
     "immunites": [],
     "evolution": "Cosmovum: Mettre K.O. quatre Pokémon + avoir une synergie Psy 6 active.",
-    "evolution_id": "0790",
-    "evolution_nom": "Cosmovum",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "psy",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0790",
+        "nom": "Cosmovum",
+        "condition": "synergie_psy_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0790",
@@ -36740,11 +37704,25 @@
     ],
     "immunites": [],
     "evolution": "Solgaleo: Mettre K.O. cinq Pokémon + avoir une synergie Acier 6 active. Lunala: Mettre K.O. cinq Pokémon + avoir une synergie Spectre 6 active.",
-    "evolution_id": "0792",
-    "evolution_nom": "Lunala",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "psy",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0791",
+        "nom": "Solgaleo",
+        "condition": "synergie_acier_6",
+        "evolution_ko": 5
+      },
+      {
+        "id": "0792",
+        "nom": "Lunala",
+        "condition": "synergie_spectre_6",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0791",
@@ -37431,11 +38409,19 @@
     ],
     "immunites": [],
     "evolution": "Mandrillon: Mettre K.O. six Pokémon + avoir une synergie Dragon 3 active.",
-    "evolution_id": "0804",
-    "evolution_nom": "Mandrillon",
-    "evolution_ko": 6,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "poison",
-    "att_def_type": "poison"
+    "att_def_type": "poison",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0804",
+        "nom": "Mandrillon",
+        "condition": "synergie_dragon_3",
+        "evolution_ko": 6
+      }
+    ]
   },
   {
     "id": "0804",
@@ -37657,11 +38643,19 @@
       "poison"
     ],
     "evolution": "Melmetal: Mettre K.O. quatre Pokémon + avoir une synergie Acier 6 active.",
-    "evolution_id": "0809",
-    "evolution_nom": "Melmetal",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
-    "att_def_type": "électrik"
+    "att_def_type": "électrik",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0809",
+        "nom": "Melmetal",
+        "condition": "synergie_acier_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0809",
@@ -39076,11 +40070,31 @@
     ],
     "immunites": [],
     "evolution": "Pomdramour: Mettre K.O. trois Pokémon + avoir une synergie Dragon 3 active. Dratatin: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 active.",
-    "evolution_id": "0842",
-    "evolution_nom": "Dratatin",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "spectre",
-    "att_def_type": "eau"
+    "att_def_type": "eau",
+    "evolutions_conditionnelles": [
+      {
+        "id": "1011",
+        "nom": "Pomdramour",
+        "condition": "synergie_dragon_3",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0842",
+        "nom": "Dratatin",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0841",
+        "nom": "Pomdrapi",
+        "condition": "boost_attaque_defense",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0841",
@@ -39471,11 +40485,25 @@
     ],
     "immunites": [],
     "evolution": "Salarsen Aiguë: Mettre K.O. trois Pokémon + avoir une synergie Électrik 3 active. Salarsen Grave: Mettre K.O. trois Pokémon + avoir une synergie Poison 3 active.",
-    "evolution_id": "0849",
-    "evolution_nom": "Salarsen Grave",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0849c",
+        "nom": "Salarsen Aiguë",
+        "condition": "synergie_electrik_3",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0849",
+        "nom": "Salarsen Grave",
+        "condition": "synergie_poison_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0849",
@@ -39729,11 +40757,19 @@
     ],
     "immunites": [],
     "evolution": "Krakos: Mettre K.O. trois Pokémon + avoir une synergie Eau 3 active.",
-    "evolution_id": "0853",
-    "evolution_nom": "Krakos",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "ténèbre"
+    "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0853",
+        "nom": "Krakos",
+        "condition": "synergie_eau_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0853",
@@ -39793,11 +40829,19 @@
       "normal"
     ],
     "evolution": "Polthegeist: Mettre K.O. trois Pokémon + avoir une synergie Spectre 3 active.",
-    "evolution_id": "0855",
-    "evolution_nom": "Polthegeist",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0855",
+        "nom": "Polthegeist",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0855",
@@ -40352,11 +41396,19 @@
       "dragon"
     ],
     "evolution": "Charmilly: Mettre K.O. trois Pokémon + avoir une synergie Fée 3 active.",
-    "evolution_id": "0869",
-    "evolution_nom": "Charmilly",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "fée",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0869",
+        "nom": "Charmilly",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0869",
@@ -41138,11 +42190,19 @@
       "poison"
     ],
     "evolution": "Pondralugon: Mettre K.O. quatre Pokémon + avoir une synergie Acier 6 active. Duralugon Gigamax: Étoile Vœu.",
-    "evolution_id": "1018",
-    "evolution_nom": "Pondralugon",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "acier",
-    "att_def_type": "acier"
+    "att_def_type": "acier",
+    "evolutions_conditionnelles": [
+      {
+        "id": "1018",
+        "nom": "Pondralugon",
+        "condition": "synergie_acier_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0884b",
@@ -41333,11 +42393,19 @@
       "dragon"
     ],
     "evolution": "Zacian Épée Suprême: Mettre K.O. quatre Pokémon + avoir une synergie Acier 9 active + avoir un Bonus en dégâts d'attaque.",
-    "evolution_id": "0888b",
-    "evolution_nom": "Zacian Épée Suprême",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "acier",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0888b",
+        "nom": "Zacian Épée Suprême",
+        "condition": "synergie_acier_9",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0888b",
@@ -41408,11 +42476,19 @@
     ],
     "immunites": [],
     "evolution": "Zamazenta Bouclier Suprême: Mettre K.O. quatre Pokémon + avoir une synergie Acier 9 active + avoir un Bonus en Défense.",
-    "evolution_id": "0889b",
-    "evolution_nom": "Zamazenta Bouclier Suprême",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "acier",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0889b",
+        "nom": "Zamazenta Bouclier Suprême",
+        "condition": "synergie_acier_9",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0889b",
@@ -41560,11 +42636,25 @@
     ],
     "immunites": [],
     "evolution": "Shifours Poing Final: Mettre K.O. cinq Pokémon + avoir une synergie Ténèbre 6 active. Shifours Mille Poings: Mettre K.O. cinq Pokémon + avoir une synergie Eau 6 active.",
-    "evolution_id": "0892b",
-    "evolution_nom": "Shifours Mille Poings",
-    "evolution_ko": 5,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "vol",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0892",
+        "nom": "Shifours Poing Final",
+        "condition": "synergie_tenebres_6",
+        "evolution_ko": 5
+      },
+      {
+        "id": "0892b",
+        "nom": "Shifours Mille Poings",
+        "condition": "synergie_eau_6",
+        "evolution_ko": 5
+      }
+    ]
   },
   {
     "id": "0892b",
@@ -43005,11 +44095,19 @@
     ],
     "immunites": [],
     "evolution": "Pohmarmotte: Mettre K.O. quatre Pokémon + avoir une synergie Électrik 3 active.",
-    "evolution_id": "0923",
-    "evolution_nom": "Pohmarmotte",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "combat",
-    "att_def_type": "électrik"
+    "att_def_type": "électrik",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0923",
+        "nom": "Pohmarmotte",
+        "condition": "synergie_electrik_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0923",
@@ -43070,11 +44168,19 @@
       "spectre"
     ],
     "evolution": "Famignol: Mettre K.O. trois Pokémon + avoir une synergie Normal 3 active.",
-    "evolution_id": "0925",
-    "evolution_nom": "Famignol",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "normal",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0925",
+        "nom": "Famignol",
+        "condition": "synergie_normal_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0925",
@@ -43467,11 +44573,25 @@
     ],
     "immunites": [],
     "evolution": "Carmadura: Mettre K.O. quatre Pokémon + avoir une synergie Psy 3 active. Malvalame: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active.",
-    "evolution_id": "0937",
-    "evolution_nom": "Malvalame",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "feu",
-    "att_def_type": "feu"
+    "att_def_type": "feu",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0936",
+        "nom": "Carmadura",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 4
+      },
+      {
+        "id": "0937",
+        "nom": "Malvalame",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0936",
@@ -43580,11 +44700,19 @@
     ],
     "immunites": [],
     "evolution": "Ampibidou: Mettre K.O. quatre Pokémon + avoir une synergie Électrik 3 active.",
-    "evolution_id": "0939",
-    "evolution_nom": "Ampibidou",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "sol",
-    "att_def_type": "électrik"
+    "att_def_type": "électrik",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0939",
+        "nom": "Ampibidou",
+        "condition": "synergie_electrik_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0939",
@@ -43867,11 +44995,19 @@
       "normal"
     ],
     "evolution": "Virevorreur: Mettre K.O. quatre Pokémon + avoir une synergie Plante 3 ou Spectre 3 active.",
-    "evolution_id": "0947",
-    "evolution_nom": "Virevorreur",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "roche",
-    "att_def_type": "insecte"
+    "att_def_type": "insecte",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0947",
+        "nom": "Virevorreur",
+        "condition": "synergie_plante_3_ou_spectre_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0947",
@@ -44053,11 +45189,19 @@
     ],
     "immunites": [],
     "evolution": "Scovilain: Mettre K.O. quatre Pokémon + avoir une synergie Feu 3 active.",
-    "evolution_id": "0952",
-    "evolution_nom": "Scovilain",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "psy",
-    "att_def_type": "plante"
+    "att_def_type": "plante",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0952",
+        "nom": "Scovilain",
+        "condition": "synergie_feu_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0952",
@@ -44156,11 +45300,19 @@
     ],
     "immunites": [],
     "evolution": "Bérasca: Mettre K.O. quatre Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": "0954",
-    "evolution_nom": "Bérasca",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "roche",
-    "att_def_type": "sol"
+    "att_def_type": "sol",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0954",
+        "nom": "Bérasca",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0954",
@@ -44521,11 +45673,19 @@
     ],
     "immunites": [],
     "evolution": "Superdofin: Mettre K.O. quatre Pokémon + avoir une synergie Eau 6 active.",
-    "evolution_id": "0964",
-    "evolution_nom": "Superdofin",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "vol",
-    "att_def_type": "fée"
+    "att_def_type": "fée",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0964",
+        "nom": "Superdofin",
+        "condition": "synergie_eau_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0964",
@@ -44894,11 +46054,19 @@
       "normal"
     ],
     "evolution": "Tomberro: Mettre K.O. trois Pokémon + avoir une synergie Spectre 3 active.",
-    "evolution_id": "0972",
-    "evolution_nom": "Tomberro",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "fée",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0972",
+        "nom": "Tomberro",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0972",
@@ -44996,11 +46164,19 @@
     ],
     "immunites": [],
     "evolution": "Balbalèze: Mettre K.O. quatre Pokémon + avoir une synergie Glace 3 active.",
-    "evolution_id": "0975",
-    "evolution_nom": "Balbalèze",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "vol",
-    "att_def_type": "psy"
+    "att_def_type": "psy",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0975",
+        "nom": "Balbalèze",
+        "condition": "synergie_glace_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0975",
@@ -46554,11 +47730,19 @@
     ],
     "immunites": [],
     "evolution": "Pomdorochi: Mettre K.O. quatre Pokémon + avoir une synergie Dragon 6 active.",
-    "evolution_id": "1019",
-    "evolution_nom": "Pomdorochi",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "plante",
-    "att_def_type": "normal"
+    "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "1019",
+        "nom": "Pomdorochi",
+        "condition": "synergie_dragon_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "1012",
@@ -46596,11 +47780,19 @@
       "normal"
     ],
     "evolution": "Théffroyable: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 active.",
-    "evolution_id": "1013",
-    "evolution_nom": "Théffroyable",
-    "evolution_ko": 3,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "spectre",
-    "att_def_type": "insecte"
+    "att_def_type": "insecte",
+    "evolutions_conditionnelles": [
+      {
+        "id": "1013",
+        "nom": "Théffroyable",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "1013",
@@ -47152,11 +48344,19 @@
       "spectre"
     ],
     "evolution": "Terapagos Téracristal: Mettre K.O. quatre Pokémon + avoir au moins 6 synergies différentes actives.",
-    "evolution_id": "1024b",
-    "evolution_nom": "Terapagos Téracristal",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "roche",
-    "att_def_type": "eau"
+    "att_def_type": "eau",
+    "evolutions_conditionnelles": [
+      {
+        "id": "1024b",
+        "nom": "Terapagos Téracristal",
+        "condition": "synergies_differentes_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "1024b",
