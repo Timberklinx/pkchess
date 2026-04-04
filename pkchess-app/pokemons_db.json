@@ -1314,7 +1314,7 @@
       "electrik"
     ],
     "niveau": 3,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 90,
     "degats": 30,
@@ -6982,7 +6982,7 @@
     "evolution": "Evolition: Mettre K.O. trois Pokémon + avoir une synergie TYPE 6 active. L'évolution dépend du type. Evoli Gigamax: Étoile Vœu.",
     "evolution_id": null,
     "evolution_nom": null,
-    "evolution_ko": null,
+    "evolution_ko": 3,
     "att_off_type": "normal",
     "att_def_type": "normal"
   },
@@ -6993,7 +6993,7 @@
       "normal"
     ],
     "niveau": 4,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 55,
     "degats": 30,
@@ -7023,7 +7023,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 65,
     "degats": 60,
@@ -7061,7 +7061,7 @@
       "dragon"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 65,
     "degats": 50,
@@ -7095,7 +7095,7 @@
       "vol"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 130,
     "degats": 50,
@@ -7130,7 +7130,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 60,
     "degats": 40,
@@ -7172,7 +7172,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 110,
     "degats": 30,
@@ -7201,7 +7201,7 @@
       "nucleaire"
     ],
     "niveau": 4,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 90,
     "degats": 50,
@@ -7230,7 +7230,7 @@
       "roche"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 65,
     "degats": 50,
@@ -7266,7 +7266,7 @@
       "sol"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 95,
     "degats": 50,
@@ -7300,7 +7300,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 130,
     "degats": 50,
@@ -7331,7 +7331,7 @@
       "poison"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 65,
     "degats": 40,
@@ -7365,7 +7365,7 @@
       "combat"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 110,
     "degats": 60,
@@ -7398,7 +7398,7 @@
       "eau"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 65,
     "degats": 50,
@@ -7431,7 +7431,7 @@
       "electrik"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 130,
     "degats": 50,
@@ -7462,7 +7462,7 @@
       "feu"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 65,
     "degats": 50,
@@ -10205,7 +10205,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 110,
     "degats": 60,
@@ -10237,7 +10237,7 @@
       "ténèbre"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 65,
     "degats": 20,
@@ -22049,7 +22049,7 @@
       "plante"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 95,
     "degats": 50,
@@ -22085,7 +22085,7 @@
       "glace"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 65,
     "degats": 60,
@@ -32663,7 +32663,7 @@
       "fée"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 60,
     "degats": 50,

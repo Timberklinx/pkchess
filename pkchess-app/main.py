@@ -44,7 +44,14 @@ _IDS_INTERMEDIAIRES |= {"0266"}  # Armulys
 _IDS_INTERMEDIAIRES |= {"0292"}  # Munja (obtenu avec Ninjask, pas un Pokémon de base)
 
 # Pokémon exclus du pool boutique (cas spéciaux)
-_EXCLUS_POOL = {"0266", "0292"}  # Armulys, Munja
+_EXCLUS_POOL = {
+    "0266",   # Armulys
+    "0292",   # Munja
+    "0052d",  # Miaouss Gigamax (forme spéciale, pas disponible en boutique)
+    "0412b",  # Cheniti Déchet (forme conditionnelle)
+    "0412c",  # Cheniti Sable (forme conditionnelle)
+    "0412d",  # Cheniti Plante (forme conditionnelle)
+}
 
 # Mapping synergie → évolition d'Évoli (palier 6 requis)
 EVOLITIONS_MAP = {
@@ -152,6 +159,7 @@ def piocher_depuis_pool(partie, niveau_joueur, n=5, niveau_max_pool=10):
                  if (lambda p: p
                      and p.get("stade", 0) == 0
                      and p["id"] not in _EXCLUS_POOL
+                     and p["id"] not in _IDS_INTERMEDIAIRES
                      and p["niveau"] <= max_niv)(_get_poke(pid))]
     random.shuffle(eligibles)
     choix = eligibles[:n]
@@ -787,7 +795,7 @@ def appliquer_transformations(joueur):
     terrain = [p for p in pokemon if p["position"] in ("off", "def")]
 
     for poke in terrain:
-        if poke.get("id") != "0412":
+        if poke.get("id") not in ("0412", "0412b", "0412c", "0412d"):
             continue
         # Déjà transformé → irréversible
         col = poke["slot"]
@@ -1177,9 +1185,50 @@ def resoudre_duel_ghost(partie, pseudo, joueur):
 def faire_evoluer(partie, joueur, poke):
     if poke.get("ko"):
         return False, ""
+
     evol_id  = poke.get("evolution_id")
     evol_nom = poke.get("evolution_nom")
     evol_ko  = poke.get("evolution_ko")
+
+    # Cas spécial Évoli : évolution via synergie active (EVOLITIONS_MAP)
+    if poke.get("id") == "0133":
+        evol_id_evoli = calculer_evoli_forme(joueur)
+        if evol_id_evoli and poke.get("xp_combats", 0) >= 3:
+            evol_data = _get_poke(evol_id_evoli)
+            if evol_data:
+                ancien_nom    = poke["nom"]
+                ancien_pv_max = poke.get("pv_max", 100)
+                nouveau_pv_max = evol_data.get("pv_max", 100)
+                diff_pv = max(0, nouveau_pv_max - ancien_pv_max)
+                poke.update({
+                    "id":           evol_data["id"],
+                    "nom":          evol_data["nom"],
+                    "types":        evol_data.get("types", poke["types"]),
+                    "niveau":       evol_data.get("niveau", poke["niveau"]),
+                    "stade":        evol_data.get("stade", poke["stade"]),
+                    "pv_max":       nouveau_pv_max,
+                    "pv":           min(poke.get("pv", nouveau_pv_max) + diff_pv, nouveau_pv_max),
+                    "vitesse":      evol_data.get("vitesse", poke.get("vitesse", 50)),
+                    "degats":       evol_data.get("degats", poke.get("degats", 20)),
+                    "faiblesses":   evol_data.get("faiblesses", []),
+                    "resistances":  evol_data.get("resistances", []),
+                    "immunites":    evol_data.get("immunites", []),
+                    "att_off_nom":  evol_data.get("att_off_nom", ""),
+                    "att_off_desc": evol_data.get("att_off_desc", ""),
+                    "att_def_nom":  evol_data.get("att_def_nom", ""),
+                    "att_def_desc": evol_data.get("att_def_desc", ""),
+                    "att_off_type": evol_data.get("att_off_type"),
+                    "att_def_type": evol_data.get("att_def_type"),
+                    "evolution_id":  evol_data.get("evolution_id"),
+                    "evolution_nom": evol_data.get("evolution_nom"),
+                    "evolution_ko":  evol_data.get("evolution_ko"),
+                    "xp_combats":   0,
+                })
+                appliquer_bonus_pv_synergies(joueur)
+                return True, f"🌟 Évoli évolue en {evol_data['nom']} ! (+{diff_pv} PV → {poke['pv']}/{nouveau_pv_max})"
+        return False, ""
+
+    # Cas standard
     if not evol_id or evol_ko is None:
         return False, ""
     if poke.get("xp_combats", 0) < evol_ko:
@@ -1220,6 +1269,7 @@ def faire_evoluer(partie, joueur, poke):
     appliquer_bonus_pv_synergies(joueur)
     appliquer_transformations(joueur)
     return True, f"🌟 {ancien_nom} évolue en {evol_nom} ! (+{diff_pv} PV → {poke['pv']}/{nouveau_pv_max})"
+
 
 def verifier_evolutions(partie, joueur):
     messages = []
@@ -1782,6 +1832,7 @@ async def traiter_action(code, pseudo, action):
         etat_avant_combat = {
             "joueurs": {pj: snapshot_joueur(j) for pj, j in partie["joueurs"].items()},
             "tour": partie.get("tour", 0),
+            "climat_actuel": partie.get("climat_actuel", "Ensoleillé"),
         }
         resultats = lancer_combat(partie)
         partie["phase"] = "preparation"
