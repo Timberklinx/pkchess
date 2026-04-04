@@ -152,7 +152,6 @@ def piocher_depuis_pool(partie, niveau_joueur, n=5, niveau_max_pool=10):
                  if (lambda p: p
                      and p.get("stade", 0) == 0
                      and p["id"] not in _EXCLUS_POOL
-                     and p["id"] not in _IDS_INTERMEDIAIRES
                      and p["niveau"] <= max_niv)(_get_poke(pid))]
     random.shuffle(eligibles)
     choix = eligibles[:n]
@@ -1748,6 +1747,23 @@ async def traiter_action(code, pseudo, action):
                 "msg": f"↩️ {pseudo} retire {poke['nom']} vers le banc",
             })
 
+    elif t == "debug_capturer_evoli":
+        evoli = _get_poke("0133")
+        if evoli:
+            slot_libre = next((i for i in range(10)
+                if not any(p["slot"] == i and p["position"] == "banc"
+                           for p in joueur.get("pokemon", []))), 0)
+            nouveau = dict(evoli)
+            nouveau["pv"]          = evoli["pv_max"]
+            nouveau["position"]    = "banc"
+            nouveau["slot"]        = slot_libre
+            nouveau["xp_combats"]  = 0
+            joueur.setdefault("pokemon", []).append(nouveau)
+            await gestionnaire.envoyer_a(code, pseudo, {
+                "type": "fin_tour", "etat": partie,
+                "msg": "🧪 DEBUG : Évoli ajouté au banc !"
+            })
+
     elif t == "lancer_combat":
         if partie.get("hote") != pseudo:
             await gestionnaire.envoyer_a(code, pseudo, {
@@ -1766,7 +1782,6 @@ async def traiter_action(code, pseudo, action):
         etat_avant_combat = {
             "joueurs": {pj: snapshot_joueur(j) for pj, j in partie["joueurs"].items()},
             "tour": partie.get("tour", 0),
-            "climat_actuel": partie.get("climat_actuel", "Ensoleillé"),
         }
         resultats = lancer_combat(partie)
         partie["phase"] = "preparation"

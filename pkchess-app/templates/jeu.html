@@ -373,6 +373,7 @@
             <div class="rangee-label" style="display:flex;align-items:center">
                 <span class="dot-noir"></span> Boîte
                 <button class="btn btn-gold" onclick="ouvrirBoutique()" style="margin-left:auto;padding:7px 16px;font-size:0.85em">🛒 Boutique</button>
+                <button class="btn" onclick="debugCaptureEvoli()" style="padding:5px 10px;font-size:0.7em;background:rgba(255,50,50,0.3);border:1px dashed red;color:#fff" title="DEBUG">🧪 Évoli</button>
             </div>
             <div class="rangee" id="rangee-boite"></div>
         </div>
@@ -1356,6 +1357,12 @@ function deplacerPokemon(fp, fs, tp, ts) {
 }
 
 // ── Combat / Arène ────────────────────────────────────────────────────────────
+function debugCaptureEvoli() {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({type: 'debug_capturer_evoli'}));
+    }
+}
+
 function lancerCombat() {
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({type: 'lancer_combat'}));
