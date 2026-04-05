@@ -276,7 +276,7 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
 
     # ── STATUT PARALYSIE ──────────────────────────────────────────────────
     elif nom_att in {"Cage Eclair", "Cage Éclair", "Tonnerre", "Coup d'Jus",
-                     "Crocs Eclair", "Crocs Éclair", "Ultrason", "Stunt Spore",
+                     "Crocs Eclair", "Crocs Éclair", "Stunt Spore",
                      "Para-Spore", "Onde Boréale"}:
         if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente paralysie"):
             ok, msg = appliquer_statut(cible, "PAR")
@@ -312,10 +312,22 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
 
     # ── STATUT CONFUSION ──────────────────────────────────────────────────
     elif nom_att in {"Babil", "Danse Folle", "Doux Baiser", "Choc Mental",
-                     "Colère", "Onde Psy", "Tourbillon", "Ultrason"}:
+                     "Colère", "Onde Psy", "Tourbillon"}:
         if not cible.get("statut"):
             ok, msg = appliquer_statut(cible, "CNF")
             if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    # ── ULTRASON (pièce → confusion, 50% = dé >= 4) ───────────────────────
+    elif nom_att == "Ultrason":
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Ultrason] tente confusion"):
+            ok, _ = appliquer_statut(cible, "CNF")
+            if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    # ── ÉTONNEMENT (dé 5-6 → peur) ────────────────────────────────────────
+    elif nom_att in {"Etonnement", "Étonnement"}:
+        if not cible.get("peur") and _jet_de(5, logs, nom, "[Étonnement] tente peur"):
+            cible["peur"] = True
+            logs.append(f"    😨 {cible['nom']} a peur !")
 
     # ── PEUR ──────────────────────────────────────────────────────────────
     elif nom_att in {"Bluff", "Intimidation", "Rugissement Sombre", "Hurlement Sinistre"}:
@@ -514,6 +526,12 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
     elif nom_att in {"Damoclès", "Lumière du Néant", "Caboche-Kaboum",
                      "Fracass'Tête", "Roc Boulet"}:
         pokemon["_degats_support_actif"] = True
+
+    # ── VOL DE VIE (soin = moitié des dégâts infligés) ────────────────────
+    elif nom_att in {"Vol-Vie", "Méga-Sangsue", "Mega-Sangsue", "Giga-Sangsue",
+                     "Vampirisme", "Vampibaiser", "Vampipoing",
+                     "Encornebois", "Lame en Peine", "Parabocharge"}:
+        pokemon["_vol_vie_actif"] = True
 
     # ── BÉLIER ────────────────────────────────────────────────────────────
     elif nom_att == "Bélier":
@@ -1323,7 +1341,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
 
     # Flag anti-double-XP : chaque pokemon ne peut gagner qu'1 XP par combat
     for p in equipe1 + equipe2:
-        p["_xp_gagne_ce_combat"] = False
+        p["_xp_ko_ids"] = set()  # IDs des Pokémon mis KO par ce Pokémon ce combat
         # Réinitialiser les bonus temporaires de combat
         p.setdefault("bonus_attaque",   0)
         p.setdefault("bonus_defense",   0)
@@ -1398,14 +1416,17 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 if attaquant in equipe1: pts2 += 1
                 else: pts1 += 1
                 for vainqueur in colonne_vainqueur:
-                    if vainqueur.get("ko") or vainqueur.get("_xp_gagne_ce_combat"):
+                    ko_id = id(attaquant)
+                    if vainqueur.get("ko") or ko_id in vainqueur.get("_xp_ko_ids", set()):
                         continue
+                    vainqueur.setdefault("_xp_ko_ids", set()).add(ko_id)
                     vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
-                    vainqueur["_xp_gagne_ce_combat"] = True
                     xp = vainqueur["xp_combats"]
                     evol_ko = vainqueur.get("evolution_ko")
+                    evols_cond = vainqueur.get("evolutions_conditionnelles", [])
+                    ko_requis = evol_ko or (evols_cond[0].get("evolution_ko") if evols_cond else None)
                     logs.append(f"    ⭐ {vainqueur['nom']} gagne 1 XP combat !" +
-                                (f" ({xp}/{evol_ko} KO)" if evol_ko else ""))
+                                (f" ({xp}/{ko_requis} KO)" if ko_requis else ""))
                 appliquer_effets_ko_synergie(
                     attaquant, equipe_ko_cnf, equipe_vict_cnf,
                     joueur_ko_cnf, joueur_vict_cnf, partie, logs)
@@ -1495,6 +1516,13 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 support["pv"] = max(0, support.get("pv", 0) - 10)
                 logs.append(f"    💥 Bélier : support {support['nom']} subit 10 dégâts !")
 
+        # Vol de vie : soin = moitié des dégâts infligés
+        if attaquant.pop("_vol_vie_actif", False) and dmg > 0:
+            soin = dmg // 2
+            pv_avant = attaquant.get("pv", 0)
+            attaquant["pv"] = min(attaquant.get("pv_max", 100), pv_avant + soin)
+            logs.append(f"    💚 {attaquant['nom']} se soigne de {soin} PV ({pv_avant}→{attaquant['pv']})")
+
         # Effets post-attaque (statuts synergies)
         if dmg > 0:
             appliquer_effets_post_attaque(attaquant, cible_reelle, joueur_att, joueur_def, logs)
@@ -1516,14 +1544,17 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             if cible_reelle in equipe1: pts2 += 1
             else:                       pts1 += 1
             for vainqueur in colonne_vainqueur:
-                if vainqueur.get("ko") or vainqueur.get("_xp_gagne_ce_combat"):
-                    continue  # Pokémon KO ou ayant déjà gagné XP ce combat
+                ko_id = id(cible_reelle)
+                if vainqueur.get("ko") or ko_id in vainqueur.get("_xp_ko_ids", set()):
+                    continue
+                vainqueur.setdefault("_xp_ko_ids", set()).add(ko_id)
                 vainqueur["xp_combats"] = vainqueur.get("xp_combats", 0) + 1
-                vainqueur["_xp_gagne_ce_combat"] = True
                 xp = vainqueur["xp_combats"]
                 evol_ko = vainqueur.get("evolution_ko")
+                evols_cond = vainqueur.get("evolutions_conditionnelles", [])
+                ko_requis = evol_ko or (evols_cond[0].get("evolution_ko") if evols_cond else None)
                 logs.append(f"    ⭐ {vainqueur['nom']} gagne 1 XP combat !" +
-                            (f" ({xp}/{evol_ko} KO)" if evol_ko else ""))
+                            (f" ({xp}/{ko_requis} KO)" if ko_requis else ""))
             # Synergies KO : Spectre + Combat
             appliquer_effets_ko_synergie(
                 cible_reelle, equipe_ko, equipe_vict,
@@ -1560,40 +1591,52 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     bonus_force_j1, bonus_force_j2 = appliquer_effets_post_combat(
         j1, p1, j2, p2, equipe1, equipe2, partie, logs)
 
-    # Dégâts directs
-    degats_directs_j1, degats_directs_j2 = 0, 0
-    for poke in sans_adv1:
-        dmg = points_force_total(poke)
-        degats_directs_j2 += dmg
-        logs.append(f"  💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p2}")
-    for poke in sans_adv2:
-        dmg = points_force_total(poke)
-        degats_directs_j1 += dmg
-        logs.append(f"  💥 {poke['nom']} sans adversaire → {dmg} dégâts directs à {p1}")
-    # Bonus force Insecte
-    degats_directs_j2 += bonus_force_j1
-    degats_directs_j1 += bonus_force_j2
-    if bonus_force_j1: logs.append(f"  🐛 Bonus Insecte {p1} : +{bonus_force_j1} dégâts directs à {p2}")
-    if bonus_force_j2: logs.append(f"  🐛 Bonus Insecte {p2} : +{bonus_force_j2} dégâts directs à {p1}")
+    # ── Résultat du combat : comparaison des forces totales ───────────────
+    # Seuls les Pokémon encore en vie comptent
+    def force_equipe(equipe):
+        return sum(points_force_total(p) for p in equipe if not p.get("ko"))
 
-    # Résultat KO
-    if pts1 > pts2:
-        ecart = pts1 - pts2
+    force1 = force_equipe(equipe1)
+    force2 = force_equipe(equipe2)
+
+    if force1 > force2:
+        ecart = force1 - force2
         j2["pv"] = max(0, j2["pv"] - ecart)
         j1["serie_vic"] = j1.get("serie_vic", 0) + 1; j1["serie_def"] = 0
         j2["serie_def"] = j2.get("serie_def", 0) + 1; j2["serie_vic"] = 0
         gagnant, perdant = p1, p2
-        logs.append(f"🏆 {p1} gagne ! ({pts1} KO vs {pts2}) → {p2} perd {ecart} PV → {j2['pv']} PV")
-    elif pts2 > pts1:
-        ecart = pts2 - pts1
+        logs.append(f"🏆 {p1} gagne ! (force {force1} vs {force2}) → {p2} perd {ecart} PV → {j2['pv']} PV")
+    elif force2 > force1:
+        ecart = force2 - force1
         j1["pv"] = max(0, j1["pv"] - ecart)
         j2["serie_vic"] = j2.get("serie_vic", 0) + 1; j2["serie_def"] = 0
         j1["serie_def"] = j1.get("serie_def", 0) + 1; j1["serie_vic"] = 0
         gagnant, perdant = p2, p1
-        logs.append(f"🏆 {p2} gagne ! ({pts2} KO vs {pts1}) → {p1} perd {ecart} PV → {j1['pv']} PV")
+        logs.append(f"🏆 {p2} gagne ! (force {force2} vs {force1}) → {p1} perd {ecart} PV → {j1['pv']} PV")
     else:
         gagnant, perdant = None, None
-        logs.append(f"🤝 Égalité ! ({pts1} KO chacun)")
+        logs.append(f"🤝 Égalité ! (force {force1} chacun)")
+
+    # ── Dégâts directs : uniquement les offensifs sans adversaire ─────────
+    degats_directs_j1, degats_directs_j2 = 0, 0
+    for poke in sans_adv1:
+        if poke.get("position") != "off" or poke.get("ko"):
+            continue
+        dmg = points_force_total(poke)
+        degats_directs_j2 += dmg
+        logs.append(f"  💥 {poke['nom']} (off) sans adversaire → {dmg} dégâts directs à {p2}")
+    for poke in sans_adv2:
+        if poke.get("position") != "off" or poke.get("ko"):
+            continue
+        dmg = points_force_total(poke)
+        degats_directs_j1 += dmg
+        logs.append(f"  💥 {poke['nom']} (off) sans adversaire → {dmg} dégâts directs à {p1}")
+
+    # Bonus force Insecte (sur les dégâts directs)
+    degats_directs_j2 += bonus_force_j1
+    degats_directs_j1 += bonus_force_j2
+    if bonus_force_j1: logs.append(f"  🐛 Bonus Insecte {p1} : +{bonus_force_j1} dégâts directs à {p2}")
+    if bonus_force_j2: logs.append(f"  🐛 Bonus Insecte {p2} : +{bonus_force_j2} dégâts directs à {p1}")
 
     if degats_directs_j2 > 0:
         j2["pv"] = max(0, j2["pv"] - degats_directs_j2)
@@ -2409,49 +2452,60 @@ async def traiter_action(code, pseudo, action):
                 "type": "erreur", "msg": "Seul l'hôte peut lancer le combat !", "pour": pseudo})
             return
         partie["phase"] = "combat"
-        # Snapshot léger AVANT le combat — uniquement les données nécessaires à l'arène
-        def snapshot_joueur(j):
-            return {
-                "niveau": j.get("niveau", 1),
-                "pokemon": [
-                    {k: p.get(k) for k in ("id","nom","pv","pv_max","slot","position","ko","types")}
-                    for p in j.get("pokemon", [])
-                ]
+        try:
+            # Snapshot léger AVANT le combat — uniquement les données nécessaires à l'arène
+            def snapshot_joueur(j):
+                return {
+                    "niveau": j.get("niveau", 1),
+                    "pokemon": [
+                        {k: p.get(k) for k in ("id","nom","pv","pv_max","slot","position","ko","types")}
+                        for p in j.get("pokemon", [])
+                    ]
+                }
+            etat_avant_combat = {
+                "joueurs": {pj: snapshot_joueur(j) for pj, j in partie["joueurs"].items()},
+                "tour": partie.get("tour", 0),
+                "climat_actuel": partie.get("climat_actuel", "Ensoleillé"),
             }
-        etat_avant_combat = {
-            "joueurs": {pj: snapshot_joueur(j) for pj, j in partie["joueurs"].items()},
-            "tour": partie.get("tour", 0),
-            "climat_actuel": partie.get("climat_actuel", "Ensoleillé"),
-        }
-        resultats = lancer_combat(partie)
-        partie["phase"] = "preparation"
+            resultats = lancer_combat(partie)
+            partie["phase"] = "preparation"
 
-        await gestionnaire.diffuser(code, {
-            "type": "resultat_combat",
-            "etat_avant": etat_avant_combat,
-            "etat": partie,
-            "resultats": resultats,
-            "tour": partie["tour"],
-        })
+            await gestionnaire.diffuser(code, {
+                "type": "resultat_combat",
+                "etat_avant": etat_avant_combat,
+                "etat": partie,
+                "resultats": resultats,
+                "tour": partie["tour"],
+            })
 
-        evolutions_anim = collecter_evolutions_a_venir(partie)
-        messages = appliquer_fin_tour(partie)
-        await gestionnaire.diffuser(code, {
-            "type": "fin_tour", "etat": partie,
-            "msg": f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
-            "evolutions": evolutions_anim,
-        })
-        # Carrousel tous les 4 tours (avant la boutique)
-        if est_tour_caroussel(partie):
-            preparer_caroussel(partie)
-            await avancer_caroussel(code, partie, gestionnaire)
-            # La boutique sera envoyée par terminer_caroussel()
-        else:
-            for pj, j in partie["joueurs"].items():
-                await gestionnaire.envoyer_a(code, pj, {
-                    "type": "boutique_offre", "pour": pj,
-                    "offre": j["boutique_offre"],
-                    "tour": partie["tour"],
-                    "tour1_gratuit": partie["tour"] <= 1,
-                    "auto": True,
-                })
+            evolutions_anim = collecter_evolutions_a_venir(partie)
+            messages = appliquer_fin_tour(partie)
+            await gestionnaire.diffuser(code, {
+                "type": "fin_tour", "etat": partie,
+                "msg": f"⏱️ Tour {partie['tour']} — " + " | ".join(messages),
+                "evolutions": evolutions_anim,
+            })
+            # Carrousel tous les 4 tours (avant la boutique)
+            if est_tour_caroussel(partie):
+                preparer_caroussel(partie)
+                await avancer_caroussel(code, partie, gestionnaire)
+                # La boutique sera envoyée par terminer_caroussel()
+            else:
+                for pj, j in partie["joueurs"].items():
+                    await gestionnaire.envoyer_a(code, pj, {
+                        "type": "boutique_offre", "pour": pj,
+                        "offre": j["boutique_offre"],
+                        "tour": partie["tour"],
+                        "tour1_gratuit": partie["tour"] <= 1,
+                        "auto": True,
+                    })
+        except Exception as e:
+            import traceback
+            err = traceback.format_exc()
+            print(f"[ERREUR COMBAT] tour={partie.get('tour','?')} code={code}\n{err}")
+            partie["phase"] = "preparation"
+            await gestionnaire.diffuser(code, {
+                "type": "erreur",
+                "msg": f"Erreur combat : {e}",
+                "pour": None,
+            })
