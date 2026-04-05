@@ -1249,7 +1249,53 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
         "Lancécrou", "Lame Tachyonique", "Force Chtonienne",
         "Ocroupi", "Peignée", "Triple Pied", "Triple Plongeon",
         "Tranch'Air", "Eruption", "Giclédo", "Ecrous d'Poing",
+        "Ecume", "Ouragan", "Surf",
+        # Attaques zone simples sans effet supplémentaire
+        "Bang Sonique", "Explonuit",
     }:
+        pokemon["_zone_colonne"] = True
+
+    # ── ZONE + effet supplémentaire ────────────────────────────────────────
+
+    elif nom_att == "Aboiement":
+        # Zone + malus attaque X sur les 2
+        for c in _cibles_colonne():
+            appliquer_bonus(c, "bonus_attaque", -X)
+            logs.append(f"    📉 {c['nom']} : -{X} Attaque (Aboiement)")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Bain de Smog":
+        # Zone + supprime tous les boosts
+        for c in _cibles_colonne():
+            c["bonus_attaque"]   = 0
+            c["bonus_defense"]   = 0
+            c["bonus_vitesse"]   = 0
+            c["bonus_precision"] = 0
+            logs.append(f"    🧹 {c['nom']} : tous les boosts supprimés !")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Boue-Bombe":
+        # Zone + dé 5-6 malus précision Y
+        for c in _cibles_colonne():
+            if _jet_de(5, logs, nom, f"[Boue-Bombe] tente malus précision {c['nom']}"):
+                appliquer_bonus(c, "bonus_precision", -Y)
+                logs.append(f"    🎯 {c['nom']} : -{Y} Précision")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Eclat Magique":
+        # Zone + malus précision 2
+        for c in _cibles_colonne():
+            appliquer_bonus(c, "bonus_precision", -2)
+            logs.append(f"    🎯 {c['nom']} : -2 Précision (Eclat Magique)")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Ere Glaciaire":
+        # Zone + malus vitesse 50
+        for c in _cibles_colonne():
+            appliquer_bonus(c, "bonus_vitesse", -50)
+            c["vitesse"] = max(5, c.get("vitesse", 50) - 50)
+            logs.append(f"    🐢 {c['nom']} : -50 Vitesse (Ere Glaciaire)")
+        pokemon["_zone_colonne"] = True
         # Marquer pour toucher aussi le support adverse (traité après calcul dégâts)
         pokemon["_zone_colonne"] = True
 
@@ -2081,16 +2127,21 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     for (a, b) in paires:
         logs.append(f"  🔸 {a['nom']} [{a['position']}] (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV)"
                     f" vs {b['nom']} [{b['position']}] (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
+    for p in sans_adv1 + sans_adv2:
+        logs.append(f"  🔹 {p['nom']} [{p['position']}] sans adversaire")
 
     # Effets synergies de début de combat (Eau, Dragon, Normal)
     appliquer_effets_synergies_debut(j1, j2, equipe1, equipe2, logs)
 
     # File d'attaque globale triée par vitesse décroissante
-    # Chaque entrée = (attaquant, defenseur)
+    # Chaque entrée = (attaquant, defenseur_ou_None)
     file_attaques = []
     for (a, b) in paires:
         file_attaques.append((a, b))
         file_attaques.append((b, a))
+    # Ajouter les Pokémon sans adversaire (offensifs → dégâts directs, défensifs → att_def)
+    for p in sans_adv1 + sans_adv2:
+        file_attaques.append((p, None))
     file_attaques.sort(key=lambda x: x[0].get("vitesse", 50), reverse=True)
 
     idx_file = 0
@@ -2103,8 +2154,23 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         # Ne pas rejouer si déjà joué ce combat
         if attaquant.get("_a_joue_ce_combat"):
             continue
-        # Si le défenseur est KO et que l'attaquant est en position offensive initiale
-        # → dégâts directs au dresseur adverse
+
+        # ── Cas sans adversaire ───────────────────────────────────────────
+        if defenseur is None:
+            attaquant["_a_joue_ce_combat"] = True
+            if attaquant.get("_position_initiale") == "off" and not attaquant.get("ko"):
+                joueur_att_dir = j1 if attaquant in equipe1 else j2
+                joueur_def_dir = j2 if attaquant in equipe1 else j1
+                pseudo_def_dir = p2 if attaquant in equipe1 else p1
+                dmg_dir = points_force_total(attaquant)
+                joueur_def_dir["pv"] = max(0, joueur_def_dir["pv"] - dmg_dir)
+                logs.append(f"    💥 {attaquant['nom']} (off) sans adversaire → {dmg_dir} dégâts directs à {pseudo_def_dir} ({joueur_def_dir['pv']} PV)")
+            elif attaquant.get("_position_initiale") == "def" and not attaquant.get("ko"):
+                # Défensif sans adversaire : utilise quand même son att_def (dans le vide)
+                logs.append(f"    🛡️ {attaquant['nom']} (def) sans adversaire — att_def ignorée")
+            continue
+
+        # Si le défenseur est KO → dégâts directs si offensif initial
         if defenseur.get("ko"):
             if attaquant.get("_position_initiale") == "off":
                 joueur_att_dir = j1 if attaquant in equipe1 else j2
