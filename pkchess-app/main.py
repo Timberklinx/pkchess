@@ -2429,12 +2429,16 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     # Retirer les effets temporaires de début de combat (Eau, Dragon, Normal)
     retirer_effets_synergies_debut(equipe1, equipe2)
 
-    # Réinitialiser compteurs Roulade/Taillade si Pokemon retiré ou KO
+    # Nettoyer tous les champs temporaires non-JSON sur tous les Pokémon
+    champs_temp = ["_xp_ko_ids", "_a_joue_ce_combat", "_position_initiale",
+                   "_roulade_actif", "_skip_next_combat"]
     for joueur_check in [j1, j2]:
         for poke in joueur_check.get("pokemon", []):
+            for champ in champs_temp:
+                poke.pop(champ, None)
+            # Réinitialiser compteurs Roulade/Taillade si Pokemon retiré ou KO
             if poke.get("ko") or poke.get("position") not in ("off", "def"):
                 poke.pop("_roulade_compteur", None)
-                poke.pop("_roulade_actif", None)
                 poke.pop("_taillade_compteur", None)
 
     # Effets post-combat : PSN, BRN, Piégé
