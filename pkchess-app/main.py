@@ -2166,6 +2166,10 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         if not ne_peut_echouer and not jet_precision(attaquant, logs):
             continue  # Attaque ratée
 
+        # ── Log de l'attaque utilisée ─────────────────────────────────────
+        pos_label = "OFF" if mode_attaquant == "off" else "DEF"
+        logs.append(f"  ⚡ {attaquant['nom']} [{pos_label}] utilise {att_nom or '(aucune)'} → {defenseur['nom']}")
+
         # ── Synergie Vol (seulement pour les offensifs) ───────────────────
         pal_vol = palier_synergie(joueur_att, "vol")
         types_norm_att = [_normaliser_type(t) for t in attaquant.get("types", [])]
