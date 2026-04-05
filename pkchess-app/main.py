@@ -2023,8 +2023,9 @@ def calculer_degats(attaquant, defenseur, type_attaque=None):
         elif t_low in [x.lower() for x in resistances]:
             multiplicateur = min(multiplicateur, 0.5)
 
-    # Appliquer bonus_defense du défenseur (réduit les dégâts reçus)
-    degats_final = max(0, int(degats_base * multiplicateur) - max(0, defenseur.get("bonus_defense", 0)))
+    # Appliquer bonus_defense du défenseur :
+    # positif = réduit les dégâts, négatif = augmente les dégâts
+    degats_final = max(0, int(degats_base * multiplicateur) - defenseur.get("bonus_defense", 0))
     if multiplicateur >= 2.0:   effet = "super efficace"
     elif multiplicateur <= 0.5: effet = "pas très efficace"
     else:                       effet = "normal"
