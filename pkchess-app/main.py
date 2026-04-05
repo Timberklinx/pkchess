@@ -2039,6 +2039,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     for p in equipe1 + equipe2:
         p["_xp_ko_ids"] = set()  # IDs des Pokémon mis KO par ce Pokémon ce combat
         p["_position_initiale"] = p.get("position", "off")  # Pour filtrer les dégâts directs
+        p["_a_joue_ce_combat"] = False  # Un Pokémon ne peut jouer qu'une fois par combat
         # Réinitialiser les bonus temporaires de combat
         p["bonus_attaque"]   = 0
         p["bonus_defense"]   = 0
@@ -2099,6 +2100,9 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         # Ne pas attaquer si déjà KO
         if attaquant.get("ko"):
             continue
+        # Ne pas rejouer si déjà joué ce combat
+        if attaquant.get("_a_joue_ce_combat"):
+            continue
         # Si le défenseur est KO et que l'attaquant est en position offensive initiale
         # → dégâts directs au dresseur adverse
         if defenseur.get("ko"):
@@ -2109,6 +2113,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 dmg_dir = points_force_total(attaquant)
                 joueur_def_dir["pv"] = max(0, joueur_def_dir["pv"] - dmg_dir)
                 logs.append(f"    💥 {attaquant['nom']} (off) sans adversaire → {dmg_dir} dégâts directs à {pseudo_def_dir} ({joueur_def_dir['pv']} PV)")
+            attaquant["_a_joue_ce_combat"] = True
             continue
         # Vérifier statuts bloquants
         if not verifier_peut_attaquer(attaquant, logs):
@@ -2191,7 +2196,10 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
 
         # ── Un Pokémon défensif n'inflige pas de dégâts de base ───────────
         # Ses effets (att_def) sont déjà appliqués ci-dessus
+        # Mais les effets de synergies post-attaque s'appliquent quand même
         if mode_attaquant == "def":
+            appliquer_effets_post_attaque(attaquant, cible_reelle, joueur_att, joueur_def, logs)
+            attaquant["_a_joue_ce_combat"] = True
             continue
 
         type_att = attaquant.get("att_off_type")
@@ -2246,6 +2254,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         # Effets post-attaque (statuts synergies)
         if dmg > 0:
             appliquer_effets_post_attaque(attaquant, cible_reelle, joueur_att, joueur_def, logs)
+        attaquant["_a_joue_ce_combat"] = True
         defenseur = cible_reelle
 
         # Vérification KO après chaque attaque
@@ -2291,21 +2300,23 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                     defensif["position"] = "off"
                     equipe_ko.append(defensif)
                     logs.append(f"    ↑ {defensif['nom']} avance en position offensive (col. {defensif['slot'] + 1})")
-                    # Chercher son adversaire (offensif miroir ou défensif)
-                    col_def = 4 - defensif["slot"]
-                    equipe_adv_ko = equipe_vict
-                    adv = next((p for p in equipe_adv_ko
-                                if p["slot"] == col_def and p["position"] == "off"
-                                and not p.get("ko")), None) or                           next((p for p in equipe_adv_ko
-                                if p["slot"] == col_def and p["position"] == "def"
-                                and not p.get("ko")), None)
-                    if adv:
-                        # Insérer dans la file à la bonne position selon vitesse
-                        vit = defensif.get("vitesse", 50)
-                        insert_pos = idx_file
-                        while insert_pos < len(file_attaques) and                               file_attaques[insert_pos][0].get("vitesse", 50) > vit:
-                            insert_pos += 1
-                        file_attaques.insert(insert_pos, (defensif, adv))
+                    # N'insérer dans la file que s'il n'a pas encore joué ce combat
+                    if not defensif.get("_a_joue_ce_combat"):
+                        col_def = 4 - defensif["slot"]
+                        equipe_adv_ko = equipe_vict
+                        adv = next((p for p in equipe_adv_ko
+                                    if p["slot"] == col_def and p["position"] == "off"
+                                    and not p.get("ko")), None) or \
+                              next((p for p in equipe_adv_ko
+                                    if p["slot"] == col_def and p["position"] == "def"
+                                    and not p.get("ko")), None)
+                        if adv:
+                            vit = defensif.get("vitesse", 50)
+                            insert_pos = idx_file
+                            while insert_pos < len(file_attaques) and \
+                                  file_attaques[insert_pos][0].get("vitesse", 50) > vit:
+                                insert_pos += 1
+                            file_attaques.insert(insert_pos, (defensif, adv))
 
     # Effets post-combat synergies : Plante, Fée, Insecte
     bonus_force_j1, bonus_force_j2 = appliquer_effets_post_combat(
