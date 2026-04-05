@@ -338,25 +338,185 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
             cible["bonus_defense"] = 0
             logs.append(f"    🗡️ {nom} [{nom_att}] : ignore le Bonus Défense de {cible['nom']}")
 
-    # ── SI ATTAQUE AVANT ──────────────────────────────────────────────────
-    elif nom_att in {"Aqua-Jet", "Balles Graines", "Balle Ombre", "Tranche Rapide",
-                     "Uppercut", "Mach Punch", "Poing-Karaté"}:
-        if mode == "off":
-            attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
-            if attaque_avant:
-                appliquer_bonus(pokemon, "bonus_attaque", 10)
-                logs.append(f"    ⚡ {nom} [{nom_att}] : +10 dégâts (attaque en premier)")
+    # ── SI ATTAQUE AVANT (+10 dégâts) ─────────────────────────────────────
+    elif nom_att in {"Aqua-Jet", "Mach Punch", "Vive-Attaque", "Eclats Glace",
+                     "Ombre Portée", "Pisto-Poing", "Vif Roc", "Vif-Roc",
+                     "Trépignement"}:
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        if attaque_avant:
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    ⚡ {nom} [{nom_att}] : +10 dégâts (attaque en premier)")
+
+    # ── SI ATTAQUE AVANT (+X dégâts selon niveau) ─────────────────────────
+    elif nom_att in {"Boule Elek"}:
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        if attaque_avant:
+            appliquer_bonus(pokemon, "bonus_attaque", X)
+            logs.append(f"    ⚡ {nom} [{nom_att}] : +{X} dégâts (attaque en premier)")
+
+    # ── SI ATTAQUE AVANT (double dégâts) ──────────────────────────────────
+    elif nom_att in {"Branchicrok", "Prise de Bec"}:
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        if attaque_avant:
+            appliquer_bonus(pokemon, "bonus_attaque", pokemon.get("degats", 20))
+            logs.append(f"    ⚡ {nom} [{nom_att}] : dégâts doublés (attaque en premier)")
+
+    # ── SI ATTAQUE AVANT (+10 + peur) ─────────────────────────────────────
+    elif nom_att in {"Bluff", "Escarmouche"}:
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        if attaque_avant:
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    ⚡ {nom} [{nom_att}] : +10 dégâts (attaque en premier)")
+            if not cible.get("peur") and cible.get("vitesse", 50) < pokemon.get("vitesse", 50):
+                cible["peur"] = True
+                logs.append(f"    😨 {cible['nom']} a peur !")
+
+    # ── SI ATTAQUE AVANT (bonus défense) ──────────────────────────────────
+    elif nom_att == "Sprint Bouclier":
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        if attaque_avant:
+            appliquer_bonus(pokemon, "bonus_defense", 30)
+            logs.append(f"    🛡️ {nom} [Sprint Bouclier] : +30 Bonus Défense (attaque en premier)")
+
+    # ── SI ATTAQUE AVANT (+20 dégâts) ─────────────────────────────────────
+    elif nom_att == "Trépignement":
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        if attaque_avant:
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    ⚡ {nom} [Trépignement] : +20 dégâts (attaque en premier)")
+
+    # ── COUP BAS (si avant + cible support) ───────────────────────────────
+    elif nom_att == "Coup Bas":
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        if attaque_avant:
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            support = _support_adverse(cible, equipe_adv)
+            if support and not support.get("ko"):
+                logs.append(f"    ⚡ {nom} [Coup Bas] : +10 dégâts, cible support {support['nom']}")
+                return support
+            logs.append(f"    ⚡ {nom} [Coup Bas] : +10 dégâts (attaque en premier)")
+
+    # ── CROCS (statut + peur) ─────────────────────────────────────────────
+    elif nom_att in {"Crocs Eclair", "Crocs Éclair"}:
+        if not cible.get("statut") and _jet_de(6, logs, nom, "[Crocs Éclair] tente paralysie"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+        if not cible.get("peur") and _jet_de(6, logs, nom, "[Crocs Éclair] tente peur"):
+            cible["peur"] = True
+            logs.append(f"    😨 {cible['nom']} a peur !")
+
+    elif nom_att in {"Crocs Feu"}:
+        if not cible.get("statut") and _jet_de(6, logs, nom, "[Crocs Feu] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+        if not cible.get("peur") and _jet_de(6, logs, nom, "[Crocs Feu] tente peur"):
+            cible["peur"] = True
+            logs.append(f"    😨 {cible['nom']} a peur !")
+
+    elif nom_att in {"Crocs Givre"}:
+        if not cible.get("statut") and _jet_de(6, logs, nom, "[Crocs Givre] tente gel"):
+            ok, _ = appliquer_statut(cible, "FRZ")
+            if ok: logs.append(f"    ❄️ {cible['nom']} est gelé !")
+        if not cible.get("peur") and _jet_de(6, logs, nom, "[Crocs Givre] tente peur"):
+            cible["peur"] = True
+            logs.append(f"    😨 {cible['nom']} a peur !")
+
+    # ── FUREUR ARDENTE (peur + brûlure) ───────────────────────────────────
+    elif nom_att == "Fureur Ardente":
+        if not cible.get("peur") and _jet_de(5, logs, nom, "[Fureur Ardente] tente peur"):
+            cible["peur"] = True
+            logs.append(f"    😨 {cible['nom']} a peur !")
+        if not cible.get("statut") and _jet_de(5, logs, nom, "[Fureur Ardente] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+
+    # ── GRIFFES FUNESTES (statut variable + dégâts) ───────────────────────
+    elif nom_att == "Griffes Funestes":
+        if not cible.get("statut"):
+            de = random.randint(1, 6)
+            if de == 4:
+                ok, _ = appliquer_statut(cible, "PSN")
+                if ok: logs.append(f"    ☠️ {cible['nom']} est empoisonné ! (dé: {de})")
+            elif de == 5:
+                ok, _ = appliquer_statut(cible, "PAR")
+                if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé ! (dé: {de})")
+            elif de == 6:
+                ok, _ = appliquer_statut(cible, "SLP")
+                if ok: logs.append(f"    😴 {cible['nom']} s'endort ! (dé: {de})")
+        if _jet_de(5, logs, nom, "[Griffes Funestes] tente +20 dégâts"):
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    💥 {nom} [Griffes Funestes] : +20 dégâts")
+
+    # ── PIED BRÛLEUR (+20 dégâts + brûlure) ──────────────────────────────
+    elif nom_att == "Pied Bruleur":
+        if _jet_de(5, logs, nom, "[Pied Brûleur] tente +20 dégâts"):
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    💥 {nom} [Pied Brûleur] : +20 dégâts")
+        if not cible.get("statut") and _jet_de(6, logs, nom, "[Pied Brûleur] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+
+    # ── PIQUÉ (peur + dégâts) ─────────────────────────────────────────────
+    elif nom_att == "Piqué":
+        if not cible.get("peur") and _jet_de(5, logs, nom, "[Piqué] tente peur"):
+            cible["peur"] = True
+            logs.append(f"    😨 {cible['nom']} a peur !")
+        if _jet_de(5, logs, nom, "[Piqué] tente +20 dégâts"):
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    💥 {nom} [Piqué] : +20 dégâts")
+
+    # ── POISON-CROIX (+20 dégâts + poison) ───────────────────────────────
+    elif nom_att == "Poison-Croix":
+        if _jet_de(5, logs, nom, "[Poison-Croix] tente +20 dégâts"):
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    💥 {nom} [Poison-Croix] : +20 dégâts")
+        if not cible.get("statut") and _jet_de(6, logs, nom, "[Poison-Croix] tente poison"):
+            ok, _ = appliquer_statut(cible, "PSN")
+            if ok: logs.append(f"    ☠️ {cible['nom']} est empoisonné !")
+
+    # ── BALLON BRULANT (brûlure + échange position) ───────────────────────
+    elif nom_att == "Ballon Brulant":
+        if not cible.get("statut") and _jet_de(5, logs, nom, "[Ballon Brûlant] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+        if _jet_de(5, logs, nom, "[Ballon Brûlant] tente échange"):
+            support = _support_adverse(cible, equipe_adv)
+            if support and not support.get("ko"):
+                cible["position"], support["position"] = support["position"], cible["position"]
+                logs.append(f"    🔄 {cible['nom']} et {support['nom']} échangent leur position !")
+
+    # ── TUNNEL (cible le support adverse) ─────────────────────────────────
+    elif nom_att == "Tunnel":
+        support = _support_adverse(cible, equipe_adv)
+        if support and not support.get("ko"):
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    🕳️ {nom} [Tunnel] : cible support {support['nom']} +20 dégâts")
+            return support
+
+    # ── QUEUE-POISON (dé 5-6 poison + dé 5-6 dégâts sup) ─────────────────
+    elif nom_att in {"Queue-Poison", "Queue-Poison (Séviper)"}:
+        if not cible.get("statut") and _jet_de(5, logs, nom, "[Queue-Poison] tente poison"):
+            ok, _ = appliquer_statut(cible, "PSN")
+            if ok: logs.append(f"    ☠️ {cible['nom']} est empoisonné !")
+        if _jet_de(5, logs, nom, "[Queue-Poison] tente dégâts sup"):
+            appliquer_bonus(pokemon, "bonus_attaque", X)
+            logs.append(f"    💥 {nom} [Queue-Poison] : +{X} dégâts supplémentaires")
+
+    # ── PLUMO-QUEUE (dé variable) ──────────────────────────────────────────
+    elif nom_att == "Plumo-Queue":
+        de = random.randint(1, 6)
+        bonus = 0 if de <= 2 else 10 if de <= 4 else 20 if de == 5 else 30
+        if bonus:
+            appliquer_bonus(pokemon, "bonus_attaque", bonus)
+            logs.append(f"    🎲 {nom} [Plumo-Queue] : +{bonus} dégâts (dé: {de})")
 
     # ── DÉGÂTS SUR SUPPORT ADVERSE ────────────────────────────────────────
     elif nom_att in {"Damoclès", "Lumière du Néant", "Caboche-Kaboum",
                      "Fracass'Tête", "Roc Boulet"}:
-        # Ces attaques transfèrent la moitié des dégâts au support
-        # Marqué pour traitement post-dégâts
         pokemon["_degats_support_actif"] = True
 
     # ── BÉLIER ────────────────────────────────────────────────────────────
     elif nom_att == "Bélier":
-        # 10 dégâts fixes au support adverse (traité post-dégâts)
         pokemon["_belier_actif"] = True
 
     # ── ATTAQUES GIGAMAX (10 dégâts à tous les adversaires hors type) ─────
@@ -1253,53 +1413,53 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         # Synergie Vol : cibler le défensif adverse si disponible
         joueur_att = j1 if attaquant in equipe1 else j2
         joueur_def = j2 if attaquant in equipe1 else j1
-        equipe_def = equipe2 if attaquant in equipe1 else equipe1
+        equipe_att = equipe1 if attaquant in equipe1 else equipe2
+        equipe_adv = equipe2 if attaquant in equipe1 else equipe1
         cible_reelle = defenseur
 
-        # ── Effet défensif du défenseur (att_def) ─────────────────────────
-        peut_etre_neutralise = appliquer_effet_attaque(
-            defenseur, attaquant, joueur_def, joueur_att,
-            equipe_def, equipe2 if attaquant in equipe1 else equipe1,
-            equipe1 if attaquant in equipe1 else equipe2,
-            "def", logs, partie
-        )
+        # ── Déterminer le mode selon la POSITION du Pokémon ───────────────
+        # Un Pokémon en position "off" utilise att_off
+        # Un Pokémon en position "def" utilise att_def
+        mode_attaquant = "off" if attaquant.get("position") == "off" else "def"
 
         # ── Jet de précision (sauf si attaque ne peut pas échouer) ────────
-        att_off_nom = attaquant.get("att_off_nom", "")
-        ne_peut_echouer = att_off_nom in ATTAQUES_NE_PEUVENT_ECHOUER
+        att_nom = attaquant.get("att_off_nom" if mode_attaquant == "off" else "att_def_nom", "")
+        ne_peut_echouer = att_nom in ATTAQUES_NE_PEUVENT_ECHOUER
         if not ne_peut_echouer and not jet_precision(attaquant, logs):
             continue  # Attaque ratée
 
+        # ── Synergie Vol (seulement pour les offensifs) ───────────────────
         pal_vol = palier_synergie(joueur_att, "vol")
         types_norm_att = [_normaliser_type(t) for t in attaquant.get("types", [])]
-        if pal_vol and "vol" in types_norm_att and jet_synergie(pal_vol):
-            # Chercher le défensif dans la même colonne que le défenseur (offensif adverse)
+        if mode_attaquant == "off" and pal_vol and "vol" in types_norm_att and jet_synergie(pal_vol):
             col_def = defenseur["slot"]
-            equipe_adverse = equipe2 if attaquant in equipe1 else equipe1
-            support_adv = next((p for p in equipe_adverse
+            support_adv = next((p for p in equipe_adv
                                 if p["slot"] == col_def
                                 and p["position"] == "def"
                                 and not p.get("ko")), None)
-
             if support_adv:
                 cible_reelle = support_adv
                 bonus_vol = {3: 10, 6: 20, 9: 30}.get(pal_vol, 0)
                 logs.append(f"    🦅 Synergie Vol : {attaquant['nom']} cible {support_adv['nom']} (support) +{bonus_vol} dégâts")
             else:
-                # Pas de défensif → attaque normale sans bonus
-                logs.append(f"    🦅 Synergie Vol : pas de support adverse en col.{col_def+1}, attaque normale")
+                logs.append(f"    🦅 Synergie Vol : pas de support adverse en col.{defenseur['slot']+1}, attaque normale")
                 bonus_vol = 0
         else:
             bonus_vol = 0
 
-        # ── Effet offensif de l'attaquant (att_off) ───────────────────────
-        equipe_att = equipe1 if attaquant in equipe1 else equipe2
-        equipe_adv = equipe2 if attaquant in equipe1 else equipe1
-        cible_reelle = appliquer_effet_attaque(
-            attaquant, defenseur, joueur_att, joueur_def,
+        # ── Effet de l'attaque selon la position ──────────────────────────
+        nouvelle_cible = appliquer_effet_attaque(
+            attaquant, cible_reelle, joueur_att, joueur_def,
             equipe_att, equipe_adv, equipe_att,
-            "off", logs, partie
-        ) or cible_reelle
+            mode_attaquant, logs, partie
+        )
+        if nouvelle_cible:
+            cible_reelle = nouvelle_cible
+
+        # ── Un Pokémon défensif n'inflige pas de dégâts de base ───────────
+        # Ses effets (att_def) sont déjà appliqués ci-dessus
+        if mode_attaquant == "def":
+            continue
 
         type_att = attaquant.get("att_off_type")
         dmg, eff  = calculer_degats(attaquant, cible_reelle, type_attaque=type_att)
