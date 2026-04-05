@@ -198,6 +198,11 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
     Y   = valeur_y(niv)
     nom = pokemon["nom"]
 
+    # Helper : cibles des 2 Pokémon adverses de la colonne
+    def _cibles_colonne():
+        col = cible.get("slot")
+        return [p for p in equipe_adv if p.get("slot") == col and not p.get("ko")]
+
     # ── BONUS DÉFENSE (Pokemon offensif) ──────────────────────────────────
     if nom_att in {"Acidarmure", "Armure", "Armure (Normale)", "Coquille", "Bouclier",
                    "Repli Tactique", "Fortification", "Abri Rocheux", "Barrage"}:
@@ -555,10 +560,700 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
                 ennemi["pv"] = max(0, ennemi.get("pv", 0) - 10)
                 logs.append(f"    💥 {nom_att} : {ennemi['nom']} subit 10 dégâts !")
 
+    # ══════════════════════════════════════════════════════════════════════
+    # MALUS DÉFENSE ADVERSE
+    # ══════════════════════════════════════════════════════════════════════
+
+    # Supprime défense sur dé 6
+    elif nom_att in {"Ball'Ombre", "Bourdon", "Eco-Sphère", "Luminocanon",
+                     "Psyko", "Telluriforce"}:
+        if _jet_de(6, logs, nom, f"[{nom_att}] tente suppression défense"):
+            appliquer_bonus(cible, "bonus_defense", -cible.get("bonus_defense", 0) - 999)
+            cible["bonus_defense"] = 0
+            logs.append(f"    📉 {cible['nom']} : Bonus Défense supprimé !")
+
+    # Supprime défense sur dé 5-6
+    elif nom_att in {"Machouille", "Telluriforce"}:
+        if _jet_de(5, logs, nom, f"[{nom_att}] tente suppression défense"):
+            cible["bonus_defense"] = 0
+            logs.append(f"    📉 {cible['nom']} : Bonus Défense supprimé !")
+
+    # Supprime défense sans condition
+    elif nom_att in {"Bombe Acide", "Canon Blindé", "Lumino-Impact"}:
+        cible["bonus_defense"] = 0
+        logs.append(f"    📉 {nom} [{nom_att}] : Bonus Défense supprimé !")
+
+    # Réduit défense de X sans condition
+    elif nom_att in {"Groz'Yeux"}:
+        appliquer_bonus(cible, "bonus_defense", -X)
+        logs.append(f"    📉 {nom} [{nom_att}] : {cible['nom']} -{X} Bonus Défense")
+
+    # Réduit défense de 20 sans condition
+    elif nom_att in {"Fouet de Feu"}:
+        appliquer_bonus(cible, "bonus_defense", -20)
+        logs.append(f"    📉 {nom} [{nom_att}] : {cible['nom']} -20 Bonus Défense")
+
+    # Réduit défense de 30 sans condition
+    elif nom_att in {"Coup Fulgurant", "Triple Flèche"}:
+        appliquer_bonus(cible, "bonus_defense", -30)
+        logs.append(f"    📉 {nom} [{nom_att}] : {cible['nom']} -30 Bonus Défense")
+
+    # Réduit défense via pièce (face = -10)
+    elif nom_att == "Coquilame":
+        if _jet_de(4, logs, nom, "[Coquilame] tente réduction défense"):
+            appliquer_bonus(cible, "bonus_defense", -10)
+            logs.append(f"    📉 {cible['nom']} : -10 Bonus Défense")
+
+    # Réduit défense via pièce (face = -50)
+    elif nom_att == "Lumi-Eclat":
+        if _jet_de(4, logs, nom, "[Lumi-Eclat] tente réduction défense"):
+            appliquer_bonus(cible, "bonus_defense", -50)
+            logs.append(f"    📉 {cible['nom']} : -50 Bonus Défense")
+
+    # Réduit défense + attaque (Chatouille, Close Combat)
+    elif nom_att in {"Chatouille", "Close Combat"}:
+        appliquer_bonus(cible, "bonus_defense", -X)
+        appliquer_bonus(cible, "bonus_attaque", -X)
+        logs.append(f"    📉 {nom} [{nom_att}] : {cible['nom']} -{X} Défense et -{X} Attaque")
+
+    # Réduit défense des 2 Pokemon de la colonne
+    elif nom_att in {"Croco Larme", "Strido-Son", "Rafale G-Max"}:
+        for c in _cibles_colonne():
+            c["bonus_defense"] = 0
+            logs.append(f"    📉 {nom} [{nom_att}] : {c['nom']} Bonus Défense supprimé !")
+
+    # Coup Fulgurant : -30 défense + dé 5-6 paralysie
+    elif nom_att == "Coup Fulgurant":
+        appliquer_bonus(cible, "bonus_defense", -30)
+        logs.append(f"    📉 {cible['nom']} : -30 Bonus Défense")
+        if not cible.get("statut") and _jet_de(5, logs, nom, "[Coup Fulgurant] tente paralysie"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+
+    # Malédiction : +X att +X def -X vitesse
+    elif nom_att == "Malédiction":
+        appliquer_bonus(pokemon, "bonus_attaque", X)
+        appliquer_bonus(pokemon, "bonus_defense", X)
+        appliquer_bonus(pokemon, "bonus_vitesse", -X)
+        pokemon["vitesse"] = max(5, pokemon.get("vitesse", 50) - X)
+        logs.append(f"    🔮 {nom} [Malédiction] : +{X} Att, +{X} Déf, -{X} Vit")
+
+    # Habanerage : supprime sa propre défense → ajoute à l'attaque
+    elif nom_att == "Habanerage":
+        bonus_def = max(0, pokemon.get("bonus_defense", 0))
+        pokemon["bonus_defense"] = 0
+        appliquer_bonus(pokemon, "bonus_attaque", X + bonus_def)
+        logs.append(f"    🌶️ {nom} [Habanerage] : +{X + bonus_def} Attaque (dont {bonus_def} de Déf)")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # BOOST ATTAQUE
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att == "Chargeur":
+        bonus = X * 2 if attaquant.get("att_off_type", "").lower() == "electrik" else X
+        appliquer_bonus(pokemon, "bonus_attaque", bonus)
+        logs.append(f"    ⚔️ {nom} [Chargeur] : +{bonus} Attaque")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # MALUS ATTAQUE ADVERSE
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Charme", "Feu Ensorcelé"}:
+        appliquer_bonus(cible, "bonus_attaque", -X)
+        logs.append(f"    📉 {nom} [{nom_att}] : {cible['nom']} -{X} Attaque")
+
+    elif nom_att == "Survinsecte":
+        appliquer_bonus(cible, "bonus_attaque", -10)
+        logs.append(f"    📉 {cible['nom']} : -10 Attaque")
+
+    elif nom_att in {"Calinerie", "Ondes Boréales"}:
+        if _jet_de(6, logs, nom, f"[{nom_att}] tente malus attaque"):
+            appliquer_bonus(cible, "bonus_attaque", -X)
+            logs.append(f"    📉 {cible['nom']} : -{X} Attaque")
+
+    elif nom_att == "Ball'Brume":
+        if _jet_de(4, logs, nom, "[Ball'Brume] tente malus attaque"):
+            appliquer_bonus(cible, "bonus_attaque", -50)
+            logs.append(f"    📉 {cible['nom']} : -50 Attaque")
+
+    elif nom_att == "Patati-Patattrape":
+        if _jet_de(5, logs, nom, "[Patati-Patattrape] tente malus attaque"):
+            appliquer_bonus(cible, "bonus_attaque", -30)
+            logs.append(f"    📉 {cible['nom']} : -30 Attaque")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # BOOST VITESSE
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att == "Danse Draco":
+        offensif = next((p for p in equipe_att if p.get("position") == "off"
+                        and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            appliquer_bonus(offensif, "bonus_vitesse", X)
+            offensif["vitesse"] = offensif.get("vitesse", 50) + X
+            logs.append(f"    🐉 {nom} [Danse Draco] : {offensif['nom']} +{X} Att/Vit")
+            if "dragon" in [_normaliser_type(t) for t in offensif.get("types", [])]:
+                appliquer_bonus(pokemon, "bonus_attaque", X)
+                appliquer_bonus(pokemon, "bonus_vitesse", X)
+                pokemon["vitesse"] = pokemon.get("vitesse", 50) + X
+                logs.append(f"    🐉 [Danse Draco] : {nom} reçoit aussi +{X} Att/Vit (offensif Dragon)")
+
+    elif nom_att in {"Hate", "Hâte"}:
+        appliquer_bonus(pokemon, "bonus_vitesse", X)
+        pokemon["vitesse"] = pokemon.get("vitesse", 50) + X
+        logs.append(f"    💨 {nom} [{nom_att}] : +{X} Vitesse")
+
+    elif nom_att == "Nitrocharge":
+        appliquer_bonus(pokemon, "bonus_vitesse", 10)
+        pokemon["vitesse"] = pokemon.get("vitesse", 50) + 10
+        logs.append(f"    💨 {nom} [Nitrocharge] : +10 Vitesse")
+
+    elif nom_att == "Poliroche":
+        bonus_vit = X + 10 if "roche" in [_normaliser_type(t) for t in pokemon.get("types", [])] else X
+        appliquer_bonus(pokemon, "bonus_vitesse", bonus_vit)
+        pokemon["vitesse"] = pokemon.get("vitesse", 50) + bonus_vit
+        logs.append(f"    💨 {nom} [Poliroche] : +{bonus_vit} Vitesse")
+
+    elif nom_att == "Roue Libre":
+        cnt = pokemon.get("_roue_libre_cnt", 0)
+        if cnt < 3:
+            pokemon["_roue_libre_cnt"] = cnt + 1
+            appliquer_bonus(pokemon, "bonus_vitesse", 20)
+            pokemon["vitesse"] = pokemon.get("vitesse", 50) + 20
+            logs.append(f"    💨 {nom} [Roue Libre] : +20 Vitesse ({cnt+1}/3)")
+
+    elif nom_att == "Danse Aquatique":
+        cnt = pokemon.get("_danse_aq_cnt", 0)
+        if cnt < 3:
+            pokemon["_danse_aq_cnt"] = cnt + 1
+            appliquer_bonus(pokemon, "bonus_vitesse", 10)
+            pokemon["vitesse"] = pokemon.get("vitesse", 50) + 10
+            logs.append(f"    💨 {nom} [Danse Aquatique] : +10 Vitesse ({cnt+1}/3)")
+
+    elif nom_att == "Papillodance":
+        appliquer_bonus(pokemon, "bonus_attaque", X)
+        appliquer_bonus(pokemon, "bonus_defense", X)
+        appliquer_bonus(pokemon, "bonus_vitesse", X)
+        pokemon["vitesse"] = pokemon.get("vitesse", 50) + X
+        logs.append(f"    🦋 {nom} [Papillodance] : +{X} Att/Déf/Vit")
+
+    elif nom_att == "Engrenage":
+        appliquer_bonus(pokemon, "bonus_attaque", X)
+        logs.append(f"    ⚔️ {nom} [Engrenage] : +{X} Attaque")
+        if "acier" in [_normaliser_type(t) for t in pokemon.get("types", [])]:
+            appliquer_bonus(pokemon, "bonus_vitesse", X)
+            pokemon["vitesse"] = pokemon.get("vitesse", 50) + X
+            logs.append(f"    💨 {nom} [Engrenage] : +{X} Vitesse (type Acier)")
+
+    elif nom_att == "Aurasphère":
+        if _jet_de(5, logs, nom, "[Aurasphère] tente boost vitesse"):
+            appliquer_bonus(pokemon, "bonus_vitesse", X)
+            pokemon["vitesse"] = pokemon.get("vitesse", 50) + X
+            logs.append(f"    💨 {nom} [Aurasphère] : +{X} Vitesse")
+        if pokemon.get("pv", 100) < pokemon.get("pv_max", 100) * 0.5:
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    ⚔️ {nom} [Aurasphère] : +20 dégâts (<50% PV)")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # MALUS VITESSE ADVERSE
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Dérapage", "Marteau de Glace", "Marto-Poing"}:
+        appliquer_bonus(cible, "bonus_vitesse", -40)
+        cible["vitesse"] = max(5, cible.get("vitesse", 50) - 40)
+        logs.append(f"    🐢 {nom} [{nom_att}] : {cible['nom']} -40 Vitesse")
+
+    elif nom_att in {"Grimace", "Sécrétion"}:
+        appliquer_bonus(cible, "bonus_vitesse", -X)
+        cible["vitesse"] = max(5, cible.get("vitesse", 50) - X)
+        logs.append(f"    🐢 {nom} [{nom_att}] : {cible['nom']} -{X} Vitesse")
+
+    elif nom_att in {"Tir de Boue", "Toile Elek"}:
+        appliquer_bonus(cible, "bonus_vitesse", -10)
+        cible["vitesse"] = max(5, cible.get("vitesse", 50) - 10)
+        logs.append(f"    🐢 {nom} [{nom_att}] : {cible['nom']} -10 Vitesse")
+
+    elif nom_att == "Tomberoche":
+        appliquer_bonus(cible, "bonus_vitesse", -20)
+        cible["vitesse"] = max(5, cible.get("vitesse", 50) - 20)
+        logs.append(f"    🐢 {cible['nom']} : -20 Vitesse")
+
+    elif nom_att == "Tambour Battant":
+        appliquer_bonus(cible, "bonus_vitesse", -40)
+        cible["vitesse"] = max(5, cible.get("vitesse", 50) - 40)
+        logs.append(f"    🐢 {cible['nom']} : -40 Vitesse")
+
+    elif nom_att in {"Bulles d'0", "Bulles d'O"}:
+        if _jet_de(6, logs, nom, "[Bulles d'O] tente malus vitesse"):
+            appliquer_bonus(cible, "bonus_vitesse", -X)
+            cible["vitesse"] = max(5, cible.get("vitesse", 50) - X)
+            logs.append(f"    🐢 {cible['nom']} : -{X} Vitesse")
+
+    # Zone malus vitesse
+    elif nom_att in {"Piétisol", "Spore Coton"}:
+        for c in _cibles_colonne():
+            appliquer_bonus(c, "bonus_vitesse", -X if nom_att == "Spore Coton" else -20)
+            c["vitesse"] = max(5, c.get("vitesse", 50) - (X if nom_att == "Spore Coton" else 20))
+            logs.append(f"    🐢 {c['nom']} : -{X if nom_att == 'Spore Coton' else 20} Vitesse")
+
+    elif nom_att == "Bulles G-Max":
+        for c in _cibles_colonne():
+            appliquer_bonus(c, "bonus_vitesse", -40)
+            c["vitesse"] = max(5, c.get("vitesse", 50) - 40)
+            logs.append(f"    🐢 {c['nom']} : -40 Vitesse")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # SOINS
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Vibra Soin", "Soin Floral"}:
+        soin = X
+        pokemon["pv"] = min(pokemon.get("pv_max", 100), pokemon.get("pv", 0) + soin)
+        logs.append(f"    💚 {nom} [{nom_att}] : +{soin} PV")
+
+    elif nom_att in {"Aromathérapie", "Glas de Soin", "Régénération"}:
+        soigner_statuts(pokemon)
+        logs.append(f"    💚 {nom} [{nom_att}] : statut soigné")
+
+    elif nom_att in {"Aria de I'Ecume", "Aria de l'Ecume"}:
+        soigner_statuts(pokemon)
+        support = next((p for p in equipe_att if p.get("position") == "def"
+                       and p.get("slot") == pokemon.get("slot") and not p.get("ko")), None)
+        if support:
+            soigner_statuts(support)
+            logs.append(f"    💚 {nom} : statuts soignés ({pokemon['nom']} + {support['nom']})")
+        else:
+            logs.append(f"    💚 {nom} : statut soigné")
+
+    elif nom_att in {"Extravaillance"}:
+        if pokemon.get("statut"):
+            soigner_statuts(pokemon)
+            appliquer_bonus(pokemon, "bonus_attaque", X)
+            appliquer_bonus(pokemon, "bonus_defense", X)
+            logs.append(f"    💚 {nom} [Extravaillance] : statut soigné +{X} Att/Déf")
+
+    elif nom_att in {"Lait a Boire", "Lait à Boire"}:
+        degats_pris = pokemon.get("pv_max", 100) - pokemon.get("pv", 0)
+        soin = X + degats_pris
+        pokemon["pv"] = min(pokemon.get("pv_max", 100), pokemon.get("pv", 0) + soin)
+        logs.append(f"    💚 {nom} [Lait à Boire] : +{soin} PV")
+
+    elif nom_att in {"Cure G-Max"}:
+        support = next((p for p in equipe_att if p.get("position") == "def"
+                       and p.get("slot") == pokemon.get("slot") and not p.get("ko")), None)
+        if support:
+            support["pv"] = support.get("pv_max", 100)
+            logs.append(f"    💚 {support['nom']} soigné intégralement !")
+
+    elif nom_att in {"Nectar G-Max"}:
+        for p in equipe_att:
+            if p.get("slot") == pokemon.get("slot") and not p.get("ko"):
+                soigner_statuts(p)
+                logs.append(f"    💚 {p['nom']} : statut soigné")
+
+    elif nom_att == "Paresse":
+        soin = X
+        pokemon["pv"] = min(pokemon.get("pv_max", 100), pokemon.get("pv", 0) + soin)
+        pokemon["_skip_next_combat"] = True
+        logs.append(f"    💚 {nom} [Paresse] : +{soin} PV (ne combat pas au prochain tour)")
+
+    elif nom_att == "Racines":
+        soin = X
+        pokemon["pv"] = min(pokemon.get("pv_max", 100), pokemon.get("pv", 0) + soin)
+        pokemon["_racines_actif"] = True
+        logs.append(f"    💚 {nom} [Racines] : +{soin} PV (ne peut plus être retiré)")
+
+    elif nom_att in {"Amass'Sable"}:
+        soin = X
+        pokemon["pv"] = min(pokemon.get("pv_max", 100), pokemon.get("pv", 0) + soin)
+        appliquer_bonus(pokemon, "bonus_defense", X)
+        logs.append(f"    💚 {nom} [Amass'Sable] : +{soin} PV +{X} Défense")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STATUTS PAR (avec variantes)
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Dracosouffle", "Etincelle", "Fatal-Foudre", "Forte-Paume",
+                     "Léchouille", "Plaquage", "Typhon Fulgurant"}:
+        if not cible.get("statut") and _jet_de(5, logs, nom, f"[{nom_att}] tente paralysie"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+
+    elif nom_att in {"Eclair", "Poing Eclair"}:
+        if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente paralysie"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+
+    elif nom_att in {"Electro-Surf Survolté", "Elécanon", "Frotte-Frimousse",
+                     "Regard Médusant"}:
+        if not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+
+    elif nom_att == "Charge Foudre":
+        if not cible.get("statut") and _jet_de(5, logs, nom, "[Charge Foudre] tente paralysie"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+        support_all = next((p for p in equipe_att if p.get("position") == "def"
+                           and p.get("slot") == pokemon.get("slot") and not p.get("ko")), None)
+        if support_all and "feu" in [_normaliser_type(t) for t in support_all.get("types", [])]:
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    ⚡ {nom} [Charge Foudre] : +20 dégâts (support Feu)")
+
+    elif nom_att == "Foudre G-Max":
+        for c in _cibles_colonne():
+            if not c.get("statut"):
+                ok, _ = appliquer_statut(c, "PAR")
+                if ok: logs.append(f"    ⚡ {c['nom']} est paralysé !")
+
+    elif nom_att == "Eclair Croix":
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Eclair Croix] tente paralysie"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+        if cible.get("statut") == "FRZ":
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    ⚡ [Eclair Croix] : +20 dégâts (cible gelée)")
+
+    elif nom_att == "Electacle":
+        if not cible.get("statut") and _jet_de(6, logs, nom, "[Electacle] tente paralysie"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+        pokemon["_degats_support_actif"] = True
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STATUTS FRZ
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Poudreuse", "Typhon Hivernal"}:
+        if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente gel"):
+            ok, _ = appliquer_statut(cible, "FRZ")
+            if ok: logs.append(f"    ❄️ {cible['nom']} est gelé !")
+
+    elif nom_att in {"Cœur de Rancœur", "Regard Glaçant"}:
+        if not cible.get("statut") and _jet_de(5, logs, nom, f"[{nom_att}] tente gel"):
+            ok, _ = appliquer_statut(cible, "FRZ")
+            if ok: logs.append(f"    ❄️ {cible['nom']} est gelé !")
+        if cible.get("statut"):
+            appliquer_bonus(pokemon, "bonus_attaque", 30 if nom_att == "Cœur de Rancœur" else 10)
+            logs.append(f"    💥 [{nom_att}] : dégâts bonus (cible avec statut)")
+
+    elif nom_att == "Feu Sacré":
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Feu Sacré] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+        if pokemon.get("statut") == "FRZ":
+            retirer_statut(pokemon)
+            logs.append(f"    ❄️ {pokemon['nom']} est dégelé par Feu Sacré !")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STATUTS BRN
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Flamméche", "Poing de Feu", "Roue de Feu"}:
+        if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+
+    elif nom_att in {"Lance-Flammes", "Ebullition", "Cortège Funèbre"}:
+        if not cible.get("statut") and _jet_de(5, logs, nom, f"[{nom_att}] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+        if nom_att == "Cortège Funèbre" and cible.get("statut"):
+            appliquer_bonus(pokemon, "bonus_attaque", 30)
+            logs.append(f"    💥 [Cortège Funèbre] : +30 dégâts (cible avec statut)")
+
+    elif nom_att == "Feu d'Enfer":
+        if not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+
+    elif nom_att == "Pyroball G-Max":
+        for c in _cibles_colonne():
+            if not c.get("statut"):
+                ok, _ = appliquer_statut(c, "BRN")
+                if ok: logs.append(f"    🔥 {c['nom']} est brûlé !")
+
+    elif nom_att in {"Boutefeu", "Boutefeu (Solaroc)"}:
+        if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+        # 10 dégâts aux Pokémon adjacents
+        col = cible.get("slot", 0)
+        for adj in equipe_adv:
+            if abs(adj.get("slot", 0) - col) == 1 and not adj.get("ko"):
+                adj["pv"] = max(0, adj.get("pv", 0) - 10)
+                logs.append(f"    🔥 {adj['nom']} (adjacent) subit 10 dégâts de feu !")
+
+    elif nom_att == "Ebullilave":
+        for c in _cibles_colonne():
+            if not c.get("statut") and _jet_de(5, logs, nom, f"[Ebullilave] tente brûlure sur {c['nom']}"):
+                ok, _ = appliquer_statut(c, "BRN")
+                if ok: logs.append(f"    🔥 {c['nom']} est brûlé !")
+
+    elif nom_att == "Mortier Matcha":
+        for c in _cibles_colonne():
+            if not c.get("statut") and _jet_de(5, logs, nom, f"[Mortier Matcha] tente brûlure"):
+                ok, _ = appliquer_statut(c, "BRN")
+                if ok: logs.append(f"    🔥 {c['nom']} est brûlé !")
+        pokemon["_vol_vie_actif"] = True
+
+    elif nom_att == "Flamme Croix":
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Flamme Croix] tente brûlure"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+        if cible.get("statut") == "FRZ":
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    💥 [Flamme Croix] : +20 dégâts (cible gelée)")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STATUTS PSN
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Direct Toxik", "Détricanon", "Détritus"}:
+        if not cible.get("statut") and _jet_de(5, logs, nom, f"[{nom_att}] tente poison"):
+            ok, _ = appliquer_statut(cible, "PSN")
+            if ok: logs.append(f"    ☠️ {cible['nom']} est empoisonné !")
+
+    elif nom_att == "Crochet Venin":
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Crochet Venin] tente poison"):
+            ok, _ = appliquer_statut(cible, "PSN")
+            if ok: logs.append(f"    ☠️ {cible['nom']} est empoisonné !")
+
+    elif nom_att in {"Toxik", "Toupie Eclat"}:
+        if not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "PSN")
+            if ok: logs.append(f"    ☠️ {cible['nom']} est empoisonné !")
+        if nom_att == "Toupie Eclat":
+            pokemon.pop("piege", None)
+            logs.append(f"    🔓 {nom} n'est plus piégé !")
+
+    elif nom_att == "Pestilence G-Max":
+        for c in _cibles_colonne():
+            if not c.get("statut"):
+                ok, _ = appliquer_statut(c, "PSN")
+                if ok: logs.append(f"    ☠️ {c['nom']} est empoisonné !")
+
+    elif nom_att == "Cradovague":
+        for c in _cibles_colonne():
+            if not c.get("statut") and _jet_de(6, logs, nom, f"[Cradovague] tente poison sur {c['nom']}"):
+                ok, _ = appliquer_statut(c, "PSN")
+                if ok: logs.append(f"    ☠️ {c['nom']} est empoisonné !")
+
+    elif nom_att == "Double-Dard":
+        for c in _cibles_colonne():
+            if not c.get("statut") and _jet_de(5, logs, nom, f"[Double-Dard] tente poison"):
+                ok, _ = appliquer_statut(c, "PSN")
+                if ok: logs.append(f"    ☠️ {c['nom']} est empoisonné !")
+
+    elif nom_att == "Chaîne Malsaine":
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Chaîne Malsaine] tente poison+confusion"):
+            ok, _ = appliquer_statut(cible, "PSN")
+            if ok: logs.append(f"    ☠️ {cible['nom']} est empoisonné !")
+            ok2, _ = appliquer_statut(cible, "CNF")
+            if ok2: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STATUTS SLP
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att == "Spore":
+        if not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "SLP")
+            if ok: logs.append(f"    😴 {cible['nom']} s'endort !")
+
+    elif nom_att == "Torpeur G-Max":
+        for c in _cibles_colonne():
+            if not c.get("statut"):
+                ok, _ = appliquer_statut(c, "SLP")
+                if ok: logs.append(f"    😴 {c['nom']} s'endort !")
+
+    elif nom_att in {"Trou Noir"}:
+        if _jet_de(4, logs, nom, "[Trou Noir] tente sommeil zone"):
+            for c in _cibles_colonne():
+                if not c.get("statut"):
+                    ok, _ = appliquer_statut(c, "SLP")
+                    if ok: logs.append(f"    😴 {c['nom']} s'endort !")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STATUTS CNF
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Danse-Fleur", "Rafale Psy", "Rayon Signal", "Vibraqua"}:
+        if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente confusion"):
+            ok, _ = appliquer_statut(cible, "CNF")
+            if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    elif nom_att in {"Colére", "Grand Courroux"}:
+        de = random.randint(1, 6)
+        if de >= 5:
+            if not cible.get("statut"):
+                ok, _ = appliquer_statut(cible, "CNF")
+                if ok: logs.append(f"    😵 {cible['nom']} est confus ! (dé: {de})")
+        elif de == 1:
+            if not pokemon.get("statut"):
+                ok, _ = appliquer_statut(pokemon, "CNF")
+                if ok: logs.append(f"    😵 {pokemon['nom']} est confus ! (dé: {de})")
+
+    elif nom_att == "Dynamopoing":
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Dynamopoing] tente confusion"):
+            ok, _ = appliquer_statut(cible, "CNF")
+            if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    elif nom_att == "Onde Folie":
+        if not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "CNF")
+            if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    elif nom_att in {"Pactole G-Max", "Percussion G-Max", "Sentence G-Max"}:
+        for c in _cibles_colonne():
+            if not c.get("statut"):
+                ok, _ = appliquer_statut(c, "CNF")
+                if ok: logs.append(f"    😵 {c['nom']} est confus !")
+
+    elif nom_att == "Uppercut":
+        if not cible.get("statut") and _jet_de(5, logs, nom, "[Uppercut] tente confusion"):
+            ok, _ = appliquer_statut(cible, "CNF")
+            if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    elif nom_att == "Vapeur Féerique":
+        if not cible.get("statut") and _jet_de(5, logs, nom, "[Vapeur Féerique] tente confusion"):
+            ok, _ = appliquer_statut(cible, "CNF")
+            if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    elif nom_att == "Vantardise":
+        appliquer_bonus(cible, "bonus_attaque", X)
+        logs.append(f"    ⚔️ {cible['nom']} +{X} Attaque (Vantardise)")
+        if not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "CNF")
+            if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
+    elif nom_att == "Talon-Marteau":
+        de = random.randint(1, 6)
+        if de == 1:
+            perte = pokemon.get("pv_max", 100) // 2
+            pokemon["pv"] = max(0, pokemon.get("pv", 0) - perte)
+            logs.append(f"    💥 [Talon-Marteau] rate ! {pokemon['nom']} perd {perte} PV")
+        elif de >= 5:
+            if not cible.get("statut"):
+                ok, _ = appliquer_statut(cible, "CNF")
+                if ok: logs.append(f"    😵 {cible['nom']} est confus ! (dé: {de})")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # PIÈGE
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Danse Flamme", "Harcélement", "Siphon", "Voltageôle", "Vortex Magma"}:
+        for c in _cibles_colonne() if nom_att in {"Danse Flamme", "Harcélement", "Siphon"} else [cible]:
+            if not c.get("piege"):
+                ok, _ = appliquer_statut(c, "PIE")
+                if ok: logs.append(f"    🔗 {c['nom']} est piégé !")
+
+    elif nom_att == "Hache de Pierre":
+        if _jet_de(5, logs, nom, "[Hache de Pierre] tente +20 dégâts"):
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    💥 [Hache de Pierre] : +20 dégâts")
+        if not cible.get("piege"):
+            ok, _ = appliquer_statut(cible, "PIE")
+            if ok: logs.append(f"    🔗 {cible['nom']} est piégé !")
+
+    elif nom_att == "Vagues à Lames":
+        if _jet_de(5, logs, nom, "[Vagues à Lames] tente +20 dégâts"):
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    💥 [Vagues à Lames] : +20 dégâts")
+        if not cible.get("piege"):
+            ok, _ = appliquer_statut(cible, "PIE")
+            if ok: logs.append(f"    🔗 {cible['nom']} est piégé !")
+
+    elif nom_att == "Salaison":
+        if not cible.get("piege"):
+            ok, _ = appliquer_statut(cible, "PIE")
+            if ok: logs.append(f"    🔗 {cible['nom']} est piégé !")
+
+    elif nom_att in {"Métalliroue"}:
+        pokemon.pop("piege", None)
+        appliquer_bonus(pokemon, "bonus_attaque", 30)
+        logs.append(f"    🔓 {nom} : piège retiré + 30 dégâts")
+
+    elif nom_att == "Tour Rapide":
+        for p in list(equipe_att) + [pokemon]:
+            if p.get("piege"):
+                p.pop("piege", None)
+                appliquer_bonus(p, "bonus_vitesse", 10)
+                p["vitesse"] = p.get("vitesse", 50) + 10
+                logs.append(f"    🔓 {p['nom']} : piège retiré +10 Vitesse")
+                break
+
+    elif nom_att == "Tourbi-Sable":
+        for c in _cibles_colonne():
+            if not c.get("piege"):
+                ok, _ = appliquer_statut(c, "PIE")
+                if ok: logs.append(f"    🔗 {c['nom']} est piégé !")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # IGNORE DÉFENSE
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Apocalypsis Luminis", "Coup Final G-Max", "Lux Nihilum",
+                     "Magie Florale", "Multicoup G-Max", "Souffle Glacé",
+                     "Lame Sainte", "Draco Ascension"}:
+        ancien = cible.get("bonus_defense", 0)
+        if ancien > 0:
+            cible["bonus_defense"] = 0
+            logs.append(f"    🗡️ {nom} [{nom_att}] : ignore Bonus Défense de {cible['nom']}")
+        if nom_att == "Lame Sainte":
+            pokemon["_ne_peut_echouer"] = True
+
+    elif nom_att == "Tranch'Herb":
+        ancien = cible.get("bonus_defense", 0)
+        if ancien > 0:
+            cible["bonus_defense"] = 0
+        for c in _cibles_colonne():
+            c["bonus_defense"] = 0
+        logs.append(f"    🗡️ {nom} [Tranch'Herb] : ignore défense, zone")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # SI AVANT
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att == "Vitesse Extrême":
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        # Attaque en premier dans le combat = plus rapide de tous
+        equipe_totale = equipe_att + equipe_adv
+        plus_rapide = pokemon.get("vitesse", 50) >= max(p.get("vitesse", 50) for p in equipe_totale)
+        if plus_rapide:
+            appliquer_bonus(pokemon, "bonus_attaque", 30)
+            logs.append(f"    ⚡ [Vitesse Extrême] : +30 dégâts (plus rapide du combat)")
+        elif attaque_avant:
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    ⚡ [Vitesse Extrême] : +10 dégâts (attaque avant)")
+
+    elif nom_att == "Sheauriken":
+        attaque_avant = pokemon.get("vitesse", 50) > cible.get("vitesse", 50)
+        if attaque_avant:
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    ⚡ [Sheauriken] : +10 dégâts (attaque avant)")
+        de = random.randint(1, 6)
+        bonus = 10 if de in [3, 4] else 20 if de >= 5 else 0
+        if bonus:
+            appliquer_bonus(pokemon, "bonus_attaque", bonus)
+            logs.append(f"    🎲 [Sheauriken] : +{bonus} dégâts (dé: {de})")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # ZONE COLONNE (attaques simples qui touchent les 2 Pokémon adverses)
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {
+        "Coup Double", "Double Baffe", "Double Pied", "Draco-Flèches",
+        "Draco-Fléches", "Eboulement", "Osmerang", "Tornade",
+        "Lancécrou", "Lame Tachyonique", "Force Chtonienne",
+        "Ocroupi", "Peignée", "Triple Pied", "Triple Plongeon",
+        "Tranch'Air", "Eruption", "Giclédo", "Ecrous d'Poing",
+    }:
+        # Marquer pour toucher aussi le support adverse (traité après calcul dégâts)
+        pokemon["_zone_colonne"] = True
+
     return None
-
-
-# ── Pool ──────────────────────────────────────────────────────────────────────
 def init_pool(partie):
     pool = [p["id"] for p in POKEMONS_DB]
     random.shuffle(pool)
@@ -1522,6 +2217,14 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             pv_avant = attaquant.get("pv", 0)
             attaquant["pv"] = min(attaquant.get("pv_max", 100), pv_avant + soin)
             logs.append(f"    💚 {attaquant['nom']} se soigne de {soin} PV ({pv_avant}→{attaquant['pv']})")
+
+        # Zone colonne : les mêmes dégâts sur le support adverse
+        if attaquant.pop("_zone_colonne", False) and dmg > 0:
+            equipe_adv_post = equipe2 if attaquant in equipe1 else equipe1
+            support = _support_adverse(cible_reelle, equipe_adv_post)
+            if support and not support.get("ko"):
+                support["pv"] = max(0, support.get("pv", 0) - dmg)
+                logs.append(f"    💥 Zone : {support['nom']} subit aussi {dmg} dégâts !")
 
         # Effets post-attaque (statuts synergies)
         if dmg > 0:
