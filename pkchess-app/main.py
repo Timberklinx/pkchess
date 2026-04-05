@@ -2096,7 +2096,18 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         attaquant, defenseur = file_attaques[idx_file]
         idx_file += 1
         # Ne pas attaquer si déjà KO
-        if attaquant.get("ko") or defenseur.get("ko"):
+        if attaquant.get("ko"):
+            continue
+        # Si le défenseur est KO et que l'attaquant est en position offensive initiale
+        # → dégâts directs au dresseur adverse
+        if defenseur.get("ko"):
+            if attaquant.get("_position_initiale") == "off":
+                joueur_att_dir = j1 if attaquant in equipe1 else j2
+                joueur_def_dir = j2 if attaquant in equipe1 else j1
+                pseudo_def_dir = p2 if attaquant in equipe1 else p1
+                dmg_dir = points_force_total(attaquant)
+                joueur_def_dir["pv"] = max(0, joueur_def_dir["pv"] - dmg_dir)
+                logs.append(f"    💥 {attaquant['nom']} (off) sans adversaire → {dmg_dir} dégâts directs à {pseudo_def_dir} ({joueur_def_dir['pv']} PV)")
             continue
         # Vérifier statuts bloquants
         if not verifier_peut_attaquer(attaquant, logs):
@@ -2325,35 +2336,13 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         gagnant, perdant = None, None
         logs.append(f"🤝 Égalité ! (force {force1} chacun)")
 
-    # ── Dégâts directs : uniquement les offensifs sans adversaire ─────────
-    # Seuls les Pokémon en position offensive dès le début du combat peuvent
-    # infliger des dégâts directs. Un défensif qui avance a forcément un adversaire.
-    degats_directs_j1, degats_directs_j2 = 0, 0
-    for poke in sans_adv1:
-        if poke.get("_position_initiale") != "off" or poke.get("ko"):
-            continue
-        dmg = points_force_total(poke)
-        degats_directs_j2 += dmg
-        logs.append(f"  💥 {poke['nom']} (off) sans adversaire → {dmg} dégâts directs à {p2}")
-    for poke in sans_adv2:
-        if poke.get("_position_initiale") != "off" or poke.get("ko"):
-            continue
-        dmg = points_force_total(poke)
-        degats_directs_j1 += dmg
-        logs.append(f"  💥 {poke['nom']} (off) sans adversaire → {dmg} dégâts directs à {p1}")
-
-    # Bonus force Insecte (sur les dégâts directs)
-    degats_directs_j2 += bonus_force_j1
-    degats_directs_j1 += bonus_force_j2
-    if bonus_force_j1: logs.append(f"  🐛 Bonus Insecte {p1} : +{bonus_force_j1} dégâts directs à {p2}")
-    if bonus_force_j2: logs.append(f"  🐛 Bonus Insecte {p2} : +{bonus_force_j2} dégâts directs à {p1}")
-
-    if degats_directs_j2 > 0:
-        j2["pv"] = max(0, j2["pv"] - degats_directs_j2)
-        logs.append(f"💢 {p2} subit {degats_directs_j2} dégâts directs → {j2['pv']} PV")
-    if degats_directs_j1 > 0:
-        j1["pv"] = max(0, j1["pv"] - degats_directs_j1)
-        logs.append(f"💢 {p1} subit {degats_directs_j1} dégâts directs → {j1['pv']} PV")
+    # ── Bonus Insecte sur les dégâts directs ──────────────────────────────
+    if bonus_force_j1:
+        j2["pv"] = max(0, j2["pv"] - bonus_force_j1)
+        logs.append(f"  🐛 Bonus Insecte {p1} : +{bonus_force_j1} dégâts directs à {p2} → {j2['pv']} PV")
+    if bonus_force_j2:
+        j1["pv"] = max(0, j1["pv"] - bonus_force_j2)
+        logs.append(f"  🐛 Bonus Insecte {p2} : +{bonus_force_j2} dégâts directs à {p1} → {j1['pv']} PV")
 
     # Retirer les effets temporaires de début de combat (Eau, Dragon, Normal)
     retirer_effets_synergies_debut(equipe1, equipe2)
