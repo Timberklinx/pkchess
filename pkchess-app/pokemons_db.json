@@ -5852,7 +5852,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 87,
     "degats": 60,
@@ -5885,7 +5885,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 76,
     "degats": 50,
@@ -12408,7 +12408,7 @@
       "combat"
     ],
     "niveau": 7,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 30,
@@ -33733,7 +33733,7 @@
       "dragon"
     ],
     "niveau": 7,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 60,
     "degats": 40,

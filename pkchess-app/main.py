@@ -2037,11 +2037,16 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     # Flag anti-double-XP : chaque pokemon ne peut gagner qu'1 XP par combat
     for p in equipe1 + equipe2:
         p["_xp_ko_ids"] = set()  # IDs des Pokémon mis KO par ce Pokémon ce combat
+        p["_position_initiale"] = p.get("position", "off")  # Pour filtrer les dégâts directs
         # Réinitialiser les bonus temporaires de combat
-        p.setdefault("bonus_attaque",   0)
-        p.setdefault("bonus_defense",   0)
-        p.setdefault("bonus_vitesse",   0)
-        p.setdefault("bonus_precision", 0)
+        p["bonus_attaque"]   = 0
+        p["bonus_defense"]   = 0
+        p["bonus_vitesse"]   = 0
+        p["bonus_precision"] = 0
+        # Restaurer la vitesse de base
+        if "_vitesse_base" not in p:
+            p["_vitesse_base"] = p.get("vitesse", 50)
+        p["vitesse"] = p["_vitesse_base"]
 
     logs = [f"⚔️ {p1} vs {p2}"]
     pts1, pts2 = 0, 0
@@ -2321,15 +2326,17 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         logs.append(f"🤝 Égalité ! (force {force1} chacun)")
 
     # ── Dégâts directs : uniquement les offensifs sans adversaire ─────────
+    # Seuls les Pokémon en position offensive dès le début du combat peuvent
+    # infliger des dégâts directs. Un défensif qui avance a forcément un adversaire.
     degats_directs_j1, degats_directs_j2 = 0, 0
     for poke in sans_adv1:
-        if poke.get("position") != "off" or poke.get("ko"):
+        if poke.get("_position_initiale") != "off" or poke.get("ko"):
             continue
         dmg = points_force_total(poke)
         degats_directs_j2 += dmg
         logs.append(f"  💥 {poke['nom']} (off) sans adversaire → {dmg} dégâts directs à {p2}")
     for poke in sans_adv2:
-        if poke.get("position") != "off" or poke.get("ko"):
+        if poke.get("_position_initiale") != "off" or poke.get("ko"):
             continue
         dmg = points_force_total(poke)
         degats_directs_j1 += dmg
@@ -3075,7 +3082,7 @@ async def traiter_action(code, pseudo, action):
                 # Assigner le slot Centre libre correspondant à la case ciblée
                 slots_centre = {p["slot"] for p in joueur["pokemon"] if p["position"] == "centre"}
                 slot_centre  = ts if ts not in slots_centre else next((i for i in range(4) if i not in slots_centre), 0)
-                poke_src["soin_tours_restants"] = points_force(poke_src)
+                poke_src["soin_tours_restants"] = 1
 
         poke     = next((p for p in joueur["pokemon"] if p["position"] == fp and p["slot"] == fs), None)
         if not poke:
