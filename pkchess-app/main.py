@@ -153,6 +153,180 @@ ATTAQUES_NE_PEUVENT_ECHOUER = {
     "Vérouillage", "Verrou Tactique",
 }
 
+ATT_DEF_CIBLE_ADVERSE = {
+    "Attraction",
+    "Baillement",
+    "Balance",
+    "Barrage",
+    "Berceuse",
+    "Bluff",
+    "Boutefeu",
+    "Boutefeu (Solaroc)",
+    "Brouillard",
+    "Cadeau",
+    "Cage Eclair",
+    "Cage Éclair",
+    "Camaraderie",
+    "Canicule",
+    "Cataclysme",
+    "Charme",
+    "Chatouille",
+    "Chaîne Malsaine",
+    "Choc G-Max",
+    "Choc Mental",
+    "Choc Venin",
+    "Clairvoyance",
+    "Colére",
+    "Confidence",
+    "Copie",
+    "Cortège Funèbre",
+    "Cradovague",
+    "Crochet Venin",
+    "Croco Larme",
+    "Cyclone",
+    "Cœur de Rancœur",
+    "Danse Flamme",
+    "Danse Plumes",
+    "Danse-Fleur",
+    "Demi-Vie",
+    "Dernier Mot",
+    "Direct Toxik",
+    "Double-Dard",
+    "Doux Baiser",
+    "Doux Parfum",
+    "Dracosouffle",
+    "Dynamopoing",
+    "Décalcage",
+    "Dépit",
+    "Détrempage",
+    "Détricanon",
+    "Détritus",
+    "Eboulement",
+    "Ebullilave",
+    "Ebullition",
+    "Echange",
+    "Eclair",
+    "Eclair Croix",
+    "Eclair Fou",
+    "Ecrous d'Poing",
+    "Electacle",
+    "Electrisation",
+    "Embargo",
+    "Entrave",
+    "Escarmouche",
+    "Etincelle",
+    "Etonnement",
+    "Fatal-Foudre",
+    "Feu Follet",
+    "Feu Sacré",
+    "Feu d'Enfer",
+    "Fil Toxique",
+    "Flair",
+    "Flamme Croix",
+    "Flamméche",
+    "Flatterie",
+    "Forte-Paume",
+    "Foudre G-Max",
+    "Frotte-Frimousse",
+    "Fulmifer",
+    "Garde Large",
+    "Gaz Toxik",
+    "Goudronnage",
+    "Grand Courroux",
+    "Gribouille",
+    "Grimace",
+    "Grincement",
+    "Grobisou",
+    "Groz'Yeux",
+    "Hache de Pierre",
+    "Halloween",
+    "Harcélement",
+    "Hurlement",
+    "Hypnose",
+    "Imitation",
+    "Interversion",
+    "Ire de la Nature",
+    "Jet de Sable",
+    "Lance-Flammes",
+    "Léchouille",
+    "Machination",
+    "Malédiction (Spectre)",
+    "Maléfice Sylvain",
+    "Mimi-Queue",
+    "Morphing",
+    "Mortier Matcha",
+    "Multitoxik",
+    "Nuée de Poudre",
+    "Octazooka",
+    "Onde Folie",
+    "Ondes Etranges",
+    "Pactole G-Max",
+    "Para-Spore",
+    "Passe-Cadeau",
+    "Percussion G-Max",
+    "Pestilence G-Max",
+    "Piege de Venin",
+    "Piqué",
+    "Plaquage",
+    "Poing Eclair",
+    "Poing de Feu",
+    "Poudre Dodo",
+    "Poudre Fureur",
+    "Poudre Magique",
+    "Poudre Toxik",
+    "Poudreuse",
+    "Provoc",
+    "Pyroball G-Max",
+    "Queue-Poison",
+    "Queue-Poison (Séviper)",
+    "Rafale Psy",
+    "Rayon Signal",
+    "Regard Glaçant",
+    "Regard Médusant",
+    "Regard Noir",
+    "Regard Touchant",
+    "Requiem",
+    "Roue de Feu",
+    "Rugissement",
+    "Saisie",
+    "Sentence G-Max",
+    "Siffl'Herbe",
+    "Siphon",
+    "Soucigraine",
+    "Spore",
+    "Spore Coton",
+    "Strido-Son",
+    "Suc Digestif",
+    "Sécrétion",
+    "Séduction",
+    "Talon-Marteau",
+    "Thérémonie",
+    "Toile",
+    "Torpeur G-Max",
+    "Toupie Eclat",
+    "Tourbi-Sable",
+    "Tourmente",
+    "Toxik",
+    "Troquenard",
+    "Trou Noir",
+    "Typhon Fulgurant",
+    "Typhon Hivernal",
+    "Télékinésie",
+    "Téléport",
+    "Ultrason",
+    "Uppercut",
+    "Vampigraine",
+    "Vantardise",
+    "Vapeur Féerique",
+    "Verrou Enchanté",
+    "Verrouillage",
+    "Vibraqua",
+    "Voile Miroir",
+    "Vérouillage",
+    "Zone Magique",
+    "Étonnement",
+}
+
 # ── Effets des attaques ───────────────────────────────────────────────────────
 def _support_adverse(cible, equipe_adverse):
     """Retourne le Pokémon défensif adverse dans la même colonne que cible."""
@@ -193,6 +367,13 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
     if not nom_att:
         return None
 
+    # Si mode défensif et que la cible est None (pas d'adversaire en face)
+    # → les attaques ciblant l'adversaire échouent, les attaques alliées continuent
+    if mode == "def" and cible is None:
+        if nom_att in ATT_DEF_CIBLE_ADVERSE:
+            return None  # Pas d'adversaire, attaque échoue silencieusement
+        # Attaque alliée : cible devient None, on continue
+
     niv = pokemon.get("niveau", 1)
     X   = valeur_x(niv)
     Y   = valeur_y(niv)
@@ -230,9 +411,14 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
             logs.append(f"    📉 {nom} [{nom_att}] : {cible['nom']} -{X} Bonus Défense")
 
     # ── BOOST ATTAQUE ─────────────────────────────────────────────────────
+    elif nom_att == "Griffe Acier":
+        if _jet_de(6, logs, nom, "[Griffe Acier] tente +10 attaque"):
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    ⚔️ {nom} [Griffe Acier] : +10 Attaque")
+
     elif nom_att in {"Aiguisage", "Tranche", "Lame d'Acier", "Danse Lames",
                      "Boost", "Concentration", "Jackpot", "Coup d'Boue",
-                     "Griffe Acier", "Taillade"}:
+                     "Taillade"}:
         compteur_key = f"_taillade_compteur" if nom_att == "Taillade" else None
         if compteur_key:
             cnt = pokemon.get(compteur_key, 0)
@@ -280,11 +466,18 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
         logs.append(f"    💚 {nom} [{nom_att}] : +{soin} PV ({ancien_pv}→{pokemon['pv']})")
 
     # ── STATUT PARALYSIE ──────────────────────────────────────────────────
-    elif nom_att in {"Cage Eclair", "Cage Éclair", "Tonnerre", "Coup d'Jus",
+    elif nom_att in {"Tonnerre", "Coup d'Jus",
                      "Crocs Eclair", "Crocs Éclair", "Stunt Spore",
                      "Para-Spore", "Onde Boréale"}:
         if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente paralysie"):
             ok, msg = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+
+    # ── Paralysie automatique (pas de dé) ─────────────────────────────────
+    elif nom_att in {"Cage Eclair", "Cage Éclair", "Regard Médusant",
+                     "Electro-Surf Survolté", "Elécanon", "Frotte-Frimousse"}:
+        if not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "PAR")
             if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
 
     # ── STATUT GEL ────────────────────────────────────────────────────────
@@ -295,34 +488,76 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
             if ok: logs.append(f"    ❄️ {cible['nom']} est gelé !")
 
     # ── STATUT BRÛLURE ────────────────────────────────────────────────────
-    elif nom_att in {"Feu Follet", "Lance-Flamme", "Crocs Feu", "Bec-Canon",
+    elif nom_att in {"Lance-Flamme", "Crocs Feu",
                      "Déflagration", "Flammèche", "Flammeche"}:
         if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente brûlure"):
             ok, msg = appliquer_statut(cible, "BRN")
             if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
 
+    # ── Brûlure automatique (pas de dé) ───────────────────────────────────
+    elif nom_att == "Feu Follet":
+        if not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé !")
+
     # ── STATUT POISON ─────────────────────────────────────────────────────
-    elif nom_att in {"Gaz Toxik", "Dard-Venin", "Choc Venin", "Bombe Beurk",
+    elif nom_att in {"Dard-Venin", "Bombe Beurk",
                      "Acide", "Fil Toxique", "Poudre Toxik"}:
         if not cible.get("statut") and _jet_de(6, logs, nom, f"[{nom_att}] tente poison"):
             ok, msg = appliquer_statut(cible, "PSN")
             if ok: logs.append(f"    ☠️ {cible['nom']} est empoisonné !")
 
+    # ── Choc Venin : dégâts ×2 si cible PSN ──────────────────────────────
+    elif nom_att == "Choc Venin":
+        if cible.get("statut") == "PSN":
+            appliquer_bonus(pokemon, "bonus_attaque", pokemon.get("degats", 20))
+            logs.append(f"    ☠️ {nom} [Choc Venin] : dégâts doublés (cible empoisonnée) !")
+
+    # ── Gaz Toxik : zone poison automatique ───────────────────────────────
+    elif nom_att == "Gaz Toxik":
+        for c in _cibles_colonne():
+            if not c.get("statut"):
+                ok, _ = appliquer_statut(c, "PSN")
+                if ok: logs.append(f"    ☠️ {c['nom']} est empoisonné !")
+
     # ── STATUT SOMMEIL ────────────────────────────────────────────────────
-    elif nom_att in {"Berceuse", "Hypnose", "Grobisou", "Chant Antique",
-                     "Chant", "Baillement", "Poudre Dodo"}:
+    elif nom_att in {"Berceuse", "Grobisou",
+                     "Chant", "Baillement"}:
         if not cible.get("statut"):
             ok, msg = appliquer_statut(cible, "SLP")
             if ok: logs.append(f"    😴 {cible['nom']} s'endort !")
 
+    elif nom_att == "Hypnose":
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Hypnose] tente sommeil"):
+            ok, _ = appliquer_statut(cible, "SLP")
+            if ok: logs.append(f"    😴 {cible['nom']} s'endort !")
+
+    elif nom_att == "Poudre Dodo":
+        de = random.randint(1, 6)
+        if de <= 2:
+            logs.append(f"    💨 [Poudre Dodo] échoue ! (dé: {de})")
+        elif not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "SLP")
+            if ok: logs.append(f"    😴 {cible['nom']} s'endort ! [Poudre Dodo] (dé: {de})")
+
     # ── STATUT CONFUSION ──────────────────────────────────────────────────
-    elif nom_att in {"Babil", "Danse Folle", "Doux Baiser", "Choc Mental",
-                     "Colère", "Onde Psy", "Tourbillon"}:
+    elif nom_att in {"Babil", "Danse Folle", "Doux Baiser",
+                     "Onde Psy", "Tourbillon"}:
         if not cible.get("statut"):
             ok, msg = appliquer_statut(cible, "CNF")
             if ok: logs.append(f"    😵 {cible['nom']} est confus !")
 
+    elif nom_att == "Choc Mental":
+        if not cible.get("statut") and _jet_de(6, logs, nom, "[Choc Mental] tente confusion"):
+            ok, _ = appliquer_statut(cible, "CNF")
+            if ok: logs.append(f"    😵 {cible['nom']} est confus !")
+
     # ── ULTRASON (pièce → confusion, 50% = dé >= 4) ───────────────────────
+    elif nom_att == "Octazooka":
+        if _jet_de(4, logs, nom, "[Octazooka] tente malus précision"):
+            appliquer_bonus(cible, "bonus_precision", -3)
+            logs.append(f"    🎯 {cible['nom']} : -3 Précision (Octazooka)")
+
     elif nom_att == "Ultrason":
         if not cible.get("statut") and _jet_de(4, logs, nom, "[Ultrason] tente confusion"):
             ok, _ = appliquer_statut(cible, "CNF")
@@ -885,11 +1120,7 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
             ok, _ = appliquer_statut(cible, "PAR")
             if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
 
-    elif nom_att in {"Electro-Surf Survolté", "Elécanon", "Frotte-Frimousse",
-                     "Regard Médusant"}:
-        if not cible.get("statut"):
-            ok, _ = appliquer_statut(cible, "PAR")
-            if ok: logs.append(f"    ⚡ {cible['nom']} est paralysé !")
+
 
     elif nom_att == "Charge Foudre":
         if not cible.get("statut") and _jet_de(5, logs, nom, "[Charge Foudre] tente paralysie"):
@@ -905,7 +1136,8 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
         for c in _cibles_colonne():
             if not c.get("statut"):
                 ok, _ = appliquer_statut(c, "PAR")
-                if ok: logs.append(f"    ⚡ {c['nom']} est paralysé !")
+                if ok: logs.append(f"    ⚡ {c['nom']} est paralysé ! (Foudre G-Max)")
+        pokemon["_zone_colonne"] = True
 
     elif nom_att == "Eclair Croix":
         if not cible.get("statut") and _jet_de(4, logs, nom, "[Eclair Croix] tente paralysie"):
@@ -962,6 +1194,13 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
         if nom_att == "Cortège Funèbre" and cible.get("statut"):
             appliquer_bonus(pokemon, "bonus_attaque", 30)
             logs.append(f"    💥 [Cortège Funèbre] : +30 dégâts (cible avec statut)")
+
+    elif nom_att == "Bec-Canon":
+        # Brûlure si POKEMON attaque après l'adversaire
+        attaque_apres = pokemon.get("vitesse", 50) < cible.get("vitesse", 50)
+        if attaque_apres and not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "BRN")
+            if ok: logs.append(f"    🔥 {cible['nom']} est brûlé ! [Bec-Canon] (attaque après)")
 
     elif nom_att == "Feu d'Enfer":
         if not cible.get("statut"):
@@ -1066,7 +1305,8 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
         for c in _cibles_colonne():
             if not c.get("statut"):
                 ok, _ = appliquer_statut(c, "SLP")
-                if ok: logs.append(f"    😴 {c['nom']} s'endort !")
+                if ok: logs.append(f"    😴 {c['nom']} s'endort ! (Torpeur G-Max)")
+        pokemon["_zone_colonne"] = True
 
     elif nom_att in {"Trou Noir"}:
         if _jet_de(4, logs, nom, "[Trou Noir] tente sommeil zone"):
@@ -1105,11 +1345,18 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
             ok, _ = appliquer_statut(cible, "CNF")
             if ok: logs.append(f"    😵 {cible['nom']} est confus !")
 
-    elif nom_att in {"Pactole G-Max", "Percussion G-Max", "Sentence G-Max"}:
+    elif nom_att in {"Pactole G-Max", "Percussion G-Max"}:
         for c in _cibles_colonne():
             if not c.get("statut"):
                 ok, _ = appliquer_statut(c, "CNF")
                 if ok: logs.append(f"    😵 {c['nom']} est confus !")
+
+    elif nom_att == "Sentence G-Max":
+        for c in _cibles_colonne():
+            if not c.get("statut"):
+                ok, _ = appliquer_statut(c, "CNF")
+                if ok: logs.append(f"    😵 {c['nom']} est confus ! (Sentence G-Max)")
+        pokemon["_zone_colonne"] = True
 
     elif nom_att == "Uppercut":
         if not cible.get("statut") and _jet_de(5, logs, nom, "[Uppercut] tente confusion"):
@@ -1117,7 +1364,7 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
             if ok: logs.append(f"    😵 {cible['nom']} est confus !")
 
     elif nom_att == "Vapeur Féerique":
-        if not cible.get("statut") and _jet_de(5, logs, nom, "[Vapeur Féerique] tente confusion"):
+        if not cible.get("statut") and _jet_de(4, logs, nom, "[Vapeur Féerique] tente confusion"):
             ok, _ = appliquer_statut(cible, "CNF")
             if ok: logs.append(f"    😵 {cible['nom']} est confus !")
 
@@ -1245,14 +1492,47 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
 
     elif nom_att in {
         "Coup Double", "Double Baffe", "Double Pied", "Draco-Flèches",
-        "Draco-Fléches", "Eboulement", "Osmerang", "Tornade",
+        "Draco-Fléches", "Osmerang", "Tornade",
         "Lancécrou", "Lame Tachyonique", "Force Chtonienne",
         "Ocroupi", "Peignée", "Triple Pied", "Triple Plongeon",
-        "Tranch'Air", "Eruption", "Giclédo", "Ecrous d'Poing",
-        "Ecume", "Ouragan", "Surf",
-        # Attaques zone simples sans effet supplémentaire
-        "Bang Sonique", "Explonuit",
+        "Tranch'Air", "Eruption", "Giclédo",
+        "Ecume", "Surf", "Bang Sonique",
     }:
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Explonuit":
+        for c in _cibles_colonne():
+            if _jet_de(4, logs, nom, f"[Explonuit] tente malus précision {c['nom']}"):
+                appliquer_bonus(c, "bonus_precision", -3)
+                logs.append(f"    🎯 {c['nom']} : -3 Précision (Explonuit)")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Ouragan":
+        for c in _cibles_colonne():
+            if not c.get("peur") and _jet_de(6, logs, nom, f"[Ouragan] tente peur {c['nom']}"):
+                c["peur"] = True
+                logs.append(f"    😨 {c['nom']} a peur !")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att in {"Eboulement", "Ecrous d'Poing"}:
+        for c in _cibles_colonne():
+            if not c.get("peur") and _jet_de(5, logs, nom, f"[{nom_att}] tente peur {c['nom']}"):
+                c["peur"] = True
+                logs.append(f"    😨 {c['nom']} a peur !")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Chant Antique":
+        for c in _cibles_colonne():
+            if not c.get("statut") and _jet_de(5, logs, nom, f"[Chant Antique] tente sommeil {c['nom']}"):
+                ok, _ = appliquer_statut(c, "SLP")
+                if ok: logs.append(f"    😴 {c['nom']} s'endort !")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Canicule":
+        for c in _cibles_colonne():
+            if not c.get("statut") and _jet_de(6, logs, nom, f"[Canicule] tente brûlure {c['nom']}"):
+                ok, _ = appliquer_statut(c, "BRN")
+                if ok: logs.append(f"    🔥 {c['nom']} est brûlé !")
         pokemon["_zone_colonne"] = True
 
     # ── ZONE + effet supplémentaire ────────────────────────────────────────
@@ -2123,12 +2403,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     sans_adv1 = [p for p in equipe1 if id(p) not in apparies1]
     sans_adv2 = [p for p in equipe2 if id(p) not in apparies2]
 
-    # Log de présentation des duels
-    for (a, b) in paires:
-        logs.append(f"  🔸 {a['nom']} [{a['position']}] (⚡{a.get('vitesse',50)}, {a.get('pv',0)}PV)"
-                    f" vs {b['nom']} [{b['position']}] (⚡{b.get('vitesse',50)}, {b.get('pv',0)}PV)")
-    for p in sans_adv1 + sans_adv2:
-        logs.append(f"  🔹 {p['nom']} [{p['position']}] sans adversaire")
+
 
     # Effets synergies de début de combat (Eau, Dragon, Normal)
     appliquer_effets_synergies_debut(j1, j2, equipe1, equipe2, logs)
@@ -2139,9 +2414,19 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     for (a, b) in paires:
         file_attaques.append((a, b))
         file_attaques.append((b, a))
-    # Ajouter les Pokémon sans adversaire (offensifs → dégâts directs, défensifs → att_def)
+    # Ajouter les Pokémon sans adversaire
+    # - Offensifs sans adversaire → dégâts directs au dresseur
+    # - Défensifs sans adversaire → att_def avec l'offensif adverse comme cible
+    #   (ou None si vraiment personne en face)
     for p in sans_adv1 + sans_adv2:
-        file_attaques.append((p, None))
+        equipe_p = equipe1 if p in equipe1 else equipe2
+        equipe_adv_p = equipe2 if p in equipe1 else equipe1
+        # Chercher l'offensif adverse dans la colonne miroir
+        col_miroir = 4 - p["slot"]
+        adv_p = next((x for x in equipe_adv_p
+                      if x["slot"] == col_miroir and x["position"] == "off"
+                      and not x.get("ko")), None)
+        file_attaques.append((p, adv_p))
     file_attaques.sort(key=lambda x: x[0].get("vitesse", 50), reverse=True)
 
     idx_file = 0
