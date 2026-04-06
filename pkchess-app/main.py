@@ -1579,6 +1579,328 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
         # Marquer pour toucher aussi le support adverse (traité après calcul dégâts)
         pokemon["_zone_colonne"] = True
 
+    # ══════════════════════════════════════════════════════════════════════
+    # ATT_DEF — BOOSTS SIMPLES (cible = offensif allié)
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Boul'Armure", "Cotogarde", "Armure"}:
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_defense", X)
+            logs.append(f"    🛡️ {nom} [{nom_att}] : {offensif['nom']} +{X} Défense")
+
+    elif nom_att in {"Grondement", "Lumiqueue", "Rengorgement", "Yoga"}:
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            logs.append(f"    ⚔️ {nom} [{nom_att}] : {offensif['nom']} +{X} Attaque")
+
+    elif nom_att == "Gonflette":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            appliquer_bonus(offensif, "bonus_defense", X)
+            logs.append(f"    💪 {nom} [Gonflette] : {offensif['nom']} +{X} Att/Déf")
+
+    elif nom_att == "Plénitude":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            appliquer_bonus(offensif, "bonus_defense", X)
+            logs.append(f"    ✨ {nom} [Plénitude] : {offensif['nom']} +{X} Att/Déf")
+
+    elif nom_att == "Enroulement":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            appliquer_bonus(offensif, "bonus_defense", X)
+            appliquer_bonus(offensif, "bonus_precision", Y)
+            logs.append(f"    🌀 {nom} [Enroulement] : {offensif['nom']} +{X} Att/Déf +{Y} Précision")
+
+    elif nom_att == "Garde Florale":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            bonus = X * 2 if "plante" in [_normaliser_type(t) for t in offensif.get("types", [])] else X
+            appliquer_bonus(offensif, "bonus_defense", bonus)
+            logs.append(f"    🌸 {nom} [Garde Florale] : {offensif['nom']} +{bonus} Défense")
+
+    elif nom_att == "Grand Nettoyage":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            appliquer_bonus(offensif, "bonus_vitesse", X)
+            offensif["vitesse"] = offensif.get("vitesse", 50) + X
+            offensif.pop("piege", None)
+            logs.append(f"    🧹 {nom} [Grand Nettoyage] : {offensif['nom']} +{X} Att/Vit, piège retiré")
+
+    elif nom_att == "Mur de Fer":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_defense", X)
+            logs.append(f"    🏰 {nom} [Mur de Fer] : {offensif['nom']} +{X} Défense")
+        # Colonnes adjacentes
+        col = pokemon.get("slot", 0)
+        for adj_col in [col - 1, col + 1]:
+            adj = next((p for p in equipe_att if p.get("slot") == adj_col
+                       and p.get("position") == "off" and not p.get("ko")), None)
+            if adj:
+                appliquer_bonus(adj, "bonus_defense", X)
+                logs.append(f"    🏰 [Mur de Fer] : {adj['nom']} (adjacent) +{X} Défense")
+
+    elif nom_att == "Mur Fumigène":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_defense", X)
+            offensif["_malus_precision_entrant"] = 2
+            logs.append(f"    🌫️ {nom} [Mur Fumigène] : {offensif['nom']} +{X} Déf, -2 précision attaquants")
+
+    elif nom_att == "Nappage":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            if len(offensif.get("types", [])) < 2:
+                offensif["types"] = offensif.get("types", []) + ["fee"]
+            logs.append(f"    🧁 {nom} [Nappage] : {offensif['nom']} +{X} Att + type Fée")
+
+    elif nom_att == "Neuf pour Un":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            appliquer_bonus(offensif, "bonus_defense", X)
+            appliquer_bonus(offensif, "bonus_vitesse", X)
+            offensif["vitesse"] = offensif.get("vitesse", 50) + X
+            logs.append(f"    9️⃣ {nom} [Neuf pour Un] : {offensif['nom']} +{X} Att/Déf/Vit")
+        # Bonus sur Évoli également
+        evoli = next((p for p in equipe_att if p.get("id") == "0133" and not p.get("ko")), None)
+        if evoli and evoli is not offensif:
+            appliquer_bonus(evoli, "bonus_attaque", X)
+            appliquer_bonus(evoli, "bonus_defense", X)
+            appliquer_bonus(evoli, "bonus_vitesse", X)
+            evoli["vitesse"] = evoli.get("vitesse", 50) + X
+            logs.append(f"    9️⃣ [Neuf pour Un] : Évoli +{X} Att/Déf/Vit")
+
+    elif nom_att == "Croissance":
+        for p in equipe_att:
+            if p.get("ko"): continue
+            if "plante" in [_normaliser_type(t) for t in p.get("types", [])]:
+                appliquer_bonus(p, "bonus_attaque", X)
+                logs.append(f"    🌱 {nom} [Croissance] : {p['nom']} +{X} Attaque")
+
+    elif nom_att == "Fertilisation":
+        for p in equipe_att:
+            if p.get("ko"): continue
+            if "plante" in [_normaliser_type(t) for t in p.get("types", [])]:
+                appliquer_bonus(p, "bonus_attaque", X)
+                logs.append(f"    🌻 {nom} [Fertilisation] : {p['nom']} +{X} Attaque")
+
+    elif nom_att == "Lance-Boue":
+        for p in list(equipe_att) + list(equipe_adv):
+            if p.get("ko"): continue
+            att_type = _normaliser_type(p.get("att_off_type", "") or "")
+            if att_type == "electrik":
+                appliquer_bonus(p, "bonus_attaque", -X)
+                logs.append(f"    💧 {nom} [Lance-Boue] : {p['nom']} -{X} Attaque (attaque Électrik)")
+
+    # ── SOINS ─────────────────────────────────────────────────────────────
+
+    elif nom_att == "E-Coque":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            soin = offensif.get("pv_max", 100) // 2
+            offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
+            logs.append(f"    💚 {nom} [E-Coque] : {offensif['nom']} +{soin} PV")
+
+    elif nom_att == "Purification":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            soigner_statuts(offensif)
+            soin = offensif.get("pv_max", 100) // 2
+            offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
+            logs.append(f"    💚 {nom} [Purification] : {offensif['nom']} statut soigné +{soin} PV")
+
+    elif nom_att == "Aurore":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            soin = X  # doublé sous Soleil — à implémenter avec système climat
+            offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
+            logs.append(f"    💚 {nom} [Aurore] : {offensif['nom']} +{soin} PV")
+
+    elif nom_att in {"Rayon Lune"}:
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            soin = X  # doublé pendant la Nuit — à implémenter avec système climat
+            offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
+            logs.append(f"    💚 {nom} [Rayon Lune] : {offensif['nom']} +{soin} PV")
+
+    elif nom_att == "Synthése":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            bonus_plante = 10 if "plante" in [_normaliser_type(t) for t in offensif.get("types", [])] else 0
+            soin = X + bonus_plante
+            offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
+            logs.append(f"    💚 {nom} [Synthèse] : {offensif['nom']} +{soin} PV")
+
+    elif nom_att == "Vol-Force":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif and cible:
+            soin = cible.get("degats", 20)
+            offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
+            appliquer_bonus(cible, "bonus_attaque", -X)
+            logs.append(f"    💚 {nom} [Vol-Force] : {offensif['nom']} +{soin} PV, {cible['nom']} -{X} Attaque")
+
+    # ── EFFETS SPÉCIAUX SIMPLES ────────────────────────────────────────────
+
+    elif nom_att == "Acupression":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            stat = random.choice(["bonus_attaque", "bonus_defense", "bonus_vitesse", "bonus_precision"])
+            val = Y if stat == "bonus_precision" else X
+            appliquer_bonus(offensif, stat, val)
+            if stat == "bonus_vitesse":
+                offensif["vitesse"] = offensif.get("vitesse", 50) + val
+            logs.append(f"    🎯 {nom} [Acupression] : {offensif['nom']} +{val} {stat}")
+
+    elif nom_att == "Air Veinard":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif and offensif.get("faiblesses"):
+            faiblesse = random.choice(offensif["faiblesses"])
+            offensif["faiblesses"] = [f for f in offensif["faiblesses"] if f != faiblesse]
+            offensif.setdefault("_faiblesses_temp_supprimees", []).append(faiblesse)
+            logs.append(f"    🍀 {nom} [Air Veinard] : {offensif['nom']} perd faiblesse {faiblesse} ce tour")
+
+    elif nom_att == "Amnésie":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["bonus_attaque"]   = max(0, offensif.get("bonus_attaque", 0))
+            offensif["bonus_defense"]   = max(0, offensif.get("bonus_defense", 0))
+            offensif["bonus_vitesse"]   = max(0, offensif.get("bonus_vitesse", 0))
+            offensif["bonus_precision"] = max(0, offensif.get("bonus_precision", 0))
+            soigner_statuts(offensif)
+            logs.append(f"    🧠 {nom} [Amnésie] : {offensif['nom']} effets négatifs annulés")
+
+    elif nom_att == "Anti-Soin":
+        pokemon["_anti_soin_actif"] = True
+        for p in equipe_att + equipe_adv:
+            p["_anti_soin"] = True
+        logs.append(f"    🚫 {nom} [Anti-Soin] : soins via attaques bloqués ce combat")
+
+    elif nom_att == "Brume":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["_brume"] = True
+            logs.append(f"    🌫️ {nom} [Brume] : {offensif['nom']} protégé des baisses de stats")
+
+    elif nom_att == "Cognobidon":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            perte = valeur_x(pokemon.get("niveau", 1))
+            pokemon["pv"] = max(0, pokemon.get("pv", 0) - perte)
+            appliquer_bonus(offensif, "bonus_attaque", perte)
+            logs.append(f"    💥 {nom} [Cognobidon] : -{perte} PV sur {nom}, {offensif['nom']} +{perte} Attaque")
+
+    elif nom_att == "Décharnement":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            perte = pokemon.get("pv", 0) // 2
+            pokemon["pv"] = max(0, pokemon.get("pv", 0) - perte)
+            appliquer_bonus(offensif, "bonus_attaque", perte)
+            appliquer_bonus(offensif, "bonus_vitesse", perte)
+            offensif["vitesse"] = offensif.get("vitesse", 50) + perte
+            logs.append(f"    ⚡ {nom} [Décharnement] : -{perte} PV, {offensif['nom']} +{perte} Att/Vit")
+
+    elif nom_att == "Force Cosmique":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif and cible:
+            type_att_adv = _normaliser_type(cible.get("att_off_type", "") or "")
+            if type_att_adv and type_att_adv not in [_normaliser_type(r) for r in offensif.get("resistances", [])]:
+                offensif.setdefault("resistances", []).append(type_att_adv)
+                offensif.setdefault("_resistances_temp", []).append(type_att_adv)
+                logs.append(f"    🌌 {nom} [Force Cosmique] : {offensif['nom']} résiste à {type_att_adv}")
+
+    elif nom_att == "Garde-a-Joues":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_defense", X)
+            logs.append(f"    🛡️ {nom} [Garde-à-Joues] : {offensif['nom']} +{X} Défense (objet sacrifié)")
+
+    elif nom_att == "Gardomax":
+        # POKEMON Gigamax encaisse les dégâts à la place de l'offensif
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["_gardomax"] = id(pokemon)
+            pokemon["_gardomax_actif"] = True
+            logs.append(f"    🛡️ {nom} [Gardomax] : encaisse les dégâts à la place de {offensif['nom']}")
+
+    elif nom_att == "Danse Folle":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif and not offensif.get("statut"):
+            ok, _ = appliquer_statut(offensif, "CNF")
+            if ok: logs.append(f"    😵 {offensif['nom']} est confus ! (Danse Folle)")
+        for c in _cibles_colonne():
+            if not c.get("statut"):
+                ok, _ = appliquer_statut(c, "CNF")
+                if ok: logs.append(f"    😵 {c['nom']} est confus ! (Danse Folle)")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # ATT_DEF COMPLEXES
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att == "Cri Draconique":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif and _jet_de(5, logs, nom, "[Cri Draconique] tente bonus prochaine attaque"):
+            est_dragon = "dragon" in [_normaliser_type(t) for t in offensif.get("types", [])]
+            bonus = 40 if est_dragon else 20
+            appliquer_bonus(offensif, "bonus_attaque", bonus)
+            logs.append(f"    🐉 {nom} [Cri Draconique] : {offensif['nom']} +{bonus} sur prochaine attaque")
+
+    elif nom_att == "Puissance":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["_puissance_actif"] = True
+            logs.append(f"    💥 {nom} [Puissance] : {offensif['nom']} lance le dé à son attaque ce tour")
+
+    elif nom_att == "Danse Victoire":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_attaque", 30)
+            appliquer_bonus(offensif, "bonus_defense", 30)
+            offensif["_danse_victoire"] = True  # flag pour +10 par KO jusqu'à +50
+            logs.append(f"    🏆 {nom} [Danse Victoire] : {offensif['nom']} +30 Att/Déf")
+
+    elif nom_att == "Dracacophonie":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            pal_dragon = palier_synergie(joueur_att, "dragon")
+            if pal_dragon < 9:
+                offensif["pv"] = max(0, offensif.get("pv", 0) - 50)
+                logs.append(f"    🐲 {offensif['nom']} perd 50 PV (Dracacophonie)")
+            appliquer_bonus(offensif, "bonus_attaque", X)
+            appliquer_bonus(offensif, "bonus_defense", X)
+            appliquer_bonus(offensif, "bonus_vitesse", X)
+            offensif["vitesse"] = offensif.get("vitesse", 50) + X
+            logs.append(f"    🐲 {nom} [Dracacophonie] : {offensif['nom']} +{X} Att/Déf/Vit")
+
+    elif nom_att == "Ultime Bastion":
+        appliquer_bonus(pokemon, "bonus_attaque", 30)
+        appliquer_bonus(pokemon, "bonus_defense", 30)
+        appliquer_bonus(pokemon, "bonus_vitesse", 30)
+        pokemon["vitesse"] = pokemon.get("vitesse", 50) + 30
+        appliquer_bonus(pokemon, "bonus_precision", 3)
+        pokemon["_ancrage"] = True  # Ne peut plus être retiré (sans dégâts de piège)
+        logs.append(f"    🏰 {nom} [Ultime Bastion] : +30 Att/Déf/Vit +3 Précision, ancré !")
+
+    elif nom_att == "Danse Lune":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            # Soigne intégralement si un allié a été KO ce tour
+            ko_ce_tour = any(p.get("ko") for p in equipe_att)
+            if ko_ce_tour:
+                offensif["pv"] = offensif.get("pv_max", 100)
+                soigner_statuts(offensif)
+                logs.append(f"    🌙 {nom} [Danse Lune] : {offensif['nom']} soigné intégralement !")
+            else:
+                logs.append(f"    🌙 [Danse Lune] : aucun allié KO, pas d'effet")
+
     return None
 def init_pool(partie):
     pool = [p["id"] for p in POKEMONS_DB]
@@ -2559,6 +2881,13 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
 
         type_att = attaquant.get("att_off_type")
         dmg, eff  = calculer_degats(attaquant, cible_reelle, type_attaque=type_att)
+
+        # Puissance : dé 5-6 → +X dégâts ce tour
+        if attaquant.pop("_puissance_actif", False):
+            if _jet_de(5, logs, attaquant["nom"], "[Puissance] bonus dégâts"):
+                bonus_p = valeur_x(attaquant.get("niveau", 1))
+                dmg += bonus_p
+                logs.append(f"    💥 [Puissance] : +{bonus_p} dégâts !")
         # Bonus Dragon
         if "dragon" in [_normaliser_type(t) for t in attaquant.get("types", [])]:
             pal_dragon = palier_synergie(joueur_att, "dragon")
@@ -2639,6 +2968,15 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 ko_requis = evol_ko or (evols_cond[0].get("evolution_ko") if evols_cond else None)
                 logs.append(f"    ⭐ {vainqueur['nom']} gagne 1 XP combat !" +
                             (f" ({xp}/{ko_requis} KO)" if ko_requis else ""))
+                # Danse Victoire : +10 par KO (max +50 total)
+                if vainqueur.get("_danse_victoire"):
+                    bonus_dv = vainqueur.get("_danse_victoire_bonus", 0)
+                    if bonus_dv < 50:
+                        gain = min(10, 50 - bonus_dv)
+                        vainqueur["_danse_victoire_bonus"] = bonus_dv + gain
+                        appliquer_bonus(vainqueur, "bonus_attaque", gain)
+                        appliquer_bonus(vainqueur, "bonus_defense", gain)
+                        logs.append(f"    🏆 [Danse Victoire] : {vainqueur['nom']} +{gain} Att/Déf (total: {bonus_dv+gain}/50)")
             # Synergies KO : Spectre + Combat
             appliquer_effets_ko_synergie(
                 cible_reelle, equipe_ko, equipe_vict,
@@ -2716,7 +3054,10 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
 
     # Nettoyer tous les champs temporaires non-JSON sur tous les Pokémon
     champs_temp = ["_xp_ko_ids", "_a_joue_ce_combat", "_position_initiale",
-                   "_roulade_actif", "_skip_next_combat"]
+                   "_roulade_actif", "_skip_next_combat", "_danse_victoire",
+                   "_danse_victoire_bonus", "_ancrage", "_brume", "_anti_soin",
+                   "_gardomax_actif", "_faiblesses_temp_supprimees", "_resistances_temp",
+                   "_malus_precision_entrant", "_puissance_actif"]
     for joueur_check in [j1, j2]:
         for poke in joueur_check.get("pokemon", []):
             for champ in champs_temp:
