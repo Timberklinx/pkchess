@@ -1583,7 +1583,46 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
     # ATT_DEF — BOOSTS SIMPLES (cible = offensif allié)
     # ══════════════════════════════════════════════════════════════════════
 
-    elif nom_att in {"Boul'Armure", "Cotogarde", "Armure"}:
+    elif nom_att == "Abri":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_defense", X)
+            logs.append(f"    🛡️ {nom} [Abri] : {offensif['nom']} +{X} Défense ce tour")
+
+    elif nom_att == "Blocage":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            appliquer_bonus(offensif, "bonus_defense", X)
+            logs.append(f"    🛡️ {nom} [Blocage] : {offensif['nom']} +{X} Défense ce tour")
+            # Supprime un bonus au hasard sur l'adversaire ciblant l'offensif
+            if cible:
+                bonus_adv = [(k, v) for k, v in [
+                    ("bonus_attaque", cible.get("bonus_attaque", 0)),
+                    ("bonus_defense", cible.get("bonus_defense", 0)),
+                    ("bonus_vitesse", cible.get("bonus_vitesse", 0)),
+                ] if v > 0]
+                if bonus_adv:
+                    champ, val = random.choice(bonus_adv)
+                    cible[champ] = 0
+                    logs.append(f"    📉 [Blocage] : {cible['nom']} perd son {champ} ({val})")
+
+    elif nom_att == "Blockhaus":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["_blockhaus"] = X  # Réduit la prochaine attaque de X + empoisonne l'attaquant
+            logs.append(f"    🏰 {nom} [Blockhaus] : prochaine attaque sur {offensif['nom']} réduite de {X} + poison")
+
+    elif nom_att == "Tatamigaeshi":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["_tatamigaeshi"] = True  # Protégé de tout sauf l'offensif adverse direct
+            logs.append(f"    🥋 {nom} [Tatamigaeshi] : {offensif['nom']} protégé des dégâts indirects")
+
+    elif nom_att == "Prévention":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["_prevention"] = True  # Dégâts reçus divisés par 2 pour la suite du tour
+            logs.append(f"    🛡️ {nom} [Prévention] : {offensif['nom']} dégâts réduits de 50% ce tour")
         offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
         if offensif:
             appliquer_bonus(offensif, "bonus_defense", X)
@@ -2899,6 +2938,32 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         if pal_roche and "roche" in [_normaliser_type(t) for t in cible_reelle.get("types", [])]:
             reduction = {3: 10, 6: 20, 9: 30}.get(pal_roche, 0)
             dmg = max(0, dmg - reduction)
+
+        # ── Protections sur la cible ──────────────────────────────────────
+        # Blockhaus : réduit les dégâts de X + empoisonne l'attaquant
+        if cible_reelle.get("_blockhaus") and dmg > 0:
+            reduction_bk = cible_reelle.pop("_blockhaus")
+            dmg = max(0, dmg - reduction_bk)
+            logs.append(f"    🏰 [Blockhaus] : -{reduction_bk} dégâts sur {cible_reelle['nom']}")
+            if not attaquant.get("statut"):
+                ok, _ = appliquer_statut(attaquant, "PSN")
+                if ok: logs.append(f"    ☠️ {attaquant['nom']} est empoisonné ! (Blockhaus)")
+
+        # Prévention : dégâts divisés par 2
+        if cible_reelle.pop("_prevention", False) and dmg > 0:
+            dmg = dmg // 2
+            logs.append(f"    🛡️ [Prévention] : dégâts réduits de 50% → {dmg}")
+
+        # Tatamigaeshi : protège de tout sauf l'offensif adverse direct
+        if cible_reelle.get("_tatamigaeshi") and dmg > 0:
+            # Vérifie si l'attaquant est l'offensif adverse direct (même colonne)
+            col_cible = cible_reelle.get("slot", 0)
+            est_offensif_direct = (attaquant.get("position") == "off" and
+                                   attaquant.get("slot") == 4 - col_cible)
+            if not est_offensif_direct:
+                logs.append(f"    🥋 [Tatamigaeshi] : {cible_reelle['nom']} bloque les dégâts de {attaquant['nom']}")
+                dmg = 0
+
         cible_reelle["pv"] = max(0, cible_reelle.get("pv", 0) - dmg)
         logs.append(f"    ➤ {attaquant['nom']} attaque ({eff}) → {dmg} dégâts → {cible_reelle['nom']} {cible_reelle['pv']}PV")
 
@@ -3057,7 +3122,8 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                    "_roulade_actif", "_skip_next_combat", "_danse_victoire",
                    "_danse_victoire_bonus", "_ancrage", "_brume", "_anti_soin",
                    "_gardomax_actif", "_faiblesses_temp_supprimees", "_resistances_temp",
-                   "_malus_precision_entrant", "_puissance_actif"]
+                   "_malus_precision_entrant", "_puissance_actif",
+                   "_blockhaus", "_prevention", "_tatamigaeshi"]
     for joueur_check in [j1, j2]:
         for poke in joueur_check.get("pokemon", []):
             for champ in champs_temp:
