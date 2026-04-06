@@ -1978,25 +1978,37 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
 
     elif nom_att == "Aurore":
         offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
-        if offensif:
-            soin = X  # doublé sous Soleil — à implémenter avec système climat
-            offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
-            logs.append(f"    💚 {nom} [Aurore] : {offensif['nom']} +{soin} PV")
+        if offensif and not offensif.get("_att_def_annulee"):
+            mult = appliquer_soins_climat(partie.get("climat_actuel"), nom_att)
+            if mult == 0.0:
+                logs.append(f"    🌙 [Nuit] : Aurore ne fonctionne pas !")
+            else:
+                soin = int(X * mult)
+                offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
+                logs.append(f"    💚 {nom} [Aurore] : {offensif['nom']} +{soin} PV" +
+                            (f" (×{mult} {partie.get('climat_actuel','')})" if mult != 1.0 else ""))
 
     elif nom_att in {"Rayon Lune"}:
         offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
         if offensif:
-            soin = X  # doublé pendant la Nuit — à implémenter avec système climat
+            mult = appliquer_soins_climat(partie.get("climat_actuel"), nom_att)
+            soin = int(X * mult)
             offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
-            logs.append(f"    💚 {nom} [Rayon Lune] : {offensif['nom']} +{soin} PV")
+            logs.append(f"    💚 {nom} [Rayon Lune] : {offensif['nom']} +{soin} PV" +
+                        (f" (×{mult} {partie.get('climat_actuel','')})" if mult != 1.0 else ""))
 
     elif nom_att == "Synthése":
         offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
-        if offensif:
-            bonus_plante = 10 if "plante" in [_normaliser_type(t) for t in offensif.get("types", [])] else 0
-            soin = X + bonus_plante
-            offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
-            logs.append(f"    💚 {nom} [Synthèse] : {offensif['nom']} +{soin} PV")
+        if offensif and not offensif.get("_att_def_annulee"):
+            mult = appliquer_soins_climat(partie.get("climat_actuel"), nom_att)
+            if mult == 0.0:
+                logs.append(f"    🌙 [Nuit] : Synthèse ne fonctionne pas !")
+            else:
+                bonus_plante = 10 if "plante" in [_normaliser_type(t) for t in offensif.get("types", [])] else 0
+                soin = int((X + bonus_plante) * mult)
+                offensif["pv"] = min(offensif.get("pv_max", 100), offensif.get("pv", 0) + soin)
+                logs.append(f"    💚 {nom} [Synthèse] : {offensif['nom']} +{soin} PV" +
+                            (f" (×{mult} {partie.get('climat_actuel','')})" if mult != 1.0 else ""))
 
     elif nom_att == "Vol-Force":
         offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
@@ -2147,7 +2159,28 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
         pokemon["_ancrage"] = True  # Ne peut plus être retiré (sans dégâts de piège)
         logs.append(f"    🏰 {nom} [Ultime Bastion] : +30 Att/Déf/Vit +3 Précision, ancré !")
 
-    elif nom_att == "Danse Lune":
+    elif nom_att == "Dernier mot":
+        # Malus attaque X sur l'offensif adverse + swap POKEMON ↔ offensif allié
+        if cible:
+            appliquer_bonus(cible, "bonus_attaque", -X)
+            logs.append(f"    📉 {nom} [Dernier Mot] : {cible['nom']} -{X} Attaque")
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["position"], pokemon["position"] = "def", "off"
+            logs.append(f"    🔄 [Dernier Mot] : {nom} ↔ {offensif['nom']} échangent leurs positions")
+
+    elif nom_att == "Neigeux de Mots":
+        # Swap POKEMON ↔ offensif allié
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["position"], pokemon["position"] = "def", "off"
+            logs.append(f"    🔄 {nom} [Neigeux de Mots] : {nom} ↔ {offensif['nom']} échangent leurs positions")
+
+    elif nom_att == "Queulonage":
+        offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
+        if offensif:
+            offensif["_bouclier"] = offensif.get("_bouclier", 0) + 30
+            logs.append(f"    🛡️ {nom} [Queulonage] : {offensif['nom']} gagne un bouclier de 30 PV")
         offensif = next((p for p in equipe_att if p.get("position") == "off" and not p.get("ko")), None)
         if offensif:
             # Soigne intégralement si un allié a été KO ce tour
@@ -2628,6 +2661,405 @@ def jet_synergie(palier):
     if seuil == 0: return True
     return random.randint(1, 6) > seuil
 
+ATTAQUES_PRIORITE = {
+    "Coup Bas", "Mach Punch", "Pisto-Poing", "Vive-Attaque", "Vitesse Extrême",
+    "Onde Vide", "Bluff", "Escarmouche", "Aqua Jet", "Poing Sonique",
+    "Vif-Éclair", "Vif Éclair", "Éclat Glace", "Eclat Glace",
+    "Ombre Portée", "Sheauriken", "Vif Roc"
+}
+
+ATTAQUES_SOIN = {
+    "Aurore", "Synthése", "Rayon Lune", "Soin", "E-Coque", "Purification",
+    "Lait a Boire", "Lait à Boire", "Vibra Soin", "Soin Floral", "Repos",
+    "Récupération", "Glas de Soin", "Aromathérapie", "Régénération",
+    "Extravaillance", "Appel Soins", "Cure G-Max", "Nectar G-Max",
+    "Fontaine de Vie", "Seve Salvatrice", "Voeu Soin", "Vœu Soin",
+    "Danse Lune", "Second Souffle", "Paresse", "Racines",
+}
+
+def appliquer_effets_climat_debut(climat, j1, j2, equipe1, equipe2, logs):
+    """Applique les effets du climat en début de combat."""
+    if not climat or climat == "Ensoleillé":
+        return
+
+    tous = equipe1 + equipe2
+    logs.append(f"  🌤️ Climat : {climat}")
+
+    def boost_att(p, mult=0.5):
+        appliquer_bonus(p, "bonus_attaque", int(p.get("degats", 20) * mult))
+
+    def t(p): return [_normaliser_type(x) for x in p.get("types", [])]
+    def att_t(p): return _normaliser_type(p.get("att_off_type", "") or "")
+
+    # ── BROUILLARD ────────────────────────────────────────────────────────
+    if climat == "Brouillard":
+        for p in tous:
+            if p.get("ko"): continue
+            at = att_t(p)
+            if at in ("fee", "psy"):
+                boost_att(p, 0.5)
+                logs.append(f"    🌫️ {p['nom']} +50% dégâts ({at})")
+            elif at in ("tenebres", "spectre"):
+                boost_att(p, -0.5)
+                logs.append(f"    🌫️ {p['nom']} -50% dégâts ({at})")
+            # -50% soin Aurore/Synthèse → géré dans appliquer_soins_climat
+            # Attaques de priorité bloquées → flag
+            if p.get("att_off_nom") in ATTAQUES_PRIORITE:
+                p["_att_priorite_bloquee"] = True
+            # Malus précision 1 si non Fée/Psy → dé spécial, géré dans boucle via flag
+            if at not in ("fee", "psy"):
+                p["_brouillard_malus_precision"] = True
+            # Statuts bloqués
+            p["_brouillard_no_statut"] = True
+
+    # ── CANICULE ──────────────────────────────────────────────────────────
+    elif climat == "Canicule":
+        for p in tous:
+            if p.get("ko"): continue
+            at = att_t(p)
+            tp = t(p)
+            if at == "feu":
+                boost_att(p, 0.5)
+                logs.append(f"    ☀️ {p['nom']} +50% dégâts Feu")
+            elif at in ("eau", "glace"):
+                boost_att(p, -0.5)
+                logs.append(f"    ☀️ {p['nom']} -50% dégâts ({at})")
+            if p.get("att_off_nom") in {"Lance-Soleil", "Lame Solaire"}:
+                boost_att(p, 0.5)
+                logs.append(f"    ☀️ {p['nom']} +50% dégâts {p['att_off_nom']}")
+            if at in ("electrik", "vol"):
+                p["_canicule_malus_precision"] = True  # dé, échoue sur 1-2-3
+            if "plante" in tp:
+                p["vitesse"] = p.get("vitesse", 50) * 2
+                logs.append(f"    ☀️ {p['nom']} vitesse ×2 (Plante)")
+            if "glace" in tp:
+                p["bonus_defense"] = 0
+                logs.append(f"    ☀️ {p['nom']} Bonus Défense supprimé (Glace)")
+            # -50% Pouvoir Lunaire
+            if p.get("att_off_nom") == "Pouvoir Lunaire (Séléroc)":
+                boost_att(p, -0.5)
+            # Soins ×2 Synthèse/Aurore, -50% Rayon Lune → appliquer_soins_climat
+
+    # ── DISTORSION ────────────────────────────────────────────────────────
+    elif climat == "Distorsion":
+        # Ordre inversé géré dans le tri de la file
+        # Compteur déjà géré dans partie["distorsion_tours"]
+        pass
+
+    # ── GRÊLE ─────────────────────────────────────────────────────────────
+    elif climat == "Grêle":
+        for p in tous:
+            if p.get("ko"): continue
+            at = att_t(p)
+            tp = t(p)
+            if at == "eau":
+                p["_att_type_override"] = "glace"
+                logs.append(f"    🧊 {p['nom']} attaque Eau → Glace")
+            if at == "glace":
+                boost_att(p, 0.5)
+                appliquer_bonus(p, "bonus_precision", 99)
+                logs.append(f"    🧊 {p['nom']} +50% dégâts Glace + précision parfaite")
+            elif at in ("feu", "plante"):
+                boost_att(p, -0.5)
+                logs.append(f"    🧊 {p['nom']} -50% dégâts ({at})")
+            if "glace" in tp:
+                p["vitesse"] = p.get("vitesse", 50) * 2
+                logs.append(f"    🧊 {p['nom']} vitesse ×2 (Glace)")
+
+    # ── NUAGEUX ───────────────────────────────────────────────────────────
+    elif climat == "Nuageux":
+        for p in tous:
+            if p.get("ko"): continue
+            if att_t(p) == "normal":
+                boost_att(p, 0.5)
+                logs.append(f"    ☁️ {p['nom']} +50% dégâts Normal")
+
+    # ── NUIT ──────────────────────────────────────────────────────────────
+    elif climat == "Nuit":
+        for p in tous:
+            if p.get("ko"): continue
+            at = att_t(p)
+            if at in ("tenebres", "spectre"):
+                boost_att(p, 0.5)
+                logs.append(f"    🌙 {p['nom']} +50% dégâts ({at})")
+            elif at == "fee":
+                boost_att(p, -0.5)
+                logs.append(f"    🌙 {p['nom']} -50% dégâts Fée")
+            # Malus précision 1 si non Ténèbre/Spectre
+            if at not in ("tenebres", "spectre"):
+                p["_nuit_malus_precision"] = True
+            # Attaques bloquées
+            if p.get("att_off_nom") in {"Lance-Soleil", "Lame Solaire"}:
+                p["_att_vol_annulee"] = True
+            if p.get("att_def_nom") in {"Aurore", "Synthése", "Rayon Lune"}:
+                p["_att_def_annulee"] = True
+            # Peur supplémentaire dé 6 → flag
+            p["_nuit_peur"] = True
+
+    # ── NUÉE ──────────────────────────────────────────────────────────────
+    elif climat == "Nuée":
+        for p in tous:
+            if p.get("ko"): continue
+            tp = t(p)
+            at = att_t(p)
+            if at == "insecte":
+                boost_att(p, 0.5)
+                logs.append(f"    🐛 {p['nom']} +50% dégâts Insecte")
+            elif at == "plante":
+                boost_att(p, -0.5)
+                logs.append(f"    🐛 {p['nom']} -50% dégâts Plante")
+            if "insecte" in tp:
+                appliquer_bonus(p, "bonus_defense", 10)
+                logs.append(f"    🐛 {p['nom']} +10 Défense (Insecte)")
+
+    # ── ORAGE ─────────────────────────────────────────────────────────────
+    elif climat == "Orage":
+        for p in tous:
+            if p.get("ko"): continue
+            tp = t(p)
+            at = att_t(p)
+            if at == "electrik":
+                boost_att(p, 0.5)
+                logs.append(f"    ⛈️ {p['nom']} +50% dégâts Électrik")
+                p["_orage_paralysie"] = True  # dé 6 → paralysie après attaque
+            elif at == "vol":
+                boost_att(p, -0.5)
+                logs.append(f"    ⛈️ {p['nom']} -50% dégâts Vol")
+            if "electrik" in tp or "acier" in tp:
+                p["vitesse"] = p.get("vitesse", 50) * 2
+                logs.append(f"    ⛈️ {p['nom']} vitesse ×2 (Électrik/Acier)")
+        # Réveiller les endormis + bloquer sommeil
+        for p in tous:
+            if p.get("statut") == "SLP":
+                retirer_statut(p)
+                logs.append(f"    ⛈️ {p['nom']} réveillé par l'Orage !")
+            p["_orage_no_sleep"] = True
+
+    # ── PLUIE ─────────────────────────────────────────────────────────────
+    elif climat == "Pluie":
+        for p in tous:
+            if p.get("ko"): continue
+            tp = t(p)
+            at = att_t(p)
+            if at == "eau":
+                boost_att(p, 0.5)
+                logs.append(f"    🌧️ {p['nom']} +50% dégâts Eau")
+            elif at in ("feu", "plante"):
+                boost_att(p, -0.5)
+                logs.append(f"    🌧️ {p['nom']} -50% dégâts ({at})")
+            if p.get("att_off_nom") in {"Lance-Soleil", "Lame Solaire"}:
+                boost_att(p, -0.5)
+            if at in ("electrik", "vol"):
+                appliquer_bonus(p, "bonus_precision", 99)
+            if "eau" in tp:
+                p["vitesse"] = p.get("vitesse", 50) * 2
+                logs.append(f"    🌧️ {p['nom']} vitesse ×2 (Eau)")
+
+    # ── SMOG ──────────────────────────────────────────────────────────────
+    elif climat == "Smog":
+        for p in tous:
+            if p.get("ko"): continue
+            at = att_t(p)
+            if at == "eau":
+                p["_att_type_override"] = "poison"
+                logs.append(f"    🏭 {p['nom']} attaque Eau → Poison")
+            if at == "poison":
+                boost_att(p, 0.5)
+                logs.append(f"    🏭 {p['nom']} +50% dégâts Poison")
+            elif at == "fee":
+                boost_att(p, -0.5)
+                logs.append(f"    🏭 {p['nom']} -50% dégâts Fée")
+
+    # ── TEMPÊTE DE SABLE ──────────────────────────────────────────────────
+    elif climat == "Tempête de Sable":
+        for p in tous:
+            if p.get("ko"): continue
+            tp = t(p)
+            at = att_t(p)
+            if at in ("roche", "sol", "acier"):
+                boost_att(p, 0.5)
+                logs.append(f"    🏜️ {p['nom']} +50% dégâts ({at})")
+            elif at == "electrik":
+                boost_att(p, -0.5)
+                logs.append(f"    🏜️ {p['nom']} -50% dégâts Électrik")
+            if "sol" in tp:
+                p["vitesse"] = p.get("vitesse", 50) * 2
+                logs.append(f"    🏜️ {p['nom']} vitesse ×2 (Sol)")
+            if "roche" in tp:
+                appliquer_bonus(p, "bonus_defense", 10)
+                logs.append(f"    🏜️ {p['nom']} +10 Défense (Roche)")
+            if at not in ("sol", "roche"):
+                p["_sable_malus_precision"] = True  # dé, échoue sur 1
+            if p.get("att_def_nom") in {"Aurore", "Synthése", "Rayon Lune"}:
+                p["_att_def_annulee"] = True
+
+    # ── VENT ──────────────────────────────────────────────────────────────
+    elif climat == "Vent":
+        for p in tous:
+            if p.get("ko"): continue
+            tp = t(p)
+            at = att_t(p)
+            if at == "vol":
+                boost_att(p, 0.5)
+                logs.append(f"    💨 {p['nom']} +50% dégâts Vol")
+            if "vol" in tp:
+                p["vitesse"] = p.get("vitesse", 50) * 2
+                logs.append(f"    💨 {p['nom']} vitesse ×2 (Vol)")
+            # Décalage cible → flag, géré dans la boucle combat
+            p["_vent_decalage"] = True
+
+    # ── TEMPÊTE ───────────────────────────────────────────────────────────
+    elif climat == "Tempête":
+        for p in tous:
+            if p.get("ko"): continue
+            tp = t(p)
+            at = att_t(p)
+            if at == "dragon":
+                boost_att(p, 0.5)
+                logs.append(f"    🌀 {p['nom']} +50% dégâts Dragon")
+            if "dragon" in tp:
+                p["vitesse"] = p.get("vitesse", 50) * 2
+                logs.append(f"    🌀 {p['nom']} vitesse ×2 (Dragon)")
+            # Annule tous les changements de stats
+            p["bonus_attaque"] = 0
+            p["bonus_defense"] = 0
+            p["bonus_vitesse"] = 0
+            p["bonus_precision"] = 0
+            # Soins bloqués → flag
+            p["_tempete_no_soin"] = True
+            logs.append(f"    🌀 {p['nom']} : stats remises à 0 (Tempête)")
+
+
+def appliquer_effets_climat_fin(climat, j1, j2, equipe1, equipe2, partie, logs):
+    """Applique les effets du climat en fin de combat."""
+    if not climat or climat == "Ensoleillé":
+        return
+
+    tous = equipe1 + equipe2
+    def t(p): return [_normaliser_type(x) for x in p.get("types", [])]
+
+    # ── CANICULE fin ──────────────────────────────────────────────────────
+    if climat == "Canicule":
+        for p in tous:
+            if p.get("ko"): continue
+            if "sol" in t(p):
+                p["pv"] = min(p.get("pv_max", 100), p.get("pv", 0) + 20)
+                logs.append(f"    ☀️ {p['nom']} +20 PV (Sol/Canicule)")
+
+    # ── GRÊLE fin ─────────────────────────────────────────────────────────
+    elif climat == "Grêle":
+        for p in tous:
+            if p.get("ko"): continue
+            if "glace" in t(p):
+                p["pv"] = min(p.get("pv_max", 100), p.get("pv", 0) + 20)
+                logs.append(f"    🧊 {p['nom']} +20 PV (Glace/Grêle)")
+            else:
+                p["pv"] = max(0, p.get("pv", 0) - 10)
+                logs.append(f"    🧊 {p['nom']} -10 PV (Grêle)")
+
+    # ── NUÉE fin ──────────────────────────────────────────────────────────
+    elif climat == "Nuée":
+        for p in tous:
+            if p.get("ko") and "insecte" in t(p):
+                p["pv"] = p.get("pv_max", 100)
+                p["ko"] = False
+                # Reste sur le terrain dans sa position actuelle
+                logs.append(f"    🐛 {p['nom']} réanimé intégralement ! (Nuée)")
+
+    # ── ORAGE fin ─────────────────────────────────────────────────────────
+    elif climat == "Orage":
+        for p in tous:
+            if p.get("ko"): continue
+            if "vol" in t(p):
+                p["pv"] = max(0, p.get("pv", 0) - 10)
+                logs.append(f"    ⛈️ {p['nom']} -10 PV (Vol/Orage)")
+        # Pokémon le plus grand KO → à implémenter avec taille
+
+    # ── PLUIE fin ─────────────────────────────────────────────────────────
+    elif climat == "Pluie":
+        for p in tous:
+            if p.get("ko"): continue
+            if "eau" in t(p):
+                p["pv"] = min(p.get("pv_max", 100), p.get("pv", 0) + 20)
+                logs.append(f"    🌧️ {p['nom']} +20 PV (Eau/Pluie)")
+
+    # ── SMOG fin ──────────────────────────────────────────────────────────
+    elif climat == "Smog":
+        for p in tous:
+            if p.get("ko"): continue
+            if "poison" not in t(p):
+                p["pv"] = max(0, p.get("pv", 0) - 10)
+                logs.append(f"    🏭 {p['nom']} -10 PV (Smog)")
+
+    # ── TEMPÊTE DE SABLE fin ──────────────────────────────────────────────
+    elif climat == "Tempête de Sable":
+        for p in tous:
+            if p.get("ko"): continue
+            types_p = t(p)
+            if not any(x in types_p for x in ("roche", "sol", "acier")):
+                p["pv"] = max(0, p.get("pv", 0) - 10)
+                logs.append(f"    🏜️ {p['nom']} -10 PV (Tempête de Sable)")
+
+    # ── TEMPÊTE fin ───────────────────────────────────────────────────────
+    elif climat == "Tempête":
+        # Tous les Pokémon (y compris banc) non-Dragon perdent 10 PV
+        for joueur in [j1, j2]:
+            for p in joueur.get("pokemon", []):
+                if p.get("ko"): continue
+                if "dragon" not in t(p):
+                    p["pv"] = max(0, p.get("pv", 0) - 10)
+                    logs.append(f"    🌀 {p['nom']} -10 PV (Tempête)")
+
+    # Nuit : flag pas de baie
+    if climat == "Nuit":
+        partie["_nuit_pas_baie"] = True
+        logs.append(f"    🌙 Les joueurs ne piochent pas de Baie au prochain tour")
+
+    # Nettoyage des flags temporaires climat
+    for p in tous:
+        for flag in ["_brouillard_no_statut", "_brouillard_malus_precision",
+                     "_orage_no_sleep", "_orage_paralysie", "_nuit_malus_precision",
+                     "_nuit_peur", "_canicule_malus_precision", "_sable_malus_precision",
+                     "_att_def_annulee", "_att_priorite_bloquee", "_vent_decalage",
+                     "_tempete_no_soin"]:
+            p.pop(flag, None)
+
+
+def appliquer_soins_climat(climat, nom_att):
+    """Retourne le multiplicateur de soin selon le climat actif."""
+    if not climat or not nom_att:
+        return 1.0
+
+    # Soins bloqués par Tempête
+    if climat == "Tempête":
+        return 0.0
+
+    if climat == "Canicule":
+        if nom_att in {"Synthése", "Aurore"}:
+            return 2.0
+        if nom_att == "Rayon Lune":
+            return 0.5
+    elif climat == "Nuit":
+        if nom_att == "Rayon Lune":
+            return 2.0
+        if nom_att in {"Aurore", "Synthése"}:
+            return 0.0
+    elif climat in {"Brouillard", "Nuageux"}:
+        if nom_att in {"Aurore", "Synthése"}:
+            return 0.5
+    elif climat == "Grêle":
+        if nom_att in {"Aurore", "Synthése", "Rayon Lune"}:
+            return 0.5
+    elif climat == "Pluie":
+        if nom_att in {"Aurore", "Synthése", "Rayon Lune"}:
+            return 0.5
+    elif climat == "Tempête de Sable":
+        if nom_att in {"Aurore", "Synthése", "Rayon Lune"}:
+            return 0.0
+
+    return 1.0
+
+
 def appliquer_effets_synergies_debut(j1, j2, equipe1, equipe2, logs):
     """
     Applique les effets de synergies permanents AVANT le combat :
@@ -2846,6 +3278,12 @@ def appliquer_statut(poke, statut):
     # Rune Protect : protège des statuts jusqu'au prochain combat
     if poke.get("_rune_protect") and statut in STATUTS_UNIQUES:
         return False, f"{poke['nom']} est protégé par Rune Protect !"
+    # Brouillard : aucun statut ne peut être appliqué ce tour
+    if poke.get("_brouillard_no_statut") and statut in STATUTS_UNIQUES:
+        return False, f"{poke['nom']} est protégé par le Brouillard !"
+    # Orage : aucun Pokémon ne peut s'endormir
+    if poke.get("_orage_no_sleep") and statut == "SLP":
+        return False, f"{poke['nom']} ne peut pas s'endormir pendant l'Orage !"
     statut_actuel = poke.get("statut")
     # Déjà un statut unique → immunisé (sauf Piégé et Peur qui sont séparés)
     if statut in STATUTS_UNIQUES and statut_actuel in STATUTS_UNIQUES:
@@ -3015,7 +3453,49 @@ def appliquer_transformations(joueur):
         poke["att_off_type"] = nouvelle_db.get("att_off_type")
         poke["att_def_type"] = nouvelle_db.get("att_def_type")
 
-# ── Combat ────────────────────────────────────────────────────────────────────
+
+MORPHEO_FORMES = {
+    "Canicule":         "0351d",  # Solaire
+    "Orage":            "0351d",  # Solaire
+    "Pluie":            "0351c",  # Pluie
+    "Tempête":          "0351c",  # Pluie
+    "Grêle":            "0351b",  # Blizzard
+    "Vent":             "0351b",  # Blizzard
+}
+
+def appliquer_transformation_morpheo(joueur, climat):
+    """Transforme Morphéo selon le climat actif. Revient à la forme normale sinon."""
+    for poke in joueur.get("pokemon", []):
+        if poke.get("id") not in ("0351", "0351b", "0351c", "0351d"):
+            continue
+        forme_cible = MORPHEO_FORMES.get(climat, "0351")
+        if poke["id"] == forme_cible:
+            continue
+        nouvelle_db = _DB_MAP.get(forme_cible)
+        if not nouvelle_db:
+            continue
+        poke["id"]           = forme_cible
+        poke["nom"]          = nouvelle_db["nom"]
+        poke["types"]        = nouvelle_db.get("types", poke["types"])
+        poke["faiblesses"]   = nouvelle_db.get("faiblesses", poke.get("faiblesses", []))
+        poke["resistances"]  = nouvelle_db.get("resistances", poke.get("resistances", []))
+        poke["att_off_nom"]  = nouvelle_db.get("att_off_nom", poke.get("att_off_nom"))
+        poke["att_off_type"] = nouvelle_db.get("att_off_type", poke.get("att_off_type"))
+        poke["att_def_nom"]  = nouvelle_db.get("att_def_nom", poke.get("att_def_nom"))
+        poke["att_def_type"] = nouvelle_db.get("att_def_type", poke.get("att_def_type"))
+
+
+def gerer_distorsion(partie):
+    """Gère le compteur de tours de Distorsion."""
+    if partie.get("climat_actuel") == "Distorsion":
+        tours = partie.get("distorsion_tours", 3)
+        if tours <= 1:
+            partie["distorsion_tours"] = 0
+            partie["climat_actuel"] = "Ensoleillé"
+        else:
+            partie["distorsion_tours"] = tours - 1
+    elif partie.get("distorsion_tours", 0) == 0 and partie.get("_distorsion_actif"):
+        partie.pop("_distorsion_actif", None)
 def valeur_x(niveau):
     """Valeur X (PV, bonus défense, dégâts sup...) selon le niveau du Pokémon."""
     if niveau <= 3:   return 10
@@ -3175,6 +3655,10 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     # Effets synergies de début de combat (Eau, Dragon, Normal)
     appliquer_effets_synergies_debut(j1, j2, equipe1, equipe2, logs)
 
+    # Effets climat de début de combat
+    climat = partie.get("climat_actuel", "Ensoleillé")
+    appliquer_effets_climat_debut(climat, j1, j2, equipe1, equipe2, logs)
+
     # File d'attaque globale triée par vitesse décroissante
     # Chaque entrée = (attaquant, defenseur_ou_None)
     file_attaques = []
@@ -3194,7 +3678,11 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                       if x["slot"] == col_miroir and x["position"] == "off"
                       and not x.get("ko")), None)
         file_attaques.append((p, adv_p))
-    file_attaques.sort(key=lambda x: x[0].get("vitesse", 50), reverse=True)
+    # Distorsion : inverser l'ordre de la file
+    if climat == "Distorsion":
+        file_attaques.sort(key=lambda x: x[0].get("vitesse", 50), reverse=False)
+    else:
+        file_attaques.sort(key=lambda x: x[0].get("vitesse", 50), reverse=True)
 
     idx_file = 0
     while idx_file < len(file_attaques):
@@ -3295,6 +3783,57 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             attaquant["_a_joue_ce_combat"] = True
             continue
 
+        # ── Vérifications climatiques ─────────────────────────────────────
+        # Attaques de priorité bloquées (Brouillard)
+        if attaquant.pop("_att_priorite_bloquee", False):
+            logs.append(f"    🌫️ [Brouillard] : {att_nom} (priorité) bloquée !")
+            attaquant["_a_joue_ce_combat"] = True
+            continue
+
+        # Malus précision Brouillard : dé lancé, échoue sur 1
+        if attaquant.get("_brouillard_malus_precision") and mode_attaquant == "off":
+            de = random.randint(1, 6)
+            if de == 1:
+                logs.append(f"    🌫️ [Brouillard] : {attaquant['nom']} rate son attaque ! (dé: {de})")
+                attaquant["_a_joue_ce_combat"] = True
+                continue
+
+        # Malus précision Nuit : dé lancé, échoue sur 1
+        if attaquant.get("_nuit_malus_precision") and mode_attaquant == "off":
+            de = random.randint(1, 6)
+            if de == 1:
+                logs.append(f"    🌙 [Nuit] : {attaquant['nom']} rate son attaque ! (dé: {de})")
+                attaquant["_a_joue_ce_combat"] = True
+                continue
+
+        # Malus précision Canicule Électrik/Vol : dé lancé, échoue sur 1-2-3
+        if attaquant.get("_canicule_malus_precision") and mode_attaquant == "off":
+            de = random.randint(1, 6)
+            if de <= 3:
+                logs.append(f"    ☀️ [Canicule] : {attaquant['nom']} rate son attaque ! (dé: {de})")
+                attaquant["_a_joue_ce_combat"] = True
+                continue
+
+        # Malus précision Tempête de Sable non-Sol/Roche : dé lancé, échoue sur 1
+        if attaquant.get("_sable_malus_precision") and mode_attaquant == "off":
+            de = random.randint(1, 6)
+            if de == 1:
+                logs.append(f"    🏜️ [Tempête de Sable] : {attaquant['nom']} rate ! (dé: {de})")
+                attaquant["_a_joue_ce_combat"] = True
+                continue
+
+        # Décalage cible Vent : cible la colonne suivante (circulaire)
+        if attaquant.get("_vent_decalage") and defenseur and mode_attaquant == "off":
+            col_actuelle = defenseur.get("slot", 0)
+            col_decalee = (col_actuelle + 1) % 5
+            nouvelle_cible_vent = next((p for p in equipe_adv
+                                        if p.get("slot") == col_decalee
+                                        and p.get("position") == "off"
+                                        and not p.get("ko")), None)
+            if nouvelle_cible_vent:
+                defenseur = nouvelle_cible_vent
+                logs.append(f"    💨 [Vent] : cible décalée vers {nouvelle_cible_vent['nom']} (col. {col_decalee+1})")
+
         # ── Synergie Vol (seulement pour les offensifs) ───────────────────
         pal_vol = palier_synergie(joueur_att, "vol")
         types_norm_att = [_normaliser_type(t) for t in attaquant.get("types", [])]
@@ -3393,6 +3932,18 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 dmg = dmg_partage  # offensif reçoit moitié
                 support_pg["pv"] = max(0, support_pg.get("pv", 0) - dmg_partage)
                 logs.append(f"    🛡️ [Partage Garde] : dégâts partagés, {support_pg['nom']} subit {dmg_partage}")
+
+        # Bouclier (Queulonage) : absorbe les dégâts avant les PV
+        if cible_reelle.get("_bouclier") and dmg > 0:
+            bouclier = cible_reelle["_bouclier"]
+            if dmg <= bouclier:
+                cible_reelle["_bouclier"] = bouclier - dmg
+                logs.append(f"    🛡️ [Bouclier] : {cible_reelle['nom']} absorbe {dmg} dégâts (bouclier restant: {cible_reelle['_bouclier']})")
+                dmg = 0
+            else:
+                dmg -= bouclier
+                cible_reelle["_bouclier"] = 0
+                logs.append(f"    🛡️ [Bouclier] : {cible_reelle['nom']} absorbe {bouclier} dégâts, {dmg} passent")
 
         # Blockhaus : réduit les dégâts de X + empoisonne l'attaquant
         if cible_reelle.get("_blockhaus") and dmg > 0:
@@ -3500,6 +4051,16 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
         # Effets post-attaque (statuts synergies)
         if dmg > 0:
             appliquer_effets_post_attaque(attaquant, cible_reelle, joueur_att, joueur_def, logs)
+            # Nuit : dé 6 → peur
+            if attaquant.get("_nuit_peur") and mode_attaquant == "off":
+                if not cible_reelle.get("peur") and random.randint(1, 6) == 6:
+                    cible_reelle["peur"] = True
+                    logs.append(f"    🌙 [Nuit] : {cible_reelle['nom']} a peur !")
+            # Orage : attaque Électrik → dé 6 → paralysie
+            if attaquant.get("_orage_paralysie") and mode_attaquant == "off":
+                if not cible_reelle.get("statut") and random.randint(1, 6) == 6:
+                    ok, _ = appliquer_statut(cible_reelle, "PAR")
+                    if ok: logs.append(f"    ⛈️ [Orage] : {cible_reelle['nom']} est paralysé !")
         attaquant["_a_joue_ce_combat"] = True
 
         # Encore : si flag posé, réinsérer dans la file pour rejouer
@@ -3653,6 +4214,9 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
     # Retirer les effets temporaires de début de combat (Eau, Dragon, Normal)
     retirer_effets_synergies_debut(equipe1, equipe2)
 
+    # Effets climat de fin de combat
+    appliquer_effets_climat_fin(climat, j1, j2, equipe1, equipe2, partie, logs)
+
     # Nettoyer tous les champs temporaires non-JSON sur tous les Pokémon
     champs_temp = ["_xp_ko_ids", "_a_joue_ce_combat", "_position_initiale",
                    "_roulade_actif", "_skip_next_combat", "_danse_victoire",
@@ -3734,6 +4298,7 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                 if slot_libre is not None:
                     poke["position"] = "banc"
                     poke["slot"]     = slot_libre
+                    poke.pop("_bouclier", None)  # bouclier perdu si déplacé
 
     return {
         "type_duel": "normal",
@@ -3993,6 +4558,18 @@ def appliquer_fin_tour(partie):
         j["a_achete_tour1"]  = False
     # Piocher le climat du prochain tour — visible au début du tour suivant
     piocher_climat(partie)
+
+    # Distorsion : décrémenter le compteur
+    gerer_distorsion(partie)
+
+    # Si Distorsion vient d'être pioché, initialiser le compteur
+    if partie.get("climat_actuel") == "Distorsion" and not partie.get("distorsion_tours"):
+        partie["distorsion_tours"] = 3
+
+    # Morpheo : transformation selon le nouveau climat
+    for j in partie["joueurs"].values():
+        appliquer_transformation_morpheo(j, partie.get("climat_actuel", "Ensoleillé"))
+
     return messages
 
 def collecter_evolutions_a_venir(partie):
@@ -4439,6 +5016,7 @@ async def traiter_action(code, pseudo, action):
             if slot_libre is not None:
                 poke["position"] = "banc"
                 poke["slot"]     = slot_libre
+                poke.pop("_bouclier", None)  # bouclier perdu si déplacé
             # Avancement automatique : si on retire un offensif, le défensif avance
             if position == "off":
                 defensif = next((p for p in joueur["pokemon"]
