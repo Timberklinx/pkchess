@@ -124,7 +124,7 @@
       "poison"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 105,
     "vitesse": 80,
     "degats": 60,
@@ -319,7 +319,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 60,
@@ -357,7 +357,7 @@
       "vol"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 70,
@@ -543,7 +543,7 @@
       "eau"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 105,
     "vitesse": 78,
     "degats": 60,
@@ -881,7 +881,7 @@
       "poison"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 60,
     "vitesse": 145,
     "degats": 70,
@@ -1034,7 +1034,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 80,
     "vitesse": 121,
     "degats": 60,
@@ -1540,7 +1540,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 85,
     "vitesse": 110,
     "degats": 60,
@@ -1573,7 +1573,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 65,
     "vitesse": 130,
     "degats": 80,
@@ -2087,7 +2087,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 100,
     "vitesse": 70,
     "degats": 60,
@@ -3693,7 +3693,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 71,
     "vitesse": 150,
     "degats": 80,
@@ -4001,7 +4001,7 @@
       "poison"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 60,
@@ -4661,7 +4661,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 120,
     "vitesse": 30,
     "degats": 50,
@@ -5415,7 +5415,7 @@
       "poison"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 80,
     "vitesse": 130,
     "degats": 80,
@@ -6859,7 +6859,7 @@
       "psy"
     ],
     "niveau": 13,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 120,
     "degats": 70,
@@ -7083,10 +7083,10 @@
       "vol"
     ],
     "immunites": [],
-    "evolution": "Élekiable: Mettre K.O. quatre Pokémon + avoir une synergie Électrik 6 active.",
-    "evolution_id": null,
-    "evolution_nom": null,
-    "evolution_ko": null,
+    "evolution": "Élekable: Mettre K.O. quatre Pokémon + avoir une synergie Électrik 6 active.",
+    "evolution_id": "0466",
+    "evolution_nom": "Élekable",
+    "evolution_ko": 4,
     "att_off_type": "électrik",
     "att_def_type": "normal",
     "poids": 30.0,
@@ -7122,9 +7122,9 @@
     ],
     "immunites": [],
     "evolution": "Maganon: Mettre K.O. quatre Pokémon + avoir une synergie Feu 6 active.",
-    "evolution_id": null,
-    "evolution_nom": null,
-    "evolution_ko": null,
+    "evolution_id": "0467",
+    "evolution_nom": "Maganon",
+    "evolution_ko": 4,
     "att_off_type": "feu",
     "att_def_type": "spectre",
     "evolutions_conditionnelles": [
@@ -7422,10 +7422,10 @@
       "glace"
     ],
     "immunites": [],
-    "evolution": "Leviator Rouge: Mettre K.O. trois Pokémon.",
-    "evolution_id": null,
-    "evolution_nom": null,
-    "evolution_ko": null,
+    "evolution": "LeviatorRouge: Mettre K.O. trois Pokémon.",
+    "evolution_id": "0130c",
+    "evolution_nom": "LeviatorRouge",
+    "evolution_ko": 3,
     "att_off_type": "normal",
     "att_def_type": "normal",
     "poids": 10.0,
@@ -7478,7 +7478,7 @@
       "ténèbre"
     ],
     "niveau": 13,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 81,
     "degats": 70,
@@ -7521,7 +7521,7 @@
       "vol"
     ],
     "niveau": 10,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 81,
     "degats": 60,
@@ -8914,7 +8914,7 @@
       "vol"
     ],
     "niveau": 14,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 110,
     "vitesse": 100,
     "degats": 70,
@@ -9325,7 +9325,7 @@
       "fée"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 105,
     "vitesse": 80,
     "degats": 60,
@@ -9645,7 +9645,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 100,
     "vitesse": 78,
     "degats": 80,
@@ -10527,7 +10527,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 100,
     "vitesse": 45,
     "degats": 80,
@@ -11688,7 +11688,7 @@
       "sol"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 135,
     "vitesse": 30,
     "degats": 60,
@@ -11932,7 +11932,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 75,
     "degats": 70,
@@ -12780,7 +12780,7 @@
       "feu"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 85,
     "vitesse": 115,
     "degats": 70,
@@ -13528,7 +13528,7 @@
       "ténèbre"
     ],
     "niveau": 14,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 125,
     "vitesse": 71,
     "degats": 70,
@@ -13851,7 +13851,7 @@
       "dragon"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 75,
     "vitesse": 145,
     "degats": 70,
@@ -14009,7 +14009,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 80,
     "vitesse": 100,
     "degats": 80,
@@ -14158,7 +14158,7 @@
       "sol"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 105,
     "vitesse": 70,
     "degats": 70,
@@ -15118,7 +15118,7 @@
       "fée"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 90,
     "vitesse": 100,
     "degats": 70,
@@ -16135,7 +16135,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 125,
     "vitesse": 50,
     "degats": 70,
@@ -16250,7 +16250,7 @@
       "psy"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 100,
     "degats": 50,
@@ -16350,7 +16350,7 @@
       "electrik"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 135,
     "degats": 60,
@@ -16725,7 +16725,7 @@
       "ténèbre"
     ],
     "niveau": 10,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 105,
     "degats": 70,
@@ -16916,7 +16916,7 @@
       "sol"
     ],
     "niveau": 10,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 20,
     "degats": 60,
@@ -17366,7 +17366,7 @@
       "fée"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 80,
     "degats": 50,
@@ -18250,7 +18250,7 @@
       "spectre"
     ],
     "niveau": 10,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 75,
     "degats": 80,
@@ -18432,7 +18432,7 @@
       "acier"
     ],
     "niveau": 10,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 65,
     "degats": 60,
@@ -18699,7 +18699,7 @@
       "glace"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 100,
     "degats": 60,
@@ -19134,7 +19134,7 @@
       "vol"
     ],
     "niveau": 14,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 105,
     "vitesse": 120,
     "degats": 70,
@@ -19310,7 +19310,7 @@
       "psy"
     ],
     "niveau": 14,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 115,
     "vitesse": 110,
     "degats": 70,
@@ -20524,7 +20524,7 @@
       "vol"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 90,
     "vitesse": 110,
     "degats": 70,
@@ -22021,7 +22021,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 135,
     "degats": 60,
@@ -22716,7 +22716,7 @@
       "sol"
     ],
     "niveau": 14,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 105,
     "vitesse": 92,
     "degats": 70,
@@ -22753,7 +22753,7 @@
       "dragon"
     ],
     "niveau": 14,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 90,
     "vitesse": 151,
     "degats": 70,
@@ -22916,7 +22916,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 75,
     "vitesse": 112,
     "degats": 70,
@@ -22959,7 +22959,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 151,
     "degats": 80,
@@ -23537,7 +23537,7 @@
       "glace"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 30,
     "degats": 50,
@@ -24144,7 +24144,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 110,
     "degats": 80,
@@ -24294,7 +24294,7 @@
       "spectre"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 120,
     "degats": 60,
@@ -25592,7 +25592,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 100,
     "vitesse": 75,
     "degats": 70,
@@ -26844,7 +26844,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 103,
     "degats": 80,
@@ -27497,7 +27497,7 @@
       "poison"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 100,
     "vitesse": 62,
     "degats": 70,
@@ -28408,7 +28408,7 @@
       "combat"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 68,
     "degats": 60,
@@ -30575,7 +30575,7 @@
       "electrik"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 85,
     "vitesse": 80,
     "degats": 70,
@@ -31414,7 +31414,7 @@
       "spectre"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 55,
     "degats": 70,
@@ -32938,7 +32938,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 125,
     "vitesse": 44,
     "degats": 60,
@@ -33098,7 +33098,7 @@
       "psy"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 90,
     "vitesse": 134,
     "degats": 70,
@@ -33261,7 +33261,7 @@
       "ténèbre"
     ],
     "niveau": 13,
-    "stade": 3,
+    "stade": 2,
     "pv_max": 70,
     "vitesse": 132,
     "degats": 70,
@@ -33304,7 +33304,7 @@
       "ténèbre"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 75,
     "vitesse": 142,
     "degats": 60,
@@ -33773,7 +33773,7 @@
       "normal"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 126,
     "degats": 60,
@@ -34257,11 +34257,11 @@
     "types": [
       "psy"
     ],
-    "niveau": 5,
-    "stade": 0,
-    "pv_max": 60,
-    "vitesse": 68,
-    "degats": 30,
+    "niveau": 7,
+    "stade": 1,
+    "pv_max": 75,
+    "vitesse": 104,
+    "degats": 40,
     "att_off_nom": "Coup Bas",
     "att_off_desc": "Inflige 10 dégats supplémentaire et vise le Pokemon Support adverse si POKEMON attaque avant le Pokemon adverse.",
     "att_def_nom": "Possessif",
@@ -34741,7 +34741,7 @@
       "psy"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 88,
     "degats": 50,
@@ -34852,7 +34852,7 @@
       "combat"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 100,
     "vitesse": 88,
     "degats": 70,
@@ -34977,7 +34977,7 @@
       "dragon"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 44,
     "degats": 60,
@@ -36388,7 +36388,7 @@
       "sol"
     ],
     "niveau": 15,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 130,
     "vitesse": 100,
     "degats": 100,
@@ -37402,7 +37402,7 @@
       "glace"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 33,
     "degats": 70,
@@ -38788,7 +38788,7 @@
       "acier"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 125,
     "vitesse": 40,
     "degats": 70,
@@ -40221,7 +40221,7 @@
       "acier"
     ],
     "niveau": 13,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 110,
     "vitesse": 77,
     "degats": 70,
@@ -40266,7 +40266,7 @@
       "dragon"
     ],
     "niveau": 14,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 129,
     "degats": 80,
@@ -47708,7 +47708,7 @@
       "feu"
     ],
     "niveau": 11,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 80,
     "vitesse": 75,
     "degats": 60,
@@ -48501,7 +48501,7 @@
       "poison"
     ],
     "niveau": 12,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 101,
     "degats": 70,
@@ -49734,7 +49734,7 @@
       "glace"
     ],
     "niveau": 14,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 110,
     "vitesse": 87,
     "degats": 80,
