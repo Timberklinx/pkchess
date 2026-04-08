@@ -2361,6 +2361,114 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
             pokemon["att_def_nom"] = derniere_att
             logs.append(f"    📋 {nom} [Sommation] : utilise {derniere_att}")
 
+    # ══════════════════════════════════════════════════════════════════════
+    # ATTAQUES BASÉES SUR LE POIDS
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Cavalerie Lourde", "Tacle Lourd"}:
+        poids_att = pokemon.get("poids", 0) or 0
+        poids_cib = cible.get("poids", 0) or 0
+        if poids_att > poids_cib:
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    ⚖️ {nom} [{nom_att}] : +10 dégâts ({poids_att}kg > {poids_cib}kg)")
+
+    elif nom_att == "Tacle Feu":
+        poids_att = pokemon.get("poids", 0) or 0
+        poids_cib = cible.get("poids", 0) or 0
+        if poids_att > poids_cib:
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    🔥 {nom} [Tacle Feu] : +10 dégâts ({poids_att}kg > {poids_cib}kg)")
+
+    elif nom_att == "Balayage":
+        poids_att = pokemon.get("poids", 0) or 0
+        poids_cib = cible.get("poids", 0) or 0
+        if poids_cib > poids_att:
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    ⚖️ {nom} [Balayage] : +10 dégâts (cible {poids_cib}kg > {poids_att}kg)")
+
+    elif nom_att == "Souplesse":
+        poids_att = pokemon.get("poids", 0) or 0
+        poids_cib = cible.get("poids", 0) or 0
+        if poids_att < poids_cib:
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    🤸 {nom} [Souplesse] : +20 dégâts ({poids_att}kg < {poids_cib}kg)")
+
+    elif nom_att == "Gare au Ronflex":
+        poids_att = pokemon.get("poids", 0) or 0
+        poids_cib = cible.get("poids", 0) or 0
+        if poids_cib < poids_att and not cible.get("statut"):
+            ok, _ = appliquer_statut(cible, "PAR")
+            if ok: logs.append(f"    ⚡ {nom} [Gare au Ronflex] : {cible['nom']} paralysé ({poids_cib}kg < {poids_att}kg)")
+
+    elif nom_att == "Force G":
+        poids_cib = cible.get("poids", 0) or 0
+        appliquer_bonus(cible, "bonus_attaque", -20)
+        logs.append(f"    📉 {nom} [Force G] : {cible['nom']} -20 Attaque")
+        if poids_cib > 100:
+            appliquer_bonus(pokemon, "bonus_attaque", 30)
+            logs.append(f"    💥 [Force G] : +30 dégâts (cible {poids_cib}kg > 100kg)")
+
+    elif nom_att == "Ondes G-Max":
+        # Zone colonne : double le poids des 2 adverses + supprime type Vol
+        for c in _cibles_colonne():
+            poids_orig = c.get("poids", 0) or 0
+            c["_poids_double"] = poids_orig * 2  # poids temporaire doublé
+            if "vol" in [_normaliser_type(t) for t in c.get("types", [])]:
+                c["_types_orig"] = c.get("types", [])
+                c["types"] = [t for t in c.get("types", []) if _normaliser_type(t) != "vol"]
+                logs.append(f"    🌊 [Ondes G-Max] : {c['nom']} poids doublé ({poids_orig}→{poids_orig*2}kg) + type Vol supprimé")
+            else:
+                logs.append(f"    🌊 [Ondes G-Max] : {c['nom']} poids doublé ({poids_orig}→{poids_orig*2}kg)")
+        pokemon["_zone_colonne"] = True
+
+    elif nom_att == "Bulldoboule":
+        # Dé 5-6 → peur (déjà géré dans le bloc précédent, ici juste le bonus poids)
+        poids_att = pokemon.get("poids", 0) or 0
+        poids_cib = cible.get("poids", 0) or 0
+        if not cible.get("peur") and _jet_de(5, logs, nom, "[Bulldoboule] tente peur"):
+            cible["peur"] = True
+            logs.append(f"    😨 {cible['nom']} a peur ! (Bulldoboule)")
+        if poids_cib < poids_att:
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    ⚖️ [Bulldoboule] : +20 dégâts (cible {poids_cib}kg < {poids_att}kg)")
+
+    # ══════════════════════════════════════════════════════════════════════
+    # ATTAQUES BASÉES SUR LA TAILLE
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif nom_att in {"Mégacorne", "Mégafouet", "Picpic"}:
+        taille_att = pokemon.get("taille", 0) or 0
+        taille_cib = cible.get("taille", 0) or 0
+        bonus = 10
+        if taille_att > taille_cib:
+            appliquer_bonus(pokemon, "bonus_attaque", bonus)
+            logs.append(f"    📏 {nom} [{nom_att}] : +{bonus} dégâts ({taille_att}m > {taille_cib}m)")
+
+    elif nom_att == "Ombre Nocturne":
+        taille_att = pokemon.get("taille", 0) or 0
+        taille_cib = cible.get("taille", 0) or 0
+        if taille_att > taille_cib:
+            appliquer_bonus(pokemon, "bonus_attaque", 20)
+            logs.append(f"    🌑 {nom} [Ombre Nocturne] : +20 dégâts ({taille_att}m > {taille_cib}m)")
+
+    elif nom_att in {"Gladius Maximus", "Aegis Maxima"}:
+        taille_att = pokemon.get("taille", 0) or 0
+        taille_cib = cible.get("taille", 0) or 0
+        if taille_cib > taille_att:
+            bonus = 40 if taille_cib >= 10.0 else 20  # ×2 contre Gigamax (≥10m)
+            appliquer_bonus(pokemon, "bonus_attaque", bonus)
+            label = " (×2 Gigamax)" if taille_cib >= 10.0 else ""
+            logs.append(f"    ⚔️ {nom} [{nom_att}] : +{bonus} dégâts ({taille_cib}m > {taille_att}m){label}")
+
+    elif nom_att == "Rapace":
+        taille_att = pokemon.get("taille", 0) or 0
+        # Si l'offensif adverse est plus petit que POKEMON → il ne peut pas cibler POKEMON
+        if cible:
+            taille_cib = cible.get("taille", 0) or 0
+            if taille_cib < taille_att:
+                cible["_rapace_bloque"] = True
+                logs.append(f"    🦅 {nom} [Rapace] : {cible['nom']} trop petit ({taille_cib}m < {taille_att}m) → bloqué")
+
     return None
 def init_pool(partie):
     pool = [p["id"] for p in POKEMONS_DB]
@@ -2973,7 +3081,19 @@ def appliquer_effets_climat_fin(climat, j1, j2, equipe1, equipe2, partie, logs):
             if "vol" in t(p):
                 p["pv"] = max(0, p.get("pv", 0) - 10)
                 logs.append(f"    ⛈️ {p['nom']} -10 PV (Vol/Orage)")
-        # Pokémon le plus grand KO → à implémenter avec taille
+        # Pokémon le plus grand (taille) parmi tous les Pokémon en jeu → KO
+        tous_en_jeu = []
+        for joueur in [j1, j2]:
+            for p in joueur.get("pokemon", []):
+                if not p.get("ko") and p.get("position") in ("off", "def"):
+                    tous_en_jeu.append(p)
+        if tous_en_jeu:
+            plus_grand = max(tous_en_jeu, key=lambda p: p.get("taille", 0) or 0)
+            if (plus_grand.get("taille") or 0) > 0:
+                plus_grand["ko"] = True
+                plus_grand["pv"] = 0
+                soigner_statuts(plus_grand)
+                logs.append(f"    ⛈️ [Orage] : {plus_grand['nom']} ({plus_grand.get('taille',0)}m) est le plus grand → KO !")
 
     # ── PLUIE fin ─────────────────────────────────────────────────────────
     elif climat == "Pluie":
@@ -3783,6 +3903,12 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
             attaquant["_a_joue_ce_combat"] = True
             continue
 
+        # Rapace : bloquer si l'attaquant est trop petit pour cibler POKEMON
+        if attaquant.pop("_rapace_bloque", False):
+            logs.append(f"    🦅 [Rapace] : {attaquant['nom']} ne peut pas cibler sa cible (trop petit) !")
+            attaquant["_a_joue_ce_combat"] = True
+            continue
+
         # ── Vérifications climatiques ─────────────────────────────────────
         # Attaques de priorité bloquées (Brouillard)
         if attaquant.pop("_att_priorite_bloquee", False):
@@ -4234,7 +4360,8 @@ def resoudre_duel_complet(partie, p1, j1, p2, j2):
                    "_partage_garde", "_partage_garde_actif", "_lien_destin",
                    "_gravite", "_resistances_sans_sol", "_resistances_orig",
                    "_att_vol_annulee", "_encore", "_lire_esprit",
-                   "_possessif_bloque", "_ten_danse_orig"]
+                   "_possessif_bloque", "_ten_danse_orig",
+                   "_rapace_bloque", "_poids_double"]
     for joueur_check in [j1, j2]:
         for poke in joueur_check.get("pokemon", []):
             for champ in champs_temp:
@@ -4842,6 +4969,8 @@ async def traiter_action(code, pseudo, action):
             "evolution_id":  poke_data.get("evolution_id"),
             "evolution_nom": poke_data.get("evolution_nom"),
             "evolution_ko":  poke_data.get("evolution_ko"),
+            "poids":         poke_data.get("poids", 0),
+            "taille":        poke_data.get("taille", 0),
             "bonus_pv_synergie": 0,
             "ko":            False,
             "xp_combats":    0,

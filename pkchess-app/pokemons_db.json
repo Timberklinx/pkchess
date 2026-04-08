@@ -27463,7 +27463,7 @@
     "vitesse": 112,
     "degats": 50,
     "att_off_nom": "Bulldoboule",
-    "att_off_desc": "Lancer un dé, sur un 5-6 le Pokemon adverse est apeuré. Si le Pokemon adverse est plus léger que POKEMON, Bulldoboule inflige X dégats supplémentaires.",
+    "att_off_desc": "Lancer un dé, sur un 5-6 le Pokemon adverse est apeuré. Si le Pokemon adverse est plus léger que POKEMON, Bulldoboule inflige 20 dégats supplémentaires.",
     "att_def_nom": "Relais",
     "att_def_desc": "POKEMON est retiré et la Vitesse de votre Pokemon offensif est augmenté de 30.",
     "faiblesses": [
@@ -27502,7 +27502,7 @@
     "vitesse": 62,
     "degats": 70,
     "att_off_nom": "Bulldoboule",
-    "att_off_desc": "Lancer un dé, sur un 5-6 le Pokemon adverse est apeuré. Si le Pokemon adverse est plus léger que POKEMON, Bulldoboule inflige X dégats supplémentaires.",
+    "att_off_desc": "Lancer un dé, sur un 5-6 le Pokemon adverse est apeuré. Si le Pokemon adverse est plus léger que POKEMON, Bulldoboule inflige 20 dégats supplémentaires.",
     "att_def_nom": "Relais",
     "att_def_desc": "POKEMON est retiré et la Vitesse de votre Pokemon offensif est augmenté de 40.",
     "faiblesses": [
