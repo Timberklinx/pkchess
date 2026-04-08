@@ -2439,10 +2439,9 @@ def appliquer_effet_attaque(pokemon, cible, joueur_att, joueur_def,
     elif nom_att in {"Mégacorne", "Mégafouet", "Picpic"}:
         taille_att = pokemon.get("taille", 0) or 0
         taille_cib = cible.get("taille", 0) or 0
-        bonus = 10
         if taille_att > taille_cib:
-            appliquer_bonus(pokemon, "bonus_attaque", bonus)
-            logs.append(f"    📏 {nom} [{nom_att}] : +{bonus} dégâts ({taille_att}m > {taille_cib}m)")
+            appliquer_bonus(pokemon, "bonus_attaque", 10)
+            logs.append(f"    📏 {nom} [{nom_att}] : +10 dégâts ({taille_att}m > {taille_cib}m)")
 
     elif nom_att == "Ombre Nocturne":
         taille_att = pokemon.get("taille", 0) or 0
@@ -2672,13 +2671,83 @@ async def terminer_caroussel(code, partie, gestionnaire):
             "auto":          True,
         })
 
-def generer_offre_boutique(partie, niveau_joueur, ancienne_offre=None, locked=False, niveau_max_pool=10):
+# ── Config garantie boutique ─────────────────────────────────────────────────
+# palier → (seuil_garantie, niv_min_garanti, niv_max_garanti)
+GARANTIE_CONFIG = {
+    11: (10, 10, 11),   # pool ≥11 : garantie à 10 rolls, force niv 10 ou 11
+    12: (15, 12, 12),   # pool ≥12 : garantie à 15 rolls, force niv 12
+    13: (20, 13, 13),   # pool ≥13 : garantie à 20 rolls, force niv 13
+    14: (25, 14, 14),   # pool ≥14 : garantie à 25 rolls, force niv 14
+    # niveau 15 : pas de garantie
+}
+
+def _palier_actif(niveau_max_pool):
+    """Retourne le palier de garantie actif selon le niveau_max_pool."""
+    for palier in sorted(GARANTIE_CONFIG.keys(), reverse=True):
+        if niveau_max_pool >= palier:
+            return palier
+    return None
+
+def _contient_niveau_garanti(offre, niv_min, niv_max):
+    """Vérifie si l'offre contient déjà un pokémon du niveau garanti."""
+    return any(niv_min <= p["niveau"] <= niv_max for p in offre)
+
+def piocher_garantie(partie, niv_min, niv_max):
+    """Pioche un pokémon stade 0 de niveau entre niv_min et niv_max dans le pool."""
+    pool = partie.get("pool", [])
+    eligibles = [pid for pid in pool
+                 if (lambda p: p
+                     and p.get("stade", 0) == 0
+                     and p["id"] not in _EXCLUS_POOL
+                     and p["id"] not in _IDS_INTERMEDIAIRES
+                     and niv_min <= p["niveau"] <= niv_max)(_get_poke(pid))]
+    if not eligibles:
+        return None
+    choix = random.choice(eligibles)
+    pool.remove(choix)
+    return _get_poke(choix)
+
+def generer_offre_boutique(partie, niveau_joueur, ancienne_offre=None, locked=False,
+                           niveau_max_pool=10, joueur=None, est_reroll=False):
     if locked and ancienne_offre:
         return ancienne_offre
     if ancienne_offre:
         retourner_au_pool(partie, [p["id"] for p in ancienne_offre])
     pokes = piocher_depuis_pool(partie, niveau_joueur, niveau_max_pool=niveau_max_pool)
-    return [{"id": p["id"], "nom": p["nom"], "types": p["types"], "niveau": p["niveau"]} for p in pokes]
+    offre = [{"id": p["id"], "nom": p["nom"], "types": p["types"], "niveau": p["niveau"]} for p in pokes]
+
+    # ── Système de garantie ───────────────────────────────────────────────────
+    if joueur is not None and niveau_max_pool >= 11:
+        palier = _palier_actif(niveau_max_pool)
+        if palier and palier in GARANTIE_CONFIG:
+            seuil, niv_min, niv_max = GARANTIE_CONFIG[palier]
+            cle = str(palier)
+            garantie_rolls = joueur.setdefault("garantie_rolls", {"11":0,"12":0,"13":0,"14":0})
+
+            if est_reroll:
+                # Incrémenter seulement si l'offre ne contient pas naturellement un pokémon garanti
+                if not _contient_niveau_garanti(offre, niv_min, niv_max):
+                    garantie_rolls[cle] = garantie_rolls.get(cle, 0) + 1
+                else:
+                    garantie_rolls[cle] = 0  # Reset : on en a vu un naturellement
+
+            # Vérifier si la garantie se déclenche
+            if garantie_rolls.get(cle, 0) >= seuil:
+                if not _contient_niveau_garanti(offre, niv_min, niv_max):
+                    poke_garanti = piocher_garantie(partie, niv_min, niv_max)
+                    if poke_garanti:
+                        # Remplacer une offre au hasard
+                        idx = random.randrange(len(offre))
+                        # Remettre le pokémon remplacé dans le pool
+                        retourner_au_pool(partie, [offre[idx]["id"]])
+                        offre[idx] = {
+                            "id": poke_garanti["id"], "nom": poke_garanti["nom"],
+                            "types": poke_garanti["types"], "niveau": poke_garanti["niveau"],
+                            "_garanti": True,
+                        }
+                        garantie_rolls[cle] = 0  # Reset après déclenchement
+
+    return offre
 
 # ── État joueur ───────────────────────────────────────────────────────────────
 def etat_initial_joueur(pseudo):
@@ -2696,6 +2765,9 @@ def etat_initial_joueur(pseudo):
         "a_achete_tour1":  False,
         "boutique_offre":  [],
         "boutique_locked": False,
+        "niveau_max_pool": 10,
+        "garantie_rolls":  {"11": 0, "12": 0, "13": 0, "14": 0},
+        "niveaux_achetes": [],
     }
 
 # ── Économie ──────────────────────────────────────────────────────────────────
@@ -4680,7 +4752,8 @@ def appliquer_fin_tour(partie):
         locked = j.get("boutique_locked", False)
         j["boutique_offre"]  = generer_offre_boutique(partie, j["niveau"],
                                                        ancienne_offre=j["boutique_offre"], locked=locked,
-                                                       niveau_max_pool=j.get("niveau_max_pool", 10))
+                                                       niveau_max_pool=j.get("niveau_max_pool", 10),
+                                                       joueur=j, est_reroll=False)
         j["boutique_locked"] = False
         j["a_achete_tour1"]  = False
     # Piocher le climat du prochain tour — visible au début du tour suivant
@@ -4892,7 +4965,9 @@ async def traiter_action(code, pseudo, action):
         if joueur["pieces"] >= 2:
             joueur["pieces"] -= 2
             joueur["boutique_offre"] = generer_offre_boutique(
-                partie, joueur["niveau"], ancienne_offre=joueur["boutique_offre"])
+                partie, joueur["niveau"], ancienne_offre=joueur["boutique_offre"],
+                niveau_max_pool=joueur.get("niveau_max_pool", 10),
+                joueur=joueur, est_reroll=True)
             await gestionnaire.envoyer_a(code, pseudo, {
                 "type": "boutique_offre", "pour": pseudo,
                 "offre": joueur["boutique_offre"], "tour": partie["tour"],
@@ -4969,17 +5044,36 @@ async def traiter_action(code, pseudo, action):
             "evolution_id":  poke_data.get("evolution_id"),
             "evolution_nom": poke_data.get("evolution_nom"),
             "evolution_ko":  poke_data.get("evolution_ko"),
-            "poids":         poke_data.get("poids", 0),
-            "taille":        poke_data.get("taille", 0),
             "bonus_pv_synergie": 0,
             "ko":            False,
             "xp_combats":    0,
         })
-        # Déblocage progressif : achat d'un Pokémon au niveau max actuel → débloque le suivant
+        # ── Déblocage palier et gestion garantie ─────────────────────────────
         niv_poke = poke_data.get("niveau", 1)
         nmp = joueur.get("niveau_max_pool", 10)
-        if niv_poke >= nmp and nmp < 15:
-            joueur["niveau_max_pool"] = nmp + 1
+        joueur.setdefault("niveaux_achetes", []).append(niv_poke)
+        garantie_rolls = joueur.setdefault("garantie_rolls", {"11":0,"12":0,"13":0,"14":0})
+
+        # Déblocage : achat d'un pokémon du palier max → débloque le palier suivant
+        # Règles de déblocage par palier :
+        #   pool 10→11 : atteindre niveau joueur 10 (géré ailleurs)
+        #   pool 11→12 : acheter un niv 10 ou 11
+        #   pool 12→13 : acheter un niv 12
+        #   pool 13→14 : acheter un niv 13
+        #   pool 14→15 : acheter un niv 14
+        DEBLOCAGE = {10: 12, 11: 12, 12: 13, 13: 14, 14: 15}
+        if niv_poke in DEBLOCAGE:
+            nouveau_max = DEBLOCAGE[niv_poke]
+            if nmp < nouveau_max:
+                joueur["niveau_max_pool"] = nouveau_max
+
+        # Reset du compteur de garantie du palier correspondant au niveau acheté
+        # Ex: acheter niv 11 → reset compteur "11" (palier 10/11)
+        # Ex: acheter niv 12 → reset compteur "12"
+        if niv_poke in (10, 11):
+            garantie_rolls["11"] = 0
+        elif str(niv_poke) in garantie_rolls:
+            garantie_rolls[str(niv_poke)] = 0
         appliquer_bonus_pv_synergies(joueur)
         appliquer_transformations(joueur)
         await gestionnaire.diffuser(code, {
