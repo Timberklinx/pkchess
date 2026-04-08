@@ -5944,7 +5944,21 @@
     "att_off_type": "normal",
     "att_def_type": "psy",
     "poids": 2.5,
-    "taille": 0.4
+    "taille": 0.4,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0103",
+        "nom": "Noadkoko",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 3
+      },
+      {
+        "id": "0103b",
+        "nom": "Noadkoko Alola",
+        "condition": "synergie_dragon_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0103",
@@ -7083,14 +7097,22 @@
       "vol"
     ],
     "immunites": [],
-    "evolution": "Élekable: Mettre K.O. quatre Pokémon + avoir une synergie Électrik 6 active.",
-    "evolution_id": "0466",
-    "evolution_nom": "Élekable",
-    "evolution_ko": 4,
+    "evolution": "Élekiable: Mettre K.O. quatre Pokémon + avoir une synergie Électrik 6 active.",
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "électrik",
     "att_def_type": "normal",
     "poids": 30.0,
-    "taille": 1.1
+    "taille": 1.1,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0466",
+        "nom": "Élekable",
+        "condition": "synergie_électrik_6",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0126",
@@ -7122,9 +7144,9 @@
     ],
     "immunites": [],
     "evolution": "Maganon: Mettre K.O. quatre Pokémon + avoir une synergie Feu 6 active.",
-    "evolution_id": "0467",
-    "evolution_nom": "Maganon",
-    "evolution_ko": 4,
+    "evolution_id": null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "feu",
     "att_def_type": "spectre",
     "evolutions_conditionnelles": [
@@ -7422,7 +7444,7 @@
       "glace"
     ],
     "immunites": [],
-    "evolution": "LeviatorRouge: Mettre K.O. trois Pokémon.",
+    "evolution": "Leviator Rouge: Mettre K.O. trois Pokémon.",
     "evolution_id": "0130c",
     "evolution_nom": "LeviatorRouge",
     "evolution_ko": 3,
@@ -8250,7 +8272,15 @@
     "att_off_type": "psy",
     "att_def_type": "normal",
     "poids": 36.5,
-    "taille": 0.8
+    "taille": 0.8,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0233",
+        "nom": "Porygon2",
+        "condition": "synergie_normal_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0138",
@@ -11258,7 +11288,15 @@
     "att_off_type": "normal",
     "att_def_type": "normal",
     "poids": 2.1,
-    "taille": 0.5
+    "taille": 0.5,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0430",
+        "nom": "Corboss",
+        "condition": "synergie_tenebres_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0199",
@@ -11580,14 +11618,22 @@
     "immunites": [
       "spectre"
     ],
-    "evolution": "Venusourdo: Mettre K.O. trois Pokémon + avoir une synergie Normal 3 active.",
+    "evolution": "Deusolourdo: Mettre K.O. trois Pokémon + avoir une synergie Normal 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "sol",
     "att_def_type": "normal",
     "poids": 14.0,
-    "taille": 1.5
+    "taille": 1.5,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0982",
+        "nom": "Deusolourdo",
+        "condition": "synergie_normal_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0207",
@@ -12110,14 +12156,22 @@
     "immunites": [
       "psy"
     ],
-    "evolution": "Vinoret: Mettre K.O. quatre Pokémon + avoir une synergie Ténèbre 3 active.",
+    "evolution": "Dimoret: Mettre K.O. quatre Pokémon + avoir une synergie Ténèbre 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "acier",
     "att_def_type": "ténèbre",
     "poids": 28.0,
-    "taille": 0.9
+    "taille": 0.9,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0461",
+        "nom": "Dimoret",
+        "condition": "synergie_tenebres_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0215b",
@@ -12149,14 +12203,22 @@
       "ténèbre"
     ],
     "immunites": [],
-    "evolution": "Farmurex: Mettre K.O. quatre Pokémon + avoir une synergie Poison 3 active.",
+    "evolution": "Farfurex: Mettre K.O. quatre Pokémon + avoir une synergie Poison 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "poison",
     "att_def_type": "ténèbre",
     "poids": 27.0,
-    "taille": 0.9
+    "taille": 0.9,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0903",
+        "nom": "Farfurex",
+        "condition": "synergie_poison_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0216",
@@ -12928,7 +12990,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 90,
     "vitesse": 60,
     "degats": 50,
@@ -12982,14 +13044,22 @@
     "immunites": [
       "spectre"
     ],
-    "evolution": "Cerbylyn: Mettre K.O. quatre Pokémon + avoir une synergie Psy 3 active.",
+    "evolution": "Cerbyllin: Mettre K.O. quatre Pokémon + avoir une synergie Psy 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "psy",
     "att_def_type": "psy",
     "poids": 71.2,
-    "taille": 1.4
+    "taille": 1.4,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0899",
+        "nom": "Cerbyllin",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0235",
@@ -24077,7 +24147,7 @@
       "normal"
     ],
     "niveau": 9,
-    "stade": 1,
+    "stade": 2,
     "pv_max": 75,
     "vitesse": 90,
     "degats": 60,
@@ -26049,7 +26119,15 @@
     "att_off_type": "vol",
     "att_def_type": "ténèbre",
     "poids": 10.5,
-    "taille": 0.6
+    "taille": 0.6,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0512",
+        "nom": "Feuiloutan",
+        "condition": "synergie_plante_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0512",
@@ -28543,14 +28621,22 @@
       "electrik",
       "normal"
     ],
-    "evolution": "Tutankafer Galar: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active.",
+    "evolution": "Tutétékri: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "spectre",
     "att_def_type": "normal",
     "poids": 1.5,
-    "taille": 0.5
+    "taille": 0.5,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0867",
+        "nom": "Tutétékri",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 4
+      }
+    ]
   },
   {
     "id": "0563",
@@ -29024,7 +29110,15 @@
     "att_off_type": "normal",
     "att_def_type": "fée",
     "poids": 5.8,
-    "taille": 0.4
+    "taille": 0.4,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0573",
+        "nom": "Pashmilla",
+        "condition": "synergie_fee_3",
+        "evolution_ko": 2
+      }
+    ]
   },
   {
     "id": "0573",
@@ -34257,11 +34351,11 @@
     "types": [
       "psy"
     ],
-    "niveau": 7,
+    "niveau": 5,
     "stade": 1,
-    "pv_max": 75,
-    "vitesse": 104,
-    "degats": 40,
+    "pv_max": 60,
+    "vitesse": 68,
+    "degats": 30,
     "att_off_nom": "Coup Bas",
     "att_off_desc": "Inflige 10 dégats supplémentaire et vise le Pokemon Support adverse si POKEMON attaque avant le Pokemon adverse.",
     "att_def_nom": "Possessif",
@@ -43876,7 +43970,15 @@
     "att_off_type": "glace",
     "att_def_type": "psy",
     "poids": 3.8,
-    "taille": 0.3
+    "taille": 0.3,
+    "evolutions_conditionnelles": [
+      {
+        "id": "0873",
+        "nom": "Beldeneige",
+        "condition": "synergie_glace_3",
+        "evolution_ko": 3
+      }
+    ]
   },
   {
     "id": "0873",
