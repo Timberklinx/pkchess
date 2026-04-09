@@ -14505,12 +14505,26 @@
       "sol"
     ],
     "immunites": [],
-    "evolution": "Armulys: Mettre K.O. un Pokémon. Blindalys: Mettre K.O. un Pokémon.",
-    "evolution_id": "0268",
-    "evolution_nom": "Blindalys",
-    "evolution_ko": 1,
+    "evolution": "Armulys: Mettre K.O. un Pokémon + avoir une synergie poison 3 active. Blindalys: Mettre K.O. un Pokémon + avoir une synergie vol 3 active.",
+    "evolution_id": "null,
+    "evolution_nom": null,
+    "evolution_ko": null,
     "att_off_type": "poison",
     "att_def_type": "insecte",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0266",
+        "nom": "Armulys",
+        "condition": "synergie_vol_3",
+        "evolution_ko": 1
+      },
+      {
+        "id": "0268",
+        "nom": "Blindalys",
+        "condition": "synergie_poison_3",
+        "evolution_ko": 1
+      }
+    ],
     "poids": 3.6,
     "taille": 0.3
   },
@@ -14853,7 +14867,7 @@
     "immunites": [
       "psy"
     ],
-    "evolution": "Tengalice: Mettre K.O. trois Pokémon + avoir une synergie Plante 6 active.",
+    "evolution": "Tengalice: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
@@ -14863,7 +14877,7 @@
       {
         "id": "0275",
         "nom": "Tengalice",
-        "condition": "synergie_plante_6",
+        "condition": "synergie_plante_3",
         "evolution_ko": 3
       }
     ],
@@ -37894,8 +37908,8 @@
     ],
     "niveau": 8,
     "stade": 1,
-    "pv_max": 80,
-    "vitesse": 82,
+    "pv_max": 70,
+    "vitesse": 110,
     "degats": 50,
     "att_off_nom": "Hurlement des Roches-Lames",
     "att_off_desc": "Inflige 10 dégâts de type Roche à tous les autres Pokemon adverses en jeu",
@@ -37929,12 +37943,11 @@
     "nom": "Lougaroc Nocturne",
     "types": [
       "roche",
-      "spectre"
     ],
     "niveau": 8,
     "stade": 1,
-    "pv_max": 70,
-    "vitesse": 110,
+    "pv_max": 80,
+    "vitesse": 82,
     "degats": 50,
     "att_off_nom": "Riposte",
     "att_off_desc": "Renvoie vers le Pokemon adverse le méme nombre de dégats recus yenant de lui.",
@@ -37942,20 +37955,16 @@
     "att_def_desc": "Empéche le Pokemon adverse de cibler des Pokemon sur d'autres colonnes et oblige le Pokemon Support adverse a utiliser son attaque offensive contre POKEMON.",
     "faiblesses": [
       "acier",
+      "combat",
       "eau",
       "plante",
-      "sol",
-      "spectre",
-      "ténèbre"
+      "sol"
     ],
     "resistances": [
       "feu",
+      "normal",
       "poison",
       "vol"
-    ],
-    "immunites": [
-      "combat",
-      "normal"
     ],
     "evolution": "Pas d'évolution.",
     "evolution_id": null,
