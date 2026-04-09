@@ -14506,7 +14506,7 @@
     ],
     "immunites": [],
     "evolution": "Armulys: Mettre K.O. un Pokémon + avoir une synergie poison 3 active. Blindalys: Mettre K.O. un Pokémon + avoir une synergie vol 3 active.",
-    "evolution_id": "null,
+    "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "poison",
