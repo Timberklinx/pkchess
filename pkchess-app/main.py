@@ -37,6 +37,57 @@ with open(DB_PATH, encoding="utf-8") as f:
 def _get_poke(pid):
     return next((p for p in POKEMONS_DB if p["id"] == pid), None)
 
+# ── Base Objets ───────────────────────────────────────────────────────────────
+OBJETS_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "objets_db.json")
+with open(OBJETS_DB_PATH, encoding="utf-8") as f:
+    OBJETS_DB = json.load(f)
+
+def _get_objet(oid):
+    return next((o for o in OBJETS_DB if o["id"] == oid), None)
+
+# IDs des objets hors pool (donnés aux carrousels)
+OBJETS_HORS_POOL = {"080", "023", "024"}  # Chaîne Rouge, Méga Gemme, Étoile Vœu
+
+# Types d'attaque par objet (pour Charbon, Eau Mystique, etc.)
+OBJET_TYPE_ATTAQUE = {
+    "062": "feu",      # Charbon
+    "063": "eau",      # Eau Mystique
+    "064": "plante",   # Graine Miracle
+    "065": "electrik", # Aimant
+    "066": "glace",    # Glacéternel
+    "067": "combat",   # Ceinture Noire
+    "068": "insecte",  # Poudre Argentée
+    "069": "poison",   # Pic Venin
+    "070": "sol",      # Sable Doux
+    "071": "roche",    # Pierre Dure
+    "072": "vol",      # Bec Pointu
+    "073": "psy",      # Cuillère Tordue
+    "074": "spectre",  # Rune Sort
+    "075": "dragon",   # Croc Dragon
+    "076": "normal",   # Mouchoir Soie
+    "077": "tenebres", # Lunettes Noires
+    "078": "acier",    # Peau Métal
+    "079": "fee",      # Ruban Rose
+}
+
+# Types ajoutés par les Plaques
+PLAQUE_TYPE = {
+    "041": "vol",      "042": "dragon",   "043": "psy",      "044": "spectre",
+    "045": "acier",    "046": "feu",      "047": "glace",    "048": "plante",
+    "049": "eau",      "050": "insecte",  "051": "tenebres", "052": "fee",
+    "053": "combat",   "054": "roche",    "055": "sol",      "056": "poison",
+    "057": "electrik", "058": "normal",
+}
+
+# Pokémon avec 2 Mégas → condition de synergie pour choisir
+MEGA_DOUBLE = {
+    "0006":  [("0006b", "combat"), ("0006c", "vol")],      # Dracaufeu X/Y
+    "0150":  [("0150b", "combat"), ("0150c", "psy")],      # Mewtwo X/Y
+    "0448":  [("0448b", "acier"),  ("0448c", "combat")],   # Lucario Z
+    "0445":  [("0445b", None),     ("0445c", "tenebres")], # Carchacrok Z
+    "0026":  [("0026c", "combat"), ("0026d", "psy")],      # Raichu X/Y
+}
+
 # IDs qui sont des formes intermédiaires (cibles d'évolution) → exclues du pool
 _IDS_INTERMEDIAIRES = {p["evolution_id"] for p in POKEMONS_DB if p.get("evolution_id")}
 # Formes intermédiaires dont le lien d'entrée est absent dans la DB
@@ -2749,6 +2800,295 @@ def generer_offre_boutique(partie, niveau_joueur, ancienne_offre=None, locked=Fa
 
     return offre
 
+# ══════════════════════════════════════════════════════════════════════════════
+# SYSTÈME OBJETS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def init_pool_objets(partie):
+    """Initialise le pool et la piste d'objets."""
+    pool = [o["id"] for o in OBJETS_DB if o["id"] not in OBJETS_HORS_POOL]
+    random.shuffle(pool)
+    partie["pool_objets"]   = pool
+    partie["defausse_objets"] = []
+    partie["piste_objets"]  = []  # liste de 5 slots, index 0=case1 ... index 4=case5
+
+def _piocher_objet(partie):
+    """Pioche un objet du pool (recrée depuis la défausse si vide)."""
+    pool = partie.get("pool_objets", [])
+    if not pool:
+        pool = partie.get("defausse_objets", [])
+        random.shuffle(pool)
+        partie["defausse_objets"] = []
+        partie["pool_objets"] = pool
+    if not pool:
+        return None
+    oid = pool.pop(0)
+    return _get_objet(oid)
+
+def avancer_piste_objets(partie):
+    """
+    Chaque tour (à partir du tour 5) :
+    - L'objet en case 1 part en défausse
+    - Tout avance vers la gauche (case i → case i-1)
+    - Un nouvel objet est pioché en case 5
+    """
+    piste = partie.get("piste_objets", [])
+
+    # Mettre l'objet en case 1 (index 0) en défausse
+    if piste:
+        defausse_id = piste[0].get("id") if piste[0] else None
+        if defausse_id:
+            partie["defausse_objets"].append(defausse_id)
+        piste = piste[1:]  # avancer
+    else:
+        # Première initialisation : créer 5 cases vides
+        piste = []
+
+    # Compléter jusqu'à 5 cases (cas init)
+    while len(piste) < 4:
+        o = _piocher_objet(partie)
+        piste.append(o if o else None)
+
+    # Ajouter le nouvel objet en case 5
+    nouvel = _piocher_objet(partie)
+    piste.append(nouvel if nouvel else None)
+
+    partie["piste_objets"] = piste
+
+def donner_objet_special(partie, objet_id):
+    """Donne un objet spécial à tous les joueurs vivants."""
+    objet = _get_objet(objet_id)
+    if not objet:
+        return
+    for j in partie["joueurs"].values():
+        if j.get("en_vie", True):
+            inventaire = j.setdefault("inventaire", [])
+            if len(inventaire) < 5:
+                inventaire.append(dict(objet))
+
+def appliquer_effets_objet_equipe(poke, objet, joueur, equiper=True):
+    """
+    Applique ou retire les effets passifs d'un objet équipé sur un Pokémon.
+    equiper=True → applique, equiper=False → retire
+    """
+    oid = objet["id"]
+    mult = 1 if equiper else -1
+
+    # ── Changement de type d'attaque ─────────────────────────────────────
+    if oid in OBJET_TYPE_ATTAQUE:
+        if equiper:
+            poke["_att_off_type_orig"] = poke.get("att_off_type")
+            poke["att_off_type"] = OBJET_TYPE_ATTAQUE[oid]
+        else:
+            orig = poke.pop("_att_off_type_orig", None)
+            if orig is not None:
+                poke["att_off_type"] = orig
+
+    # ── Plaques : ajouter un type secondaire ──────────────────────────────
+    if oid in PLAQUE_TYPE:
+        type_gagne = PLAQUE_TYPE[oid]
+        if equiper:
+            if len(poke.get("types", [])) == 1:
+                poke["types"] = poke["types"] + [type_gagne]
+                poke["_plaque_type_ajoute"] = type_gagne
+        else:
+            type_ajoute = poke.pop("_plaque_type_ajoute", None)
+            if type_ajoute and type_ajoute in poke.get("types", []):
+                poke["types"] = [t for t in poke["types"] if t != type_ajoute]
+
+    # ── Point de Mire : inverser faiblesses/résistances ───────────────────
+    if oid == "059":
+        if equiper:
+            poke["_faiblesses_orig"] = list(poke.get("faiblesses", []))
+            poke["_resistances_orig_pm"] = list(poke.get("resistances", []))
+            poke["faiblesses"], poke["resistances"] = poke.get("resistances", []), poke.get("faiblesses", [])
+        else:
+            if "_faiblesses_orig" in poke:
+                poke["faiblesses"]  = poke.pop("_faiblesses_orig")
+                poke["resistances"] = poke.pop("_resistances_orig_pm", poke.get("resistances", []))
+
+    # ── Orbe Vie : +20 dégâts de base ────────────────────────────────────
+    if oid == "032":
+        poke["degats"] = poke.get("degats", 20) + (20 * mult)
+
+    # ── Évoluroc : +10 Bonus Défense si peut encore évoluer ──────────────
+    if oid == "036":
+        peut_evoluer = bool(poke.get("evolution_id") or poke.get("evolutions_conditionnelles"))
+        if peut_evoluer:
+            appliquer_bonus(poke, "bonus_defense", 10 * mult)
+
+    # ── Bandeau Choix : +50% dégâts, ancré ───────────────────────────────
+    if oid == "039":
+        if equiper:
+            bonus_att = poke.get("degats", 20) // 2
+            poke["_bandeau_choix_bonus"] = bonus_att
+            appliquer_bonus(poke, "bonus_attaque", bonus_att)
+            poke["_bandeau_choix"] = True
+        else:
+            bonus = poke.pop("_bandeau_choix_bonus", 0)
+            appliquer_bonus(poke, "bonus_attaque", -bonus)
+            poke.pop("_bandeau_choix", None)
+
+    # ── Mouchoir Choix : +50% Vitesse, ancré ─────────────────────────────
+    if oid == "040":
+        if equiper:
+            bonus_vit = poke.get("vitesse", 50) // 2
+            poke["_mouchoir_choix_bonus"] = bonus_vit
+            appliquer_bonus(poke, "bonus_vitesse", bonus_vit)
+            poke["vitesse"] = poke.get("vitesse", 50) + bonus_vit
+            poke["_mouchoir_choix"] = True
+        else:
+            bonus = poke.pop("_mouchoir_choix_bonus", 0)
+            appliquer_bonus(poke, "bonus_vitesse", -bonus)
+            poke["vitesse"] = max(0, poke.get("vitesse", 50) - bonus)
+            poke.pop("_mouchoir_choix", None)
+
+    # ── Veste de Combat : -20 dégâts reçus, position off uniquement ──────
+    if oid == "038":
+        if equiper:
+            poke["_veste_combat"] = True
+        else:
+            poke.pop("_veste_combat", None)
+
+    # ── Chaîne Rouge : Baron ──────────────────────────────────────────────
+    if oid == "080":
+        if equiper:
+            poke["_baron"]  = True
+            poke["poids"]   = (poke.get("poids", 0) or 0) * 2
+            poke["taille"]  = (poke.get("taille", 0) or 0) * 2
+            appliquer_bonus(poke, "bonus_attaque", 10)
+            appliquer_bonus(poke, "bonus_defense", 10)
+            joueur["baron_id"] = poke.get("slot")
+        else:
+            poke.pop("_baron", None)
+            poke["poids"]  = (poke.get("poids", 0) or 0) / 2
+            poke["taille"] = (poke.get("taille", 0) or 0) / 2
+            appliquer_bonus(poke, "bonus_attaque", -10)
+            appliquer_bonus(poke, "bonus_defense", -10)
+            joueur["baron_id"] = None
+
+def equiper_objet_sur_pokemon(poke, objet, joueur):
+    """Équipe un objet sur un Pokémon (appelé depuis le handler)."""
+    poke["objet"] = dict(objet)
+    appliquer_effets_objet_equipe(poke, objet, joueur, equiper=True)
+
+def desequiper_objet_de_pokemon(poke, joueur):
+    """Retire l'objet d'un Pokémon et le remet dans l'inventaire."""
+    objet = poke.get("objet")
+    if not objet:
+        return None
+    appliquer_effets_objet_equipe(poke, objet, joueur, equiper=False)
+    poke.pop("objet", None)
+    return objet
+
+def appliquer_consommable(poke, objet, joueur, partie):
+    """
+    Applique l'effet d'un consommable (potion, ball, etc.).
+    Retourne (ok, message).
+    """
+    oid = objet["id"]
+    nom_poke = poke["nom"] if poke else "?"
+
+    # ── Potions de soin ───────────────────────────────────────────────────
+    soins = {"005": 20, "006": 50, "007": 80}
+    if oid in soins:
+        soin = soins[oid]
+        poke["pv"] = min(poke.get("pv_max", 100), poke.get("pv", 0) + soin)
+        return True, f"💚 {nom_poke} +{soin} PV"
+    if oid == "008":  # Potion Max
+        poke["pv"] = poke.get("pv_max", 100)
+        return True, f"💚 {nom_poke} soigné intégralement"
+    if oid == "016":  # Guérison
+        poke["pv"] = poke.get("pv_max", 100)
+        soigner_statuts(poke)
+        return True, f"💚 {nom_poke} soigné intégralement + statut guéri"
+
+    # ── Soins de statut ───────────────────────────────────────────────────
+    statut_soins = {"009": "PAR", "010": "PSN", "011": "BRN", "012": "FRZ", "013": "SLP", "014": "CNF"}
+    if oid in statut_soins:
+        if poke.get("statut") == statut_soins[oid] or (oid == "014" and poke.get("statut") == "CNF"):
+            soigner_statuts(poke)
+            return True, f"💊 {nom_poke} guéri de {statut_soins[oid]}"
+        return False, f"❌ {nom_poke} n'a pas ce statut"
+    if oid == "015":  # Total Soin
+        soigner_statuts(poke)
+        return True, f"💊 {nom_poke} tous les statuts guéris"
+
+    # ── Rappel ────────────────────────────────────────────────────────────
+    if oid == "017":  # Rappel
+        if not poke.get("ko"):
+            return False, f"❌ {nom_poke} n'est pas KO"
+        poke["ko"] = False
+        poke["pv"] = poke.get("pv_max", 100) // 2
+        soigner_statuts(poke)
+        return True, f"💊 {nom_poke} réanimé ({poke['pv']} PV)"
+    if oid == "018":  # Rappel Max
+        if not poke.get("ko"):
+            return False, f"❌ {nom_poke} n'est pas KO"
+        poke["ko"] = False
+        poke["pv"] = poke.get("pv_max", 100)
+        soigner_statuts(poke)
+        return True, f"💊 {nom_poke} réanimé intégralement"
+
+    # ── Super Bonbon : +1 XP ──────────────────────────────────────────────
+    if oid == "019":
+        poke["xp_combats"] = poke.get("xp_combats", 0) + 1
+        return True, f"🍬 {nom_poke} +1 XP combat"
+
+    # ── Repousses : filtre la prochaine boutique ──────────────────────────
+    repousses = {"020": 2, "021": 4, "022": 6}
+    if oid in repousses:
+        joueur["_repousse_niv_min"] = repousses[oid]
+        return True, f"🔮 Prochaine boutique : niveau > {repousses[oid]}"
+
+    # ── Balls : pioche un Pokémon automatiquement ─────────────────────────
+    ball_niveaux = {"001": (1, 3), "002": (4, 6), "003": (7, 9), "004": (10, 15)}
+    if oid in ball_niveaux:
+        niv_min, niv_max = ball_niveaux[oid]
+        poke_pioche = piocher_garantie(partie, niv_min, niv_max)
+        if not poke_pioche:
+            return False, f"❌ Aucun Pokémon niveau {niv_min}-{niv_max} disponible"
+        slots_banc = {p["slot"] for p in joueur["pokemon"] if p["position"] == "banc"}
+        slot_libre = next((i for i in range(10) if i not in slots_banc), None)
+        if slot_libre is None:
+            retourner_au_pool(partie, [poke_pioche["id"]])
+            return False, "❌ Banc plein !"
+        joueur["pokemon"].append({
+            "id": poke_pioche["id"], "nom": poke_pioche["nom"],
+            "position": "banc", "slot": slot_libre,
+            "niveau": poke_pioche["niveau"], "stade": poke_pioche.get("stade", 0),
+            "pv": poke_pioche.get("pv_max", 100), "pv_max": poke_pioche.get("pv_max", 100),
+            "vitesse": poke_pioche.get("vitesse", 50), "degats": poke_pioche.get("degats", 20),
+            "types": poke_pioche.get("types", []),
+            "faiblesses": poke_pioche.get("faiblesses", []),
+            "resistances": poke_pioche.get("resistances", []),
+            "immunites": poke_pioche.get("immunites", []),
+            "att_off_nom": poke_pioche.get("att_off_nom", ""),
+            "att_off_desc": poke_pioche.get("att_off_desc", ""),
+            "att_def_nom": poke_pioche.get("att_def_nom", ""),
+            "att_def_desc": poke_pioche.get("att_def_desc", ""),
+            "att_off_type": poke_pioche.get("att_off_type"),
+            "att_def_type": poke_pioche.get("att_def_type"),
+            "evolution_id": poke_pioche.get("evolution_id"),
+            "evolution_nom": poke_pioche.get("evolution_nom"),
+            "evolution_ko": poke_pioche.get("evolution_ko"),
+            "poids": poke_pioche.get("poids", 0),
+            "taille": poke_pioche.get("taille", 0),
+            "bonus_pv_synergie": 0, "ko": False, "xp_combats": 0,
+        })
+        appliquer_bonus_pv_synergies(joueur)
+        return True, f"🎯 {poke_pioche['nom']} ajouté au banc !"
+
+    # ── Switch : échange avec un autre joueur ─────────────────────────────
+    # (géré séparément dans le handler — nécessite une cible)
+
+    # ── Clonage : crée un clone dans la même colonne ──────────────────────
+    if oid == "025":
+        # Géré dans le handler (nécessite la colonne)
+        return False, "Utiliser depuis le plateau"
+
+    return False, f"❌ Effet non implémenté pour {objet['nom']}"
+
 # ── État joueur ───────────────────────────────────────────────────────────────
 def etat_initial_joueur(pseudo):
     return {
@@ -2768,6 +3108,8 @@ def etat_initial_joueur(pseudo):
         "niveau_max_pool": 10,
         "garantie_rolls":  {"11": 0, "12": 0, "13": 0, "14": 0},
         "niveaux_achetes": [],
+        "inventaire":      [],   # liste d'objets {id, nom, categorie, effet}
+        "baron_id":        None, # slot du pokémon Baron actuel
     }
 
 # ── Économie ──────────────────────────────────────────────────────────────────
@@ -4759,6 +5101,28 @@ def appliquer_fin_tour(partie):
     # Piocher le climat du prochain tour — visible au début du tour suivant
     piocher_climat(partie)
 
+    # ── Piste d'objets (à partir du tour 5 = après le premier carrousel) ──
+    tour = partie.get("tour", 0)
+    if tour >= 5 and "piste_objets" in partie:
+        avancer_piste_objets(partie)
+    elif tour == 5 and "piste_objets" not in partie:
+        init_pool_objets(partie)
+        avancer_piste_objets(partie)
+
+    # ── Objets spéciaux aux carrousels ────────────────────────────────────
+    # Tour 8 : Chaîne Rouge pour tous
+    if tour == 8:
+        donner_objet_special(partie, "080")
+        messages.append("🔴 Chaque joueur reçoit une Chaîne Rouge !")
+    # Tour 12 : Étoile Vœu pour tous
+    elif tour == 12:
+        donner_objet_special(partie, "024")
+        messages.append("⭐ Chaque joueur reçoit une Étoile Vœu !")
+    # Tour 16 : Méga Gemme pour tous
+    elif tour == 16:
+        donner_objet_special(partie, "023")
+        messages.append("💎 Chaque joueur reçoit une Méga Gemme !")
+
     # Distorsion : décrémenter le compteur
     gerer_distorsion(partie)
 
@@ -4881,6 +5245,7 @@ async def creer_partie(data: dict):
         "climat_actuel": "Ensoleillé",
     }
     init_pool(partie)
+    init_pool_objets(partie)
     joueur["boutique_offre"] = generer_offre_boutique(partie, joueur["niveau"])
     parties[code] = partie
     return {"code": code}
@@ -5117,15 +5482,25 @@ async def traiter_action(code, pseudo, action):
                      if p["position"] == position and p["slot"] == slot), None)
         if not poke:
             return
+        # Récupérer l'objet équipé dans l'inventaire
+        objet_recupere = desequiper_objet_de_pokemon(poke, joueur)
+        if objet_recupere:
+            inventaire = joueur.setdefault("inventaire", [])
+            if len(inventaire) < 5:
+                inventaire.append(objet_recupere)
+            else:
+                # Inventaire plein → défausse
+                partie.get("defausse_objets", []).append(objet_recupere["id"])
         gain = poke.get("niveau", 1) + poke.get("xp_combats", 0)
         joueur["pokemon"].remove(poke)
         joueur["pieces"] += gain
         retourner_au_pool(partie, [poke["id"]])
         appliquer_bonus_pv_synergies(joueur)
         appliquer_transformations(joueur)
+        msg_objet = f" (objet {objet_recupere['nom']} récupéré)" if objet_recupere else ""
         await gestionnaire.diffuser(code, {
             "type": "etat_mis_a_jour", "etat": partie,
-            "msg": f"💸 {pseudo} vend {poke['nom']} (+{gain} 🪙)",
+            "msg": f"💸 {pseudo} vend {poke['nom']} (+{gain} 🪙){msg_objet}",
         })
 
     elif t == "racheter_pokemon":
@@ -5270,6 +5645,205 @@ async def traiter_action(code, pseudo, action):
                 "type": "fin_tour", "etat": partie,
                 "msg": "🧪 DEBUG : Évoli ajouté au banc !"
             })
+
+    # ══════════════════════════════════════════════════════════════════════
+    # HANDLERS OBJETS
+    # ══════════════════════════════════════════════════════════════════════
+
+    elif t == "acheter_objet":
+        # Acheter un objet de la piste (case 1-5, prix = numéro de case)
+        idx_case = action.get("index")  # 0=case1 ... 4=case5
+        if idx_case is None:
+            return
+        piste = partie.get("piste_objets", [])
+        if idx_case < 0 or idx_case >= len(piste) or not piste[idx_case]:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Objet indisponible !", "pour": pseudo})
+            return
+        cout = idx_case + 1  # case 1=1 pièce, case 5=5 pièces
+        if joueur["pieces"] < cout:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": f"Pas assez de pièces ! ({cout} 🪙)", "pour": pseudo})
+            return
+        inventaire = joueur.setdefault("inventaire", [])
+        if len(inventaire) >= 5:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Inventaire plein !", "pour": pseudo})
+            return
+        objet = dict(piste[idx_case])
+        joueur["pieces"] -= cout
+        inventaire.append(objet)
+        piste[idx_case] = None  # retirer de la piste
+        await gestionnaire.diffuser(code, {
+            "type": "etat_mis_a_jour", "etat": partie,
+            "msg": f"🎁 {pseudo} achète {objet['nom']} (-{cout} 🪙)",
+        })
+
+    elif t == "equiper_objet":
+        # Équiper un objet depuis l'inventaire sur un Pokémon
+        inv_idx  = action.get("inv_idx")   # index dans l'inventaire
+        position = action.get("position")
+        slot     = int(action.get("slot", 0))
+        inventaire = joueur.setdefault("inventaire", [])
+        if inv_idx is None or inv_idx < 0 or inv_idx >= len(inventaire):
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Objet introuvable !", "pour": pseudo})
+            return
+        poke = next((p for p in joueur["pokemon"] if p["position"] == position and p["slot"] == slot), None)
+        if not poke:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Pokémon introuvable !", "pour": pseudo})
+            return
+        if poke.get("objet"):
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": f"{poke['nom']} a déjà un objet !", "pour": pseudo})
+            return
+        objet = inventaire.pop(inv_idx)
+        # Vérifications objets spéciaux
+        if objet["id"] == "080":  # Chaîne Rouge
+            if joueur.get("baron_id") is not None:
+                inventaire.insert(inv_idx, objet)
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Vous avez déjà un Baron !", "pour": pseudo})
+                return
+            if poke.get("niveau", 1) >= 10:
+                inventaire.insert(inv_idx, objet)
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Un Pokémon niveau 10+ ne peut pas être Baron !", "pour": pseudo})
+                return
+        if objet["id"] == "024":  # Étoile Vœu → Gigamax
+            # Trouver la forme Gigamax du Pokémon
+            import re as _re
+            base_num = _re.match(r'^(\d+)', poke["id"])
+            if base_num:
+                gigamax_id = base_num.group(1).zfill(4) + "d"
+                gigamax_data = _get_poke(gigamax_id)
+                if not gigamax_data:
+                    # Chercher variantes b, c, d, e
+                    for suffix in ("b","c","d","e"):
+                        candidate = _get_poke(base_num.group(1).zfill(4) + suffix)
+                        if candidate and "gigamax" in candidate["nom"].lower():
+                            gigamax_data = candidate
+                            break
+            if not gigamax_data:
+                inventaire.insert(inv_idx, objet)
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": f"{poke['nom']} n'a pas de forme Gigamax !", "pour": pseudo})
+                return
+            # Transformer en Gigamax
+            poke.update({
+                "id": gigamax_data["id"], "nom": gigamax_data["nom"],
+                "types": gigamax_data.get("types", poke["types"]),
+                "pv_max": gigamax_data.get("pv_max", poke["pv_max"]),
+                "pv": min(poke["pv"] + max(0, gigamax_data.get("pv_max",100) - poke["pv_max"]), gigamax_data.get("pv_max",100)),
+                "vitesse": gigamax_data.get("vitesse", poke["vitesse"]),
+                "degats": gigamax_data.get("degats", poke["degats"]),
+                "att_off_nom": gigamax_data.get("att_off_nom", poke["att_off_nom"]),
+                "att_off_desc": gigamax_data.get("att_off_desc", poke["att_off_desc"]),
+                "att_def_nom": gigamax_data.get("att_def_nom", poke["att_def_nom"]),
+                "att_def_desc": gigamax_data.get("att_def_desc", poke["att_def_desc"]),
+                "taille": gigamax_data.get("taille", poke.get("taille")),
+                "poids": gigamax_data.get("poids", poke.get("poids")),
+                "_gigamax_objet": True,
+            })
+            appliquer_bonus_pv_synergies(joueur)
+            await gestionnaire.diffuser(code, {
+                "type": "etat_mis_a_jour", "etat": partie,
+                "msg": f"⭐ {poke['nom']} passe en forme Gigamax !",
+            })
+            return
+        if objet["id"] == "023":  # Méga Gemme → Méga Évolution
+            base_id = poke["id"]
+            synergies = calculer_synergies(joueur)
+            mega_id = None
+            if base_id in MEGA_DOUBLE:
+                for (mid, syn_requis) in MEGA_DOUBLE[base_id]:
+                    if syn_requis is None or synergies.get(syn_requis, 0) >= 3:
+                        mega_id = mid
+                        break
+                if not mega_id:
+                    inventaire.insert(inv_idx, objet)
+                    await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Synergie requise non active pour cette Méga-Évolution !", "pour": pseudo})
+                    return
+            else:
+                # Chercher la Méga dans la DB
+                import re as _re2
+                base_num2 = _re2.match(r'^(\d+)', base_id)
+                if base_num2:
+                    for suffix in ("b","c","d"):
+                        candidate = _get_poke(base_num2.group(1).zfill(4) + suffix)
+                        if candidate and "méga" in candidate["nom"].lower():
+                            mega_id = candidate["id"]
+                            break
+            if not mega_id or not _get_poke(mega_id):
+                inventaire.insert(inv_idx, objet)
+                await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": f"{poke['nom']} n'a pas de Méga-Évolution !", "pour": pseudo})
+                return
+            mega_data = _get_poke(mega_id)
+            poke.update({
+                "id": mega_data["id"], "nom": mega_data["nom"],
+                "types": mega_data.get("types", poke["types"]),
+                "pv_max": mega_data.get("pv_max", poke["pv_max"]),
+                "pv": min(poke["pv"] + max(0, mega_data.get("pv_max",100) - poke["pv_max"]), mega_data.get("pv_max",100)),
+                "vitesse": mega_data.get("vitesse", poke["vitesse"]),
+                "degats": mega_data.get("degats", poke["degats"]),
+                "att_off_nom": mega_data.get("att_off_nom", poke["att_off_nom"]),
+                "att_off_desc": mega_data.get("att_off_desc", poke["att_off_desc"]),
+                "att_def_nom": mega_data.get("att_def_nom", poke["att_def_nom"]),
+                "att_def_desc": mega_data.get("att_def_desc", poke["att_def_desc"]),
+                "taille": mega_data.get("taille", poke.get("taille")),
+                "poids": mega_data.get("poids", poke.get("poids")),
+                "_mega_objet": True,
+            })
+            appliquer_bonus_pv_synergies(joueur)
+            await gestionnaire.diffuser(code, {
+                "type": "etat_mis_a_jour", "etat": partie,
+                "msg": f"💎 {poke['nom']} Méga-Évolue !",
+            })
+            return
+        # Objet normal : équiper
+        equiper_objet_sur_pokemon(poke, objet, joueur)
+        appliquer_bonus_pv_synergies(joueur)
+        await gestionnaire.diffuser(code, {
+            "type": "etat_mis_a_jour", "etat": partie,
+            "msg": f"🎽 {pseudo} équipe {objet['nom']} sur {poke['nom']}",
+        })
+
+    elif t == "utiliser_objet":
+        # Utiliser un consommable depuis l'inventaire sur un Pokémon
+        inv_idx  = action.get("inv_idx")
+        position = action.get("position")
+        slot     = int(action.get("slot", 0)) if action.get("slot") is not None else None
+        inventaire = joueur.setdefault("inventaire", [])
+        if inv_idx is None or inv_idx < 0 or inv_idx >= len(inventaire):
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Objet introuvable !", "pour": pseudo})
+            return
+        objet = inventaire[inv_idx]
+        poke = None
+        if position is not None and slot is not None:
+            poke = next((p for p in joueur["pokemon"] if p["position"] == position and p["slot"] == slot), None)
+        ok, msg_effet = appliquer_consommable(poke, objet, joueur, partie)
+        if ok:
+            inventaire.pop(inv_idx)
+            appliquer_bonus_pv_synergies(joueur)
+            await gestionnaire.diffuser(code, {
+                "type": "etat_mis_a_jour", "etat": partie,
+                "msg": f"✨ {pseudo} utilise {objet['nom']} : {msg_effet}",
+            })
+        else:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": msg_effet, "pour": pseudo})
+
+    elif t == "desequiper_objet":
+        # Déséquiper l'objet d'un Pokémon → retour inventaire
+        position = action.get("position")
+        slot     = int(action.get("slot", 0))
+        poke = next((p for p in joueur["pokemon"] if p["position"] == position and p["slot"] == slot), None)
+        if not poke or not poke.get("objet"):
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Pas d'objet à retirer !", "pour": pseudo})
+            return
+        inventaire = joueur.setdefault("inventaire", [])
+        if len(inventaire) >= 5:
+            await gestionnaire.envoyer_a(code, pseudo, {"type": "erreur", "msg": "Inventaire plein !", "pour": pseudo})
+            return
+        objet = desequiper_objet_de_pokemon(poke, joueur)
+        if objet:
+            inventaire.append(objet)
+        appliquer_bonus_pv_synergies(joueur)
+        await gestionnaire.diffuser(code, {
+            "type": "etat_mis_a_jour", "etat": partie,
+            "msg": f"📦 {pseudo} retire {objet['nom']} de {poke['nom']}",
+        })
 
     elif t == "lancer_combat":
         if partie.get("hote") != pseudo:
