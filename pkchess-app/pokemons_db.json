@@ -4555,12 +4555,26 @@
       "psy"
     ],
     "immunites": [],
-    "evolution": "Flagadoss: Mettre K.O. quatre Pokémon. Roigada: Mettre K.O. quatre Pokémon.",
+    "evolution": "Flagadoss: Mettre K.O. quatre Pokémon + avoir une synergie Eau 3 active. Roigada: Mettre K.O. quatre Pokémon + avoir une synergie Psy 3 active",
     "evolution_id": "0199",
     "evolution_nom": "Roigada",
     "evolution_ko": 4,
     "att_off_type": "psy",
     "att_def_type": "normal",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0199",
+        "nom": "Roigada",
+        "condition": "synergie_psy_3",
+        "evolution_ko": 4
+      },
+      {
+        "id": "0080",
+        "nom": "Flagadoss",
+        "condition": "synergie eau 3",
+        "evolution_ko": 4
+      }
+    ],
     "poids": 36.0,
     "taille": 1.2
   },
@@ -4589,7 +4603,7 @@
       "psy"
     ],
     "immunites": [],
-    "evolution": "Waal: Mettre K.O. quatre Pokémon + avoir une synergie Poison 3 active. Roigada Galar: Mettre K.O. quatre Pokémon + avoir une synergie Ténèbre 3 active.",
+    "evolution": "Flagadoss Galar: Mettre K.O. quatre Pokémon + avoir une synergie Poison 3 active. Roigada Galar: Mettre K.O. quatre Pokémon + avoir une synergie Psy 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
@@ -4599,12 +4613,12 @@
       {
         "id": "0199b",
         "nom": "Roigada Galar",
-        "condition": "synergie_tenebres_3",
+        "condition": "synergie_psy_3",
         "evolution_ko": 4
       },
       {
         "id": "0080c",
-        "nom": "Waal",
+        "nom": "Flagadoss Galar",
         "condition": "synergie_poison_3",
         "evolution_ko": 4
       }
@@ -4620,7 +4634,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 95,
     "vitesse": 30,
     "degats": 40,
@@ -4702,7 +4716,7 @@
       "psy"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 30,
     "degats": 50,
@@ -7012,7 +7026,7 @@
     "immunites": [
       "sol"
     ],
-    "evolution": "Scizor: Mettre K.O. trois Pokémon + avoir une synergie Acier 3 active. Hachécateur: Mettre K.O. trois Pokémon + avoir une synergie Roche 3 active.",
+    "evolution": "Cizayox: Mettre K.O. trois Pokémon + avoir une synergie Acier 3 active. Hachécateur: Mettre K.O. trois Pokémon + avoir une synergie Roche 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
@@ -11937,7 +11951,7 @@
       "acier"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 85,
     "vitesse": 65,
     "degats": 60,
@@ -23846,7 +23860,7 @@
       "electrik"
     ],
     "niveau": 10,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 75,
     "vitesse": 95,
     "degats": 60,
@@ -26123,7 +26137,7 @@
     "evolutions_conditionnelles": [
       {
         "id": "0512",
-        "nom": "Feuiloutan",
+        "nom": "Feuilloutan",
         "condition": "synergie_plante_3",
         "evolution_ko": 2
       }
@@ -26131,12 +26145,12 @@
   },
   {
     "id": "0512",
-    "nom": "Feuiloutan",
+    "nom": "Feuilloutan",
     "types": [
       "plante"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 65,
     "vitesse": 101,
     "degats": 30,
@@ -26489,7 +26503,7 @@
       "vol"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 70,
     "vitesse": 93,
     "degats": 50,
@@ -26776,20 +26790,12 @@
     "immunites": [
       "sol"
     ],
-    "evolution": "Oniglali: Mettre K.O. trois Pokémon + avoir une synergie Psy 3 active.",
-    "evolution_id": null,
-    "evolution_nom": null,
-    "evolution_ko": null,
+    "evolution": "Rhinolove: Mettre K.O. trois Pokémon.",
+    "evolution_id": "0528",
+    "evolution_nom": "Rhinolove",
+    "evolution_ko": 3,
     "att_off_type": "psy",
     "att_def_type": "normal",
-    "evolutions_conditionnelles": [
-      {
-        "id": "0362",
-        "nom": "Oniglali",
-        "condition": "synergie_psy_3",
-        "evolution_ko": 3
-      }
-    ],
     "poids": 2.1,
     "taille": 0.4
   },
@@ -26801,7 +26807,7 @@
       "vol"
     ],
     "niveau": 6,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 60,
     "vitesse": 114,
     "degats": 30,
@@ -27893,12 +27899,26 @@
       "glace"
     ],
     "immunites": [],
-    "evolution": "Paragruel Blanc: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active. Paragruel: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active.",
+    "evolution": "Paragruel Blanc: Mettre K.O. quatre Pokémon + avoir une synergie Spectre 3 active. Paragruel: Mettre K.O. quatre Pokémon + avoir une synergie Eau 3 active.",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
     "att_off_type": "psy",
     "att_def_type": "ténèbre",
+    "evolutions_conditionnelles": [
+      {
+        "id": "0902",
+        "nom": "Paragruel F",
+        "condition": "synergie_spectre_3",
+        "evolution_ko": 4
+      },
+      {
+        "id": "902c",
+        "nom": "Paragruel M",
+        "condition": "synergie_eau_3",
+        "evolution_ko": 4
+      }
+    ],
     "poids": 18.0,
     "taille": 1.0
   },
@@ -36808,7 +36828,7 @@
       "spectre"
     ],
     "niveau": 9,
-    "stade": 0,
+    "stade": 2,
     "pv_max": 85,
     "vitesse": 70,
     "degats": 50,
@@ -37531,7 +37551,7 @@
     "id": "0741",
     "nom": "Plumeline Buyo",
     "types": [
-      "eau",
+      "spectre",
       "vol"
     ],
     "niveau": 8,
@@ -37609,7 +37629,7 @@
   },
   {
     "id": "0741c",
-    "nom": "Plumeline Hula",
+    "nom": "Plumeline Pom-Pom",
     "types": [
       "electrik",
       "vol"
@@ -37648,7 +37668,7 @@
   },
   {
     "id": "0741d",
-    "nom": "Plumeline Pompom",
+    "nom": "Plumeline Hula",
     "types": [
       "psy",
       "vol"
@@ -42345,7 +42365,7 @@
       "sol"
     ],
     "immunites": [],
-    "evolution": "Pomdramour: Mettre K.O. trois Pokémon + avoir une synergie Dragon 3 active. Dratatin: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 active.",
+    "evolution": "Pomdramour: Mettre K.O. trois Pokémon + avoir une synergie Dragon 3 active. Dratatin: Mettre K.O. trois Pokémon + avoir une synergie Plante 3 active. Pomdrapi: Mettre K.O. trois Pokémon + avoir un boost d'attaque et de vitesse",
     "evolution_id": null,
     "evolution_nom": null,
     "evolution_ko": null,
@@ -42367,7 +42387,7 @@
       {
         "id": "0841",
         "nom": "Pomdrapi",
-        "condition": "boost_attaque_defense",
+        "condition": "boost_attaque_vitesse",
         "evolution_ko": 3
       }
     ],
@@ -42382,7 +42402,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 70,
     "vitesse": 70,
     "degats": 50,
@@ -42422,7 +42442,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 140,
     "vitesse": 70,
     "degats": 60,
@@ -42502,7 +42522,7 @@
       "dragon"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 180,
     "vitesse": 30,
     "degats": 60,
@@ -43683,7 +43703,7 @@
       "spectre"
     ],
     "niveau": 8,
-    "stade": 0,
+    "stade": 1,
     "pv_max": 105,
     "vitesse": 30,
     "degats": 40,
