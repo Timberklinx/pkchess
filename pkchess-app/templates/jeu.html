@@ -322,19 +322,11 @@
         .piste-case .objet-nom-mini { font-size: 0.48em; font-weight: 800; text-align: center; color: rgba(255,255,255,0.8); padding: 0 2px; line-height: 1.2; }
         .piste-fleche { color: rgba(255,215,0,0.4); font-size: 1.1em; align-self: center; margin-bottom: 8px; }
         .piste-defausse { width: 40px; height: 40px; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15); background: rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.7em; opacity: 0.4; align-self: center; margin-bottom: 8px; }
-
-        /* ── Objet sur Pokémon (badge) ── */
-        .objet-badge { position: absolute; bottom: 18px; right: 2px; font-size: 0.85em; z-index: 5;
-            background: rgba(0,0,0,0.7); border-radius: 4px; padding: 0 2px; line-height: 1.4;
-            cursor: pointer; border: 1px solid rgba(255,215,0,0.4); }
+        .objet-badge { position: absolute; bottom: 18px; right: 2px; font-size: 0.85em; z-index: 5; background: rgba(0,0,0,0.7); border-radius: 4px; padding: 0 2px; line-height: 1.4; cursor: pointer; border: 1px solid rgba(255,215,0,0.4); }
         .objet-badge:hover { border-color: var(--gold); }
-
-        /* ── Inventaire objets ── */
         .case.inventaire.occupe { border-style: solid; border-color: rgba(168,85,247,0.7); }
         .inv-objet-emoji { font-size: 1.4em; }
         .inv-objet-nom { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.75); font-size: 0.52em; font-weight: 800; text-align: center; padding: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* ── Modal détail objet ── */
         .modal-objet-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 250; align-items: center; justify-content: center; }
         .modal-objet-bg.open { display: flex; }
         .modal-objet { background: linear-gradient(135deg, var(--blue-mid), var(--blue-card)); border-radius: 16px; padding: 24px; border: 2px solid var(--gold); max-width: 380px; width: 90vw; }
@@ -583,8 +575,8 @@ var etat_apres_evolution = null;    // état post-évolution à appliquer après
 var boutique_locked    = false;
 var zoom_pos = null, zoom_slot = null;
 var drag_pos = null, drag_slot = null;
-var drag_inv_idx = null;          // index inventaire en cours de drag
-var objet_modal_ctx = null;       // contexte du modal objet ouvert
+var drag_inv_idx = null;
+var objet_modal_ctx = null;
 var arenaEtat = null;
 var pvsMoi = {}, pvsAdv = {};
 
@@ -927,8 +919,10 @@ function renderCentre(containerId) {
             miniCaseC.className = 'case-objet' + (!pokeCentre ? ' case-objet-bloquee' : '');
             miniCaseC.dataset.pos  = 'centre';
             miniCaseC.dataset.slot = s;
-            miniCaseC.title = 'Objet équipé';
-            miniCaseC.innerHTML = '<span style="font-size:0.8em;opacity:0.3">📦</span>';
+            miniCaseC.title = pokeCentre && pokeCentre.objet ? pokeCentre.objet.nom : 'Objet équipé';
+            miniCaseC.innerHTML = pokeCentre && pokeCentre.objet
+                ? '<span style="font-size:1em">' + getObjetEmoji(pokeCentre.objet.id) + '</span>'
+                : '<span style="font-size:0.8em;opacity:0.3">📦</span>';
             wrapperC.appendChild(miniCaseC);
 
             container.appendChild(wrapperC);
@@ -1034,26 +1028,25 @@ function renderRangee(containerId, pos, dispo, cssClass) {
 
         // Badge objet sur le Pokémon (lié au Pokémon, pas à la case)
         if (poke && poke.objet) {
-            var objetEmoji = objetEmoji(poke.objet.id);
             var badgeObjet = document.createElement('div');
             badgeObjet.className = 'objet-badge';
             badgeObjet.title = poke.objet.nom;
-            badgeObjet.textContent = objetEmoji;
+            badgeObjet.textContent = getObjetEmoji(poke.objet.id);
             (function(p, s) {
-                badgeObjet.onclick = function(e) {
+                badgeObjet.addEventListener('click', function(e) {
                     e.stopPropagation();
                     ouvrirModalObjet({source: 'equipe', position: p, slot: s, objet: poke.objet});
-                };
+                });
             })(pos, i);
             el.appendChild(badgeObjet);
         }
 
-        // Wrapper case + mini-case objet (zone drop pour équiper)
+        // Wrapper case + mini-case objet
         var wrapper = document.createElement('div');
         wrapper.className = 'slot-wrapper';
         wrapper.appendChild(el);
 
-        // Mini-case objet à droite (zone de drop depuis inventaire)
+        // Mini-case objet à droite (zone drop depuis inventaire)
         if (pos !== 'centre') {
             var miniCase = document.createElement('div');
             miniCase.className = 'case-objet' + (!poke ? ' case-objet-bloquee' : '');
@@ -1061,20 +1054,21 @@ function renderRangee(containerId, pos, dispo, cssClass) {
             miniCase.dataset.slot = i;
             miniCase.title = poke && poke.objet ? poke.objet.nom : 'Déposer un objet';
             miniCase.innerHTML = poke && poke.objet
-                ? '<span style="font-size:1em">' + objetEmoji(poke.objet.id) + '</span>'
+                ? '<span style="font-size:1em">' + getObjetEmoji(poke.objet.id) + '</span>'
                 : '<span style="font-size:0.8em;opacity:0.3">📦</span>';
-            // Drop depuis inventaire
-            miniCase.addEventListener('dragover', function(e) {
-                if (drag_inv_idx !== null) { e.preventDefault(); this.style.borderColor = 'var(--gold)'; }
-            });
-            miniCase.addEventListener('dragleave', function() { this.style.borderColor = ''; });
-            miniCase.addEventListener('drop', function(e) {
-                e.preventDefault(); this.style.borderColor = '';
-                if (drag_inv_idx !== null && poke) {
-                    equiperObjetSurPoke(drag_inv_idx, pos, i);
-                    drag_inv_idx = null;
-                }
-            });
+            (function(p, s, hasPoke) {
+                miniCase.addEventListener('dragover', function(e) {
+                    if (drag_inv_idx !== null && hasPoke) { e.preventDefault(); this.style.borderColor = 'var(--gold)'; }
+                });
+                miniCase.addEventListener('dragleave', function() { this.style.borderColor = ''; });
+                miniCase.addEventListener('drop', function(e) {
+                    e.preventDefault(); this.style.borderColor = '';
+                    if (drag_inv_idx !== null && hasPoke) {
+                        equiperObjetSurPoke(drag_inv_idx, p, s);
+                        drag_inv_idx = null;
+                    }
+                });
+            })(pos, i, !!poke);
             wrapper.appendChild(miniCase);
         }
 
@@ -1688,8 +1682,7 @@ function forcerFermetureCombat() {
 
 // ── Objets ───────────────────────────────────────────────────────────────────
 
-// Mapping ID objet → emoji affiché
-function objetEmoji(oid) {
+function getObjetEmoji(oid) {
     var map = {
         "001":"⚪","002":"🔵","003":"🔴","004":"🌑",
         "005":"🧪","006":"💊","007":"💉","008":"✨",
@@ -1701,10 +1694,9 @@ function objetEmoji(oid) {
         "036":"🪨","037":"💥","038":"🥋","039":"🎗️","040":"🧣",
         "059":"🎯","060":"🔄","061":"📊","080":"🔴"
     };
-    // Plaques
-    if (parseInt(oid) >= 41 && parseInt(oid) <= 58) return "📛";
-    // Objets de type
-    if (parseInt(oid) >= 62 && parseInt(oid) <= 79) return "💠";
+    var n = parseInt(oid);
+    if (n >= 41 && n <= 58) return "📛";
+    if (n >= 62 && n <= 79) return "💠";
     return map[oid] || "📦";
 }
 
@@ -1717,24 +1709,26 @@ function renderInventaire() {
     slots.forEach(function(slot, i) {
         var objet = inventaire[i] || null;
         slot.innerHTML = '';
-        slot.className = 'case inventaire' + (objet ? ' occupee' : '');
+        slot.className = 'case inventaire' + (objet ? ' occupe' : '');
         slot.draggable = !!objet;
         slot.title = objet ? objet.nom : ('Objet/Baie ' + (i+1));
         if (objet) {
-            slot.innerHTML = '<span class="inv-objet-emoji">' + objetEmoji(objet.id) + '</span>'
+            slot.innerHTML = '<span class="inv-objet-emoji">' + getObjetEmoji(objet.id) + '</span>'
                 + '<div class="inv-objet-nom">' + objet.nom + '</div>';
-            // Drag depuis inventaire
-            (function(idx) {
+            (function(idx, obj) {
                 slot.addEventListener('dragstart', function(e) {
                     drag_inv_idx = idx;
                     e.dataTransfer.effectAllowed = 'move';
                     slot.style.opacity = '0.4';
                 });
-                slot.addEventListener('dragend', function() { slot.style.opacity = '1'; drag_inv_idx = null; });
-                slot.addEventListener('click', function() {
-                    ouvrirModalObjet({source: 'inventaire', inv_idx: idx, objet: objet});
+                slot.addEventListener('dragend', function() {
+                    slot.style.opacity = '1';
+                    drag_inv_idx = null;
                 });
-            })(i);
+                slot.addEventListener('click', function() {
+                    ouvrirModalObjet({source: 'inventaire', inv_idx: idx, objet: obj});
+                });
+            })(i, objet);
         } else {
             slot.innerHTML = '<span style="font-size:1.4em;opacity:0.3">🎒</span>';
         }
@@ -1751,7 +1745,6 @@ function renderPiste() {
     var moi = etat && etat.joueurs ? etat.joueurs[PSEUDO] : null;
     var pieces = moi ? (moi.pieces || 0) : 0;
     container.innerHTML = '';
-    // Afficher cases 5→1 de droite à gauche (case 5 = index 4 = nouveau, case 1 = index 0 = part en défausse)
     for (var i = 4; i >= 0; i--) {
         (function(idx) {
             var objet = piste[idx];
@@ -1762,15 +1755,19 @@ function renderPiste() {
             var caseEl = document.createElement('div');
             caseEl.className = 'piste-case' + (!objet ? ' vide' : (!peutAcheter ? ' trop-cher' : ''));
             if (objet) {
-                caseEl.innerHTML = '<span class="objet-emoji">' + objetEmoji(objet.id) + '</span>'
+                caseEl.innerHTML = '<span class="objet-emoji">' + getObjetEmoji(objet.id) + '</span>'
                     + '<span class="objet-nom-mini">' + objet.nom + '</span>';
-                caseEl.title = objet.nom + ' (' + prix + ' 🪙)
+                caseEl.title = objet.nom + ' (' + prix + ' pièces)
 ' + objet.effet;
-                if (peutAcheter) {
-                    caseEl.onclick = function() { acheterObjet(idx); };
-                } else if (objet) {
-                    caseEl.onclick = function() { showToast('Pas assez de pièces ! (' + prix + ' 🪙)', true); };
-                }
+                (function(i2) {
+                    caseEl.addEventListener('click', function() {
+                        if (peutAcheter) {
+                            acheterObjet(i2);
+                        } else {
+                            showToast('Pas assez de pièces ! (' + prix + ')', true);
+                        }
+                    });
+                })(idx);
             } else {
                 caseEl.innerHTML = '<span style="opacity:0.3;font-size:1.2em">—</span>';
             }
@@ -1780,7 +1777,6 @@ function renderPiste() {
             slotEl.appendChild(caseEl);
             slotEl.appendChild(prixEl);
             container.appendChild(slotEl);
-            // Flèche entre cases
             if (idx > 0) {
                 var fleche = document.createElement('span');
                 fleche.className = 'piste-fleche';
@@ -1794,35 +1790,21 @@ function renderPiste() {
 function ouvrirModalObjet(ctx) {
     objet_modal_ctx = ctx;
     var objet = ctx.objet;
-    document.getElementById('modal-objet-titre').textContent = objetEmoji(objet.id) + ' ' + objet.nom;
+    document.getElementById('modal-objet-titre').textContent = getObjetEmoji(objet.id) + ' ' + objet.nom;
     document.getElementById('modal-objet-effet').textContent = objet.effet;
     var actionsEl = document.getElementById('modal-objet-actions');
     actionsEl.innerHTML = '';
     var btnFermer = document.createElement('button');
     btnFermer.className = 'btn btn-gray';
     btnFermer.textContent = '✕ Fermer';
-    btnFermer.onclick = function() { document.getElementById('modal-objet').classList.remove('open'); };
+    btnFermer.addEventListener('click', function() {
+        document.getElementById('modal-objet').classList.remove('open');
+    });
     actionsEl.appendChild(btnFermer);
-
-    if (ctx.source === 'inventaire') {
-        // Bouton Utiliser (consommables)
-        var cats = ['potion', 'ball'];
-        if (cats.indexOf(objet.categorie) >= 0 && objet.id !== '025' && objet.id !== '060') {
-            // Soin direct sur un pokemon → besoin de sélectionner un pokemon
-            var btnUtiliser = document.createElement('button');
-            btnUtiliser.className = 'btn btn-green';
-            btnUtiliser.textContent = '✅ Utiliser';
-            btnUtiliser.onclick = function() {
-                document.getElementById('modal-objet').classList.remove('open');
-                showToast('Glisse l'objet sur un Pokémon ou clique dessus pour utiliser', false);
-            };
-            actionsEl.appendChild(btnUtiliser);
-        }
-    } else if (ctx.source === 'equipe') {
-        // Ne peut pas déséquiper (règle du jeu)
+    if (ctx.source === 'equipe') {
         var info = document.createElement('div');
         info.style.cssText = 'font-size:0.75em;color:rgba(255,255,255,0.4);margin-top:4px';
-        info.textContent = 'Objet équipé — vendre le Pokémon pour récupérer l'objet.';
+        info.textContent = 'Objet équipé — vendez le Pokémon pour récupérer l'objet.';
         actionsEl.appendChild(info);
     }
     document.getElementById('modal-objet').classList.add('open');
